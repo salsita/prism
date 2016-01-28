@@ -19,11 +19,11 @@ const unwindIterable = iterable => {
 
 const last = arr => arr[arr.length - 1];
 
-export default function*(updaterIterable, type) {
+export default function*(updaterIterable, ...types) {
   const unwoundIterable = unwindIterable(updaterIterable);
 
   for (let i = 0; i < unwoundIterable.length - 1; i++) {
-    yield dispatch => unwoundIterable[i](forwardTo(dispatch, type));
+    yield dispatch => unwoundIterable[i](forwardTo(dispatch, ...types));
   }
 
   return last(unwoundIterable);

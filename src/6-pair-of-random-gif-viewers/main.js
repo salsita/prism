@@ -60,6 +60,6 @@ const ConnectedView = connect(model => model)(View);
 const store = createElmishStore(update);
 const Application = () => <Provider store={store}><ConnectedView /></Provider>;
 
-store.dispatch(INIT);
+store.dispatch(INIT, 'funny cats');
 
 render(<Application />, document.getElementById('app'));

@@ -22,7 +22,7 @@ export const getRandomGif = topic =>
 // UPDATE
 
 const initialModel = {
-  topic: 'funny cats',
+  topic: '',
   gifUrl: 'assets/waiting.gif'
 };
 
@@ -31,6 +31,9 @@ export function* update(model = initialModel, action) {
 
   switch (type) {
   case INIT:
+    yield getRandomGif(payload);
+    return {...model, topic: payload};
+
   case REQUEST_MORE:
     yield getRandomGif(model.topic);
     return model;
@@ -73,6 +76,6 @@ const ConnectedView = connect(model => ({model}))(View);
 const store = createElmishStore(update);
 const Application = () => <Provider store={store}><ConnectedView /></Provider>;
 
-store.dispatch(INIT);
+store.dispatch(INIT, 'funny cats');
 
 render(<Application />, document.getElementById('app'));
