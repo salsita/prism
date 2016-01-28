@@ -11,7 +11,7 @@ module.exports = {
   entry: [
     'webpack-dev-server/client?http://localhost:3000',
     'webpack/hot/only-dev-server',
-    './src/3-a-dynamic-list-of-counters/main.js'
+    './src/4-a-fancier-list-of-counters/main.js'
   ],
   output: {
     path: path.join(__dirname, './dev'),
