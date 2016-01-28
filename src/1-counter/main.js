@@ -1,7 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore } from 'redux';
 import { connect, Provider } from 'react-redux';
+
+import createElmishStore from '../elm/createElmishStore';
 
 const ACTION_INCREMENT = 'ACTION_INCREMENT';
 const ACTION_DECREMENT = 'ACTION_DECREMENT';
@@ -33,8 +34,7 @@ const View = connect(model => ({model}))(({dispatch, model}) => (
   </div>
 ));
 
-const store = createStore(update);
-
+const store = createElmishStore(update);
 const Application = () => <Provider store={store}><View /></Provider>;
 
 render(<Application />, document.getElementById('app'));
