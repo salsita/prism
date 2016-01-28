@@ -4,15 +4,19 @@ import { connect, Provider } from 'react-redux';
 
 import createElmishStore from '../elm/createElmishStore';
 
+// UPDATE
+
 const ACTION_INCREMENT = 'ACTION_INCREMENT';
 const ACTION_DECREMENT = 'ACTION_DECREMENT';
 
-const update = (model = 0, { type }) => {
+export const update = (model = 0, { type }) => {
   switch (type) {
   case ACTION_INCREMENT:
     return model + 1;
+
   case ACTION_DECREMENT:
     return model - 1;
+
   default:
     return model;
   }
@@ -26,15 +30,20 @@ const countStyle = {
   textAlign: 'center'
 };
 
-const View = connect(model => ({model}))(({dispatch, model}) => (
+// VIEW
+
+export const View = ({dispatch, model}) => (
   <div>
     <button onClick={() => dispatch(ACTION_DECREMENT)}>-</button>
     <div style={countStyle}>{model}</div>
     <button onClick={() => dispatch(ACTION_INCREMENT)}>+</button>
   </div>
-));
+);
 
+// MAIN
+
+const ConnectedView = connect(model => ({model}))(View);
 const store = createElmishStore(update);
-const Application = () => <Provider store={store}><View /></Provider>;
+const Application = () => <Provider store={store}><ConnectedView /></Provider>;
 
 render(<Application />, document.getElementById('app'));
