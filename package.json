@@ -14,10 +14,14 @@
   },
   "dependencies": {
     "babel-runtime": "^5.8.12",
+    "bluebird": "^3.1.5",
     "react": "^0.14.0-rc1",
     "react-dom": "^0.14.0-rc1",
     "react-redux": "^3.0.0-alpha",
-    "redux": "^3.0.0"
+    "redux": "^3.0.0",
+    "redux-side-effects": "^0.2.6",
+    "superagent": "^1.7.2",
+    "superagent-bluebird-promise": "^3.0.0"
   },
   "author": "Tomas Weiss <tomasw@salsitasoft.com>",
   "license": "MIT"

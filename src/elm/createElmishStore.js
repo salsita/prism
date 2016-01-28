@@ -1,4 +1,5 @@
-import { createStore } from 'redux';
+import { compose, createStore } from 'redux';
+import { createEffectCapableStore } from 'redux-side-effects';
 
 const elmEnhancer = storeFactory => (reducer, initialState) => {
   const store = storeFactory(reducer, initialState);
@@ -9,4 +10,11 @@ const elmEnhancer = storeFactory => (reducer, initialState) => {
   };
 };
 
-export default (updater, initialState) => elmEnhancer(createStore)(updater, initialState);
+export default (updater, initialState) => {
+  const storeFactory = compose(
+    createEffectCapableStore,
+    elmEnhancer
+  )(createStore);
+
+  return storeFactory(updater, initialState);
+};
