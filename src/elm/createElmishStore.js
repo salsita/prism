@@ -6,7 +6,7 @@ const elmEnhancer = storeFactory => (reducer, initialState) => {
 
   return {
     ...store,
-    dispatch: (type, payload) => store.dispatch({type, payload})
+    dispatch: (type, payload = {}) => store.dispatch({type, payload})
   };
 };
 

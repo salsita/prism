@@ -13,7 +13,7 @@ const NEW_GIF = 'NEW_GIF';
 
 const randomUrl = topic => `http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=${topic}`;
 
-const getRandomGif = topic =>
+export const getRandomGif = topic =>
   dispatch =>
     request.get(randomUrl(topic))
       .then(response => dispatch(NEW_GIF, response.body.data.image_url));
