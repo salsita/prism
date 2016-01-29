@@ -26,6 +26,6 @@ open http://localhost:3000
 
 # Why not npm?
 
-**This is not a framework**, this is just a proof concept. If you feel like you'd like to see the repo as framework just give us a star. If the repo hits 500 stars, I'll turn this into real library including proper documentation, implementation, versioning, tests, build system, up-to date deps, npm and everything you'd expect.
+**This is not a framework**, this is just a proof of concept. If you feel like you'd like to see the repo as framework just give us a star. If the repo hits 500 stars, I'll turn this into real library including proper documentation, implementation, versioning, tests, build system, up-to date deps, npm and everything you'd expect.
 
 All credits goes to [Dan Abramov](https://github.com/gaearon) as the author of Redux and [Evan Czaplicki](https://github.com/evancz) as the author of Elm.
