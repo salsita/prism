@@ -3,6 +3,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { connect, Provider } from 'react-redux';
+import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import createElmishStore from './elm/createElmishStore';
 import forwardTo from './elm/forwardTo';
@@ -140,6 +141,13 @@ const View = ({ dispatch, page, example1Model, example2Model, example3Model, exa
 
 const ConnectedView = connect(model => model)(View);
 const store = createElmishStore(update);
-const Application = () => <Provider store={store}><ConnectedView /></Provider>;
+const Application = () => (
+  <div>
+    <Provider store={store}><ConnectedView /></Provider>
+    <DebugPanel top right bottom>
+      <DevTools store={store} monitor={LogMonitor} />
+    </DebugPanel>
+  </div>
+);
 
 render(<Application />, document.getElementById('app'));

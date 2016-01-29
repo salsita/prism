@@ -1,5 +1,6 @@
 import { compose, createStore } from 'redux';
 import { createEffectCapableStore } from 'redux-side-effects';
+import { devTools } from 'redux-devtools';
 
 const elmEnhancer = storeFactory => (reducer, initialState) => {
   const store = storeFactory(reducer, initialState);
@@ -19,7 +20,8 @@ const elmEnhancer = storeFactory => (reducer, initialState) => {
 export default (updater, initialState) => {
   const storeFactory = compose(
     createEffectCapableStore,
-    elmEnhancer
+    elmEnhancer,
+    devTools()
   )(createStore);
 
   return storeFactory(updater, initialState);
