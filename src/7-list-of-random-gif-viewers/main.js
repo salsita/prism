@@ -92,7 +92,7 @@ export const View = ({dispatch, model}) => (
     <div style={{display: 'flex', flexWrap: 'wrap'}}>
       {model.gifList.map(item => (
         <RandomGif
-          key={item.id}
+          key={item.uid}
           dispatch={forwardTo(dispatch, SUBMSG, item.uid)}
           model={item.model} />
       ))}

@@ -1,5 +1,3 @@
-// This is just for development
-
 import React from 'react';
 import { render } from 'react-dom';
 import { connect, Provider } from 'react-redux';
@@ -38,16 +36,59 @@ const update = function*(model = initialModel, action) {
 
   switch (type) {
   case CHANGE_PAGE:
-    return {
-      page: payload,
-      example1Model: yield* mapEffects(firstExampleUpdate(model.example1Model, action), EXAMPLE_1),
-      example2Model: yield* mapEffects(secondExampleUpdate(model.example2Model, action), EXAMPLE_2),
-      example3Model: yield* mapEffects(thirdExampleUpdate(model.example3Model, payload), EXAMPLE_3),
-      example4Model: yield* mapEffects(fourthExampleUpdate(model.example4Model, payload), EXAMPLE_4),
-      example5Model: yield* mapEffects(fifthExampleUpdate(model.example5Model, {type: INIT, payload: 'funny cats'}), EXAMPLE_5),
-      example6Model: yield* mapEffects(sixthExampleUpdate(model.example6Model, {type: INIT, payload: 'funny cats'}), EXAMPLE_6),
-      example7Model: yield* mapEffects(seventhExampleUpdate(model.example7Model, payload), EXAMPLE_7)
-    };
+
+    switch (payload) {
+    case INDEX_PAGE:
+      return {
+        page: payload
+      };
+
+    case EXAMPLE_1:
+      return {
+        page: payload,
+        example1Model: yield* mapEffects(firstExampleUpdate(model.example1Model, action), EXAMPLE_1)
+      };
+
+    case EXAMPLE_2:
+      return {
+        page: payload,
+        example2Model: yield* mapEffects(secondExampleUpdate(model.example2Model, action), EXAMPLE_2)
+      };
+
+    case EXAMPLE_3:
+      return {
+        page: payload,
+        example3Model: yield* mapEffects(thirdExampleUpdate(model.example3Model, payload), EXAMPLE_3)
+      };
+
+    case EXAMPLE_4:
+      return {
+        page: payload,
+        example4Model: yield* mapEffects(fourthExampleUpdate(model.example4Model, payload), EXAMPLE_4)
+      };
+
+    case EXAMPLE_5:
+      return {
+        page: payload,
+        example5Model: yield* mapEffects(fifthExampleUpdate(model.example5Model, {type: INIT, payload: 'funny cats'}), EXAMPLE_5)
+      };
+
+    case EXAMPLE_6:
+      return {
+        page: payload,
+        example6Model: yield* mapEffects(sixthExampleUpdate(model.example6Model, {type: INIT, payload: 'funny cats'}), EXAMPLE_6)
+      };
+
+    case EXAMPLE_7:
+      return {
+        page: payload,
+        example7Model: yield* mapEffects(seventhExampleUpdate(model.example7Model, payload), EXAMPLE_7)
+      };
+
+    default:
+      return model;
+    }
+    break;
 
   case EXAMPLE_1:
     return {
@@ -108,7 +149,7 @@ const IndexPage = ({ dispatch }) => (
   </ol>
 );
 
-const View = ({ dispatch, page, example1Model, example2Model, example3Model, example5Model, example6Model, example7Model }) => {
+const getContentView = ({ dispatch, page, example1Model, example2Model, example3Model, example4Model, example5Model, example6Model, example7Model }) => {
   switch (page) {
   case INDEX_PAGE:
     return <IndexPage dispatch={dispatch} />;
@@ -137,6 +178,16 @@ const View = ({ dispatch, page, example1Model, example2Model, example3Model, exa
   default:
     return false;
   }
+};
+
+const View = props => {
+  return (
+    <div>
+      {getContentView(props)}
+      <br />
+      {props.page !== INDEX_PAGE ? <button onClick={() => props.dispatch(CHANGE_PAGE, INDEX_PAGE)}>Back</button> : false}
+    </div>
+  );
 };
 
 const ConnectedView = connect(model => model)(View);
