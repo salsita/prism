@@ -1,27 +1,20 @@
 export default (dispatch, ...types) => (action, payload) => {
-  let a = {};
-  if (types.length === 1) {
-    a = {
-      type: types[0],
-      payload: {
-        type: action,
-        payload
-      }
-    };
-  } else if (types.length === 2) {
-    a = {
-      type: types[0],
-      payload: {
-        type: types[1],
+  const recur = index => {
+    if (types.length === index + 1) {
+      return {
+        type: types[index],
         payload: {
           type: action,
           payload
         }
-      }
-    };
-  } else {
-    throw new Error('err');
-  }
+      };
+    } else {
+      return {
+        type: types[index],
+        payload: recur(index + 1)
+      };
+    }
+  };
 
-  dispatch(a);
+  dispatch(recur(0));
 };
