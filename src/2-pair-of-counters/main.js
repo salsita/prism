@@ -1,8 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
-import { connect, Provider } from 'react-redux';
 
-import createElmishStore from '../elm/createElmishStore';
 import forwardTo from '../elm/forwardTo';
 import { View as Counter, update as counterUpdate } from '../1-counter/main';
 
@@ -12,20 +9,20 @@ const RESET = 'RESET';
 const TOP = 'TOP';
 const BOTTOM = 'BOTTOM';
 
-export const update = (model = {}, action) => {
+export const update = function*(model = {}, action) {
   const { type, payload } = action;
 
   switch (type) {
   case TOP:
     return {
       ...model,
-      topCounter: counterUpdate(model.topCounter, payload)
+      topCounter: yield* counterUpdate(model.topCounter, payload)
     };
 
   case BOTTOM:
     return {
       ...model,
-      bottomCounter: counterUpdate(model.bottomCounter, payload)
+      bottomCounter: yield* counterUpdate(model.bottomCounter, payload)
     };
 
   case RESET:
@@ -33,26 +30,18 @@ export const update = (model = {}, action) => {
     // No need for {topCounter: 0, bottomCounter: 0}
     // we better let the state shape encapsulated in the Counter component
     return {
-      topCounter: counterUpdate(undefined, action),
-      bottomCounter: counterUpdate(undefined, action)
+      topCounter: yield* counterUpdate(undefined, action),
+      bottomCounter: yield* counterUpdate(undefined, action)
     };
   }
 };
 
 // VIEW
 
-export const View = ({dispatch, topCounter, bottomCounter}) => (
+export const View = ({dispatch, model}) => (
   <div>
-    <Counter model={topCounter} dispatch={forwardTo(dispatch, TOP)} />
-    <Counter model={bottomCounter} dispatch={forwardTo(dispatch, BOTTOM)} />
+    <Counter model={model.topCounter} dispatch={forwardTo(dispatch, TOP)} />
+    <Counter model={model.bottomCounter} dispatch={forwardTo(dispatch, BOTTOM)} />
     <button onClick={() => dispatch(RESET)}>RESET</button>
   </div>
 );
-
-// MAIN
-
-const ConnectedView = connect(model => model)(View);
-const store = createElmishStore(update);
-const Application = () => <Provider store={store}><ConnectedView /></Provider>;
-
-render(<Application />, document.getElementById('app'));

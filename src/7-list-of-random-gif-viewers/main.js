@@ -1,8 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
-import { connect, Provider } from 'react-redux';
 
-import createElmishStore from '../elm/createElmishStore';
 import forwardTo from '../elm/forwardTo';
 import mapEffects from '../elm/mapEffects';
 import generatorMap from '../elm/generatorMap';
@@ -84,16 +81,16 @@ const inputStyle = {
   textAlign: 'center'
 };
 
-export const View = ({dispatch, topic, gifList}) => (
+export const View = ({dispatch, model}) => (
   <div>
     <input
       placeholder="What kind of gifs do you want?"
-      value={topic}
+      value={model.topic}
       onKeyDown={ev => ev.keyCode === 13 ? dispatch(CREATE) : null}
       onChange={ev => dispatch(TOPIC, ev.target.value)}
       style={inputStyle} />
     <div style={{display: 'flex', flexWrap: 'wrap'}}>
-      {gifList.map(item => (
+      {model.gifList.map(item => (
         <RandomGif
           key={item.id}
           dispatch={forwardTo(dispatch, SUBMSG, item.uid)}
@@ -102,11 +99,3 @@ export const View = ({dispatch, topic, gifList}) => (
     </div>
   </div>
 );
-
-// MAIN
-
-const ConnectedView = connect(model => model)(View);
-const store = createElmishStore(update);
-const Application = () => <Provider store={store}><ConnectedView /></Provider>;
-
-render(<Application />, document.getElementById('app'));

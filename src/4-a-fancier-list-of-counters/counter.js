@@ -1,15 +1,11 @@
 import React from 'react';
-import { render } from 'react-dom';
-import { connect, Provider } from 'react-redux';
-
-import createElmishStore from '../elm/createElmishStore';
 
 // UPDATE
 
 const ACTION_INCREMENT = 'ACTION_INCREMENT';
 const ACTION_DECREMENT = 'ACTION_DECREMENT';
 
-export const update = (model = 0, { type }) => {
+export const update = function*(model = 0, { type }) {
   switch (type) {
   case ACTION_INCREMENT:
     return model + 1;
@@ -49,11 +45,3 @@ export const ViewWithRemoveButton = ({dispatch, model, remove}) => (
     <button onClick={remove}>X</button>
   </div>
 );
-
-// MAIN
-
-const ConnectedView = connect(model => ({model}))(View);
-const store = createElmishStore(update);
-const Application = () => <Provider store={store}><ConnectedView /></Provider>;
-
-render(<Application />, document.getElementById('app'));

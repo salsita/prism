@@ -1,8 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
-import { connect, Provider } from 'react-redux';
 
-import createElmishStore from '../elm/createElmishStore';
 import forwardTo from '../elm/forwardTo';
 import mapEffects from '../elm/mapEffects';
 import { View as RandomGif, update as randomGifUpdate } from '../5-random-gif-viewer/main';
@@ -44,22 +41,11 @@ export function* update(incomingModel, action) {
   }
 }
 
-
 // VIEW
 
-export const View = ({dispatch, left, right}) => (
+export const View = ({dispatch, model}) => (
   <div style={{display: 'flex'}}>
-    <RandomGif dispatch={forwardTo(dispatch, LEFT)} model={left} />
-    <RandomGif dispatch={forwardTo(dispatch, RIGHT)} model={right} />
+    <RandomGif dispatch={forwardTo(dispatch, LEFT)} model={model.left} />
+    <RandomGif dispatch={forwardTo(dispatch, RIGHT)} model={model.right} />
   </div>
 );
-
-// MAIN
-
-const ConnectedView = connect(model => model)(View);
-const store = createElmishStore(update);
-const Application = () => <Provider store={store}><ConnectedView /></Provider>;
-
-store.dispatch(INIT, 'funny cats');
-
-render(<Application />, document.getElementById('app'));

@@ -16,5 +16,6 @@ export default (dispatch, ...types) => (action, payload) => {
     }
   };
 
-  dispatch(recur(0));
+  const composed = recur(0);
+  dispatch(composed.type, composed.payload);
 };

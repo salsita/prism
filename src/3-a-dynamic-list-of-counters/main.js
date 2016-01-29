@@ -1,9 +1,7 @@
 import React from 'react';
-import { render } from 'react-dom';
-import { connect, Provider } from 'react-redux';
 
-import createElmishStore from '../elm/createElmishStore';
 import forwardTo from '../elm/forwardTo';
+import generatorMap from '../elm/generatorMap';
 import { View as Counter, update as counterUpdate } from '../1-counter/main';
 
 // UPDATE
@@ -17,11 +15,11 @@ const initialModel = {
   nextId: 0
 };
 
-const insert = (model, action) => {
+const insert = function*(model, action) {
   const { counters, nextId } = model;
   const newCounter = {
     id: nextId,
-    model: counterUpdate(undefined, action)
+    model: yield* counterUpdate(undefined, action)
   };
 
   return {
@@ -30,7 +28,7 @@ const insert = (model, action) => {
   };
 };
 
-const remove = model => {
+const remove = function*(model) {
   const counters = [...model.counters];
   counters.pop();
 
@@ -40,22 +38,22 @@ const remove = model => {
   };
 };
 
-export const update = (model = initialModel, action) => {
+export const update = function* (model = initialModel, action) {
   const { type, payload } = action;
 
   switch (type) {
   case INSERT:
-    return insert(model, action);
+    return yield* insert(model, action);
 
   case REMOVE:
-    return remove(model);
+    return yield* remove(model);
 
   case MODIFY:
     return {
       ...model,
-      counters: model.counters.map(counter => {
+      counters: yield* generatorMap(model.counters, function*(counter) {
         if (counter.id === payload.type) {
-          return {...counter, model: counterUpdate(counter.model, payload.payload)};
+          return {...counter, model: yield* counterUpdate(counter.model, payload.payload)};
         } else {
           return counter;
         }
@@ -71,18 +69,11 @@ export const update = (model = initialModel, action) => {
 
 const viewCounter = (dispatch, model, id) => <Counter key={id} dispatch={forwardTo(forwardTo(dispatch, MODIFY), id)} model={model} />;
 
-export const View = ({dispatch, counters}) => (
+export const View = ({dispatch, model}) => (
   <div>
     <button onClick={() => dispatch(REMOVE)}>Remove</button>
     <button onClick={() => dispatch(INSERT)}>Add</button>
-    {counters.map(counter => viewCounter(dispatch, counter.model, counter.id))}
+    {model.counters.map(counter => viewCounter(dispatch, counter.model, counter.id))}
   </div>
 );
 
-// MAIN
-
-const ConnectedView = connect(model => model)(View);
-const store = createElmishStore(update);
-const Application = () => <Provider store={store}><ConnectedView /></Provider>;
-
-render(<Application />, document.getElementById('app'));

@@ -1,9 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
-import { connect, Provider } from 'react-redux';
 import request from 'superagent-bluebird-promise';
-
-import createElmishStore from '../elm/createElmishStore';
 
 const INIT = 'INIT';
 const REQUEST_MORE = 'REQUEST_MORE';
@@ -70,12 +66,3 @@ export const View = ({dispatch, model}) => (
   </div>
 );
 
-// MAIN
-
-const ConnectedView = connect(model => ({model}))(View);
-const store = createElmishStore(update);
-const Application = () => <Provider store={store}><ConnectedView /></Provider>;
-
-store.dispatch(INIT, 'funny cats');
-
-render(<Application />, document.getElementById('app'));
