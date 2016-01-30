@@ -3,11 +3,10 @@ import React from 'react';
 import forwardTo from '../elm/forwardTo';
 import mapEffects from '../elm/mapEffects';
 import generatorMap from '../elm/generatorMap';
-import { View as RandomGif, update as randomGifUpdate } from '../5-random-gif-viewer/main';
+import { View as RandomGif, update as randomGifUpdate, init } from '../5-random-gif-viewer/main';
 
 // UPDATE
 
-const INIT = 'INIT';
 const CREATE = 'CREATE';
 const TOPIC = 'TOPIC';
 const SUBMSG = 'SUBMSG';
@@ -20,7 +19,7 @@ const initialAppState = {
 
 const create = function*(model) {
   const { uid } = model;
-  const randomGifModel = yield* mapEffects(randomGifUpdate(undefined, {type: INIT, payload: model.topic}), SUBMSG, uid);
+  const randomGifModel = yield* mapEffects(init(model.topic), SUBMSG, uid);
 
   return {
     ...model,

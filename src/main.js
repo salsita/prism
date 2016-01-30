@@ -2,6 +2,9 @@ import React from 'react';
 import { render } from 'react-dom';
 import { connect, Provider } from 'react-redux';
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
+import { routeActions, UPDATE_LOCATION } from 'react-router-redux';
+import { Router, Route } from 'react-router';
+import { createHashHistory } from 'history';
 
 import createElmishStore from './elm/createElmishStore';
 import forwardTo from './elm/forwardTo';
@@ -11,190 +14,154 @@ import { View as FirstExampleView, update as firstExampleUpdate } from './1-coun
 import { View as SecondExampleView, update as secondExampleUpdate } from './2-pair-of-counters/main';
 import { View as ThirdExampleView, update as thirdExampleUpdate } from './3-a-dynamic-list-of-counters/main';
 import { View as FourthExampleView, update as fourthExampleUpdate } from './4-a-fancier-list-of-counters/main';
-import { View as FifthExampleView, update as fifthExampleUpdate } from './5-random-gif-viewer/main';
-import { View as SixthExampleView, update as sixthExampleUpdate } from './6-pair-of-random-gif-viewers/main';
+import { View as FifthExampleView, update as fifthExampleUpdate, init as fifthInit } from './5-random-gif-viewer/main';
+import { View as SixthExampleView, update as sixthExampleUpdate, init as sixthInit } from './6-pair-of-random-gif-viewers/main';
 import { View as SeventhExampleView, update as seventhExampleUpdate } from './7-list-of-random-gif-viewers/main';
 
-const INDEX_PAGE = '#/';
-const EXAMPLE_1 = '#/1-counter';
-const EXAMPLE_2 = '#/2-pair-of-counters';
-const EXAMPLE_3 = '#/3-dynamic-list-of-counters';
-const EXAMPLE_4 = '#/4-fancier-list-of-counters';
-const EXAMPLE_5 = '#/5-random-gif-viewer';
-const EXAMPLE_6 = '#/6-pair-of-random-gif-viewers';
-const EXAMPLE_7 = '#/7-list-of-random-gif-viewers';
+const INDEX_PAGE = '/';
+const INIT = 'INIT';
+
+const EXAMPLE_1 = {
+  id: '/1-counter',
+  title: 'Counter',
+  View: FirstExampleView,
+  update: firstExampleUpdate
+};
+
+const EXAMPLE_2 = {
+  id: '/2-counter',
+  title: 'Pair of Counters',
+  View: SecondExampleView,
+  update: secondExampleUpdate
+};
+
+const EXAMPLE_3 = {
+  id: '/3-counter',
+  title: 'Dynamic list of Counters',
+  View: ThirdExampleView,
+  update: thirdExampleUpdate
+};
+
+const EXAMPLE_4 = {
+  id: '/4-a-fancier-list-of-counters',
+  title: 'Fancier list of Counters',
+  View: FourthExampleView,
+  update: fourthExampleUpdate
+};
+
+const EXAMPLE_5 = {
+  id: '/5-random-gif-viewer',
+  title: 'Random GIF Viewer',
+  View: FifthExampleView,
+  update: fifthExampleUpdate
+};
+
+const EXAMPLE_6 = {
+  id: '/6-pair-of-random-gif-viewers',
+  title: 'Pair of random GIF Viewers',
+  View: SixthExampleView,
+  update: sixthExampleUpdate
+};
+
+const EXAMPLE_7 = {
+  id: '/7-list-of-random-gif-viewers',
+  title: 'List of random GIF Viewers',
+  View: SeventhExampleView,
+  update: seventhExampleUpdate
+};
+
+const PAGES = [
+  EXAMPLE_1,
+  EXAMPLE_2,
+  EXAMPLE_3,
+  EXAMPLE_4,
+  EXAMPLE_5,
+  EXAMPLE_6,
+  EXAMPLE_7
+];
 
 const initialModel = {
   page: INDEX_PAGE
 };
 
-const INIT = 'INIT';
-const CHANGE_PAGE = 'CHANGE_PAGE';
-
 const update = function*(model = initialModel, action) {
   const { type, payload } = action;
 
-  switch (type) {
-  case CHANGE_PAGE:
+  if (type === UPDATE_LOCATION) {
+    const { pathname } = payload;
+    const view = PAGES.find(page => page.id === pathname);
 
-    switch (payload) {
-    case INDEX_PAGE:
+    switch (pathname) {
+    case EXAMPLE_1.id:
+    case EXAMPLE_2.id:
+    case EXAMPLE_3.id:
+    case EXAMPLE_4.id:
+    case EXAMPLE_7.id:
       return {
-        page: payload
+        ...model,
+        [view.id]: yield* mapEffects(view.update(model[view.id], action), pathname)
       };
 
-    case EXAMPLE_1:
+    case EXAMPLE_5.id:
       return {
-        page: payload,
-        example1Model: yield* mapEffects(firstExampleUpdate(model.example1Model, action), EXAMPLE_1)
+        ...model,
+        [view.id]: yield* mapEffects(fifthInit('funny cats'), pathname)
       };
 
-    case EXAMPLE_2:
+    case EXAMPLE_6.id:
       return {
-        page: payload,
-        example2Model: yield* mapEffects(secondExampleUpdate(model.example2Model, action), EXAMPLE_2)
+        ...model,
+        [view.id]: yield* mapEffects(sixthInit('funny cats'), pathname)
       };
 
-    case EXAMPLE_3:
-      return {
-        page: payload,
-        example3Model: yield* mapEffects(thirdExampleUpdate(model.example3Model, payload), EXAMPLE_3)
-      };
-
-    case EXAMPLE_4:
-      return {
-        page: payload,
-        example4Model: yield* mapEffects(fourthExampleUpdate(model.example4Model, payload), EXAMPLE_4)
-      };
-
-    case EXAMPLE_5:
-      return {
-        page: payload,
-        example5Model: yield* mapEffects(fifthExampleUpdate(model.example5Model, {type: INIT, payload: 'funny cats'}), EXAMPLE_5)
-      };
-
-    case EXAMPLE_6:
-      return {
-        page: payload,
-        example6Model: yield* mapEffects(sixthExampleUpdate(model.example6Model, {type: INIT, payload: 'funny cats'}), EXAMPLE_6)
-      };
-
-    case EXAMPLE_7:
-      return {
-        page: payload,
-        example7Model: yield* mapEffects(seventhExampleUpdate(model.example7Model, payload), EXAMPLE_7)
-      };
 
     default:
       return model;
     }
-    break;
+  } else {
+    const view = PAGES.find(page => page.id === type);
 
-  case EXAMPLE_1:
-    return {
-      ...model,
-      example1Model: yield* mapEffects(firstExampleUpdate(model.example1Model, payload), EXAMPLE_1)
-    };
-
-  case EXAMPLE_2:
-    return {
-      ...model,
-      example2Model: yield* mapEffects(secondExampleUpdate(model.example2Model, payload), EXAMPLE_2)
-    };
-
-  case EXAMPLE_3:
-    return {
-      ...model,
-      example3Model: yield* mapEffects(thirdExampleUpdate(model.example3Model, payload), EXAMPLE_3)
-    };
-
-  case EXAMPLE_4:
-    return {
-      ...model,
-      example4Model: yield* mapEffects(fourthExampleUpdate(model.example4Model, payload), EXAMPLE_4)
-    };
-
-  case EXAMPLE_5:
-    return {
-      ...model,
-      example5Model: yield* mapEffects(fifthExampleUpdate(model.example5Model, payload), EXAMPLE_5)
-    };
-
-  case EXAMPLE_6:
-    return {
-      ...model,
-      example6Model: yield* mapEffects(sixthExampleUpdate(model.example6Model, payload), EXAMPLE_6)
-    };
-
-  case EXAMPLE_7:
-    return {
-      ...model,
-      example7Model: yield* mapEffects(seventhExampleUpdate(model.example7Model, payload), EXAMPLE_7)
-    };
-
-  default:
-    return model;
+    if (view) {
+      return {
+        ...model,
+        [view.id]: yield* mapEffects(view.update(model[view.id], payload), type)
+      };
+    } else {
+      return model;
+    }
   }
 };
 
 const IndexPage = ({ dispatch }) => (
   <ol>
-    <li><a onClick={() => dispatch(CHANGE_PAGE, EXAMPLE_1)}>Counter</a></li>
-    <li><a onClick={() => dispatch(CHANGE_PAGE, EXAMPLE_2)}>Pair of Counters</a></li>
-    <li><a onClick={() => dispatch(CHANGE_PAGE, EXAMPLE_3)}>Dynamic list of counters</a></li>
-    <li><a onClick={() => dispatch(CHANGE_PAGE, EXAMPLE_4)}>Fancier list of counters</a></li>
-    <li><a onClick={() => dispatch(CHANGE_PAGE, EXAMPLE_5)}>Random GIF Viewer</a></li>
-    <li><a onClick={() => dispatch(CHANGE_PAGE, EXAMPLE_6)}>Pair of random GIF Viewers</a></li>
-    <li><a onClick={() => dispatch(CHANGE_PAGE, EXAMPLE_7)}>List of random GIF Viewers</a></li>
+    {PAGES.map(view => <li><a onClick={() => dispatch(routeActions.push(view.id))}>{view.title}</a></li>)}
   </ol>
 );
 
-const getContentView = ({ dispatch, page, example1Model, example2Model, example3Model, example4Model, example5Model, example6Model, example7Model }) => {
-  switch (page) {
-  case INDEX_PAGE:
-    return <IndexPage dispatch={dispatch} />;
+const ConnectedIndexPage = connect(() => ({}))(props => <IndexPage {...props} />);
 
-  case EXAMPLE_1:
-    return <FirstExampleView dispatch={forwardTo(dispatch, EXAMPLE_1)} model={example1Model} />;
+const buildComponent = page => connect(appState => ({model: appState.model[page.id]}))(
+  ({model, dispatch}) => <page.View dispatch={forwardTo(dispatch, page.id)} model={model} />);
 
-  case EXAMPLE_2:
-    return <SecondExampleView dispatch={forwardTo(dispatch, EXAMPLE_2)} model={example2Model} />;
-
-  case EXAMPLE_3:
-    return <ThirdExampleView dispatch={forwardTo(dispatch, EXAMPLE_3)} model={example3Model} />;
-
-  case EXAMPLE_4:
-    return <FourthExampleView dispatch={forwardTo(dispatch, EXAMPLE_4)} model={example4Model} />;
-
-  case EXAMPLE_5:
-    return <FifthExampleView dispatch={forwardTo(dispatch, EXAMPLE_5)} model={example5Model} />;
-
-  case EXAMPLE_6:
-    return <SixthExampleView dispatch={forwardTo(dispatch, EXAMPLE_6)} model={example6Model} />;
-
-  case EXAMPLE_7:
-    return <SeventhExampleView dispatch={forwardTo(dispatch, EXAMPLE_7)} model={example7Model} />;
-
-  default:
-    return false;
-  }
-};
-
-const View = props => {
+const MainView = ({ history }) => {
   return (
-    <div>
-      {getContentView(props)}
-      <br />
-      {props.page !== INDEX_PAGE ? <button onClick={() => props.dispatch(CHANGE_PAGE, INDEX_PAGE)}>Back</button> : false}
-    </div>
+    <Router history={history}>
+      <Route path={INDEX_PAGE} component={ConnectedIndexPage} />
+      <Route path={INDEX_PAGE}>
+        {PAGES.map(page => <Route path={page.id} component={buildComponent(page)} />)}
+      </Route>
+    </Router>
   );
 };
 
-const ConnectedView = connect(model => model)(View);
-const store = createElmishStore(update);
+const history = createHashHistory();
+const store = createElmishStore(update, history);
+
 const Application = () => (
   <div>
-    <Provider store={store}><ConnectedView /></Provider>
+    <Provider store={store}>
+      <MainView history={history} />
+    </Provider>
     <DebugPanel top right bottom>
       <DevTools store={store} monitor={LogMonitor} />
     </DebugPanel>

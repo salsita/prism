@@ -1,6 +1,8 @@
-import { compose, createStore } from 'redux';
-import { createEffectCapableStore } from 'redux-side-effects';
+import { applyMiddleware, compose, createStore } from 'redux';
+import { createEffectCapableStore, combineReducers } from 'redux-side-effects';
 import { devTools } from 'redux-devtools';
+import { syncHistory, routeReducer } from 'react-router-redux';
+
 
 const elmEnhancer = storeFactory => (reducer, initialState) => {
   const store = storeFactory(reducer, initialState);
@@ -17,12 +19,20 @@ const elmEnhancer = storeFactory => (reducer, initialState) => {
   };
 };
 
-export default (updater, initialState) => {
+export default (updater, history, initialState) => {
+  const reduxRouterMiddleware = syncHistory(history);
+
   const storeFactory = compose(
     createEffectCapableStore,
     elmEnhancer,
+    applyMiddleware(reduxRouterMiddleware),
     devTools()
   )(createStore);
 
-  return storeFactory(updater, initialState);
+  const reducer = combineReducers({
+    model: updater,
+    routing: routeReducer
+  });
+
+  return storeFactory(reducer, initialState);
 };

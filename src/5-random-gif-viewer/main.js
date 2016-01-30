@@ -1,7 +1,6 @@
 import React from 'react';
 import request from 'superagent-bluebird-promise';
 
-const INIT = 'INIT';
 const REQUEST_MORE = 'REQUEST_MORE';
 const NEW_GIF = 'NEW_GIF';
 
@@ -22,14 +21,19 @@ const initialModel = {
   gifUrl: 'assets/waiting.gif'
 };
 
+export function* init(topic = '') {
+  yield getRandomGif(topic);
+
+  return {
+    ...initialModel,
+    topic
+  };
+}
+
 export function* update(model = initialModel, action) {
   const { type, payload } = action;
 
   switch (type) {
-  case INIT:
-    yield getRandomGif(payload);
-    return {...model, topic: payload};
-
   case REQUEST_MORE:
     yield getRandomGif(model.topic);
     return model;

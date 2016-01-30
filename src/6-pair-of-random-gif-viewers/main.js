@@ -2,37 +2,33 @@ import React from 'react';
 
 import forwardTo from '../elm/forwardTo';
 import mapEffects from '../elm/mapEffects';
-import { View as RandomGif, update as randomGifUpdate } from '../5-random-gif-viewer/main';
+import { View as RandomGif, update as randomGifUpdate, init as initRandomGifUpdate } from '../5-random-gif-viewer/main';
 
 // UPDATE
 
-const INIT = 'INIT';
 const LEFT = 'LEFT';
 const RIGHT = 'RIGHT';
 
-export function* update(incomingModel, action) {
-  const model = incomingModel || {
-    left: yield* randomGifUpdate(undefined, action),
-    right: yield* randomGifUpdate(undefined, action)
+export function* init(topic) {
+  return {
+    left: yield* mapEffects(initRandomGifUpdate(topic), LEFT),
+    right: yield* mapEffects(initRandomGifUpdate(topic), RIGHT)
   };
+}
 
+export function* update(model = {}, action) {
   const { type, payload } = action;
-  switch (type) {
-  case INIT:
-    return {
-      left: yield* mapEffects(randomGifUpdate(model.left, action), LEFT),
-      right: yield* mapEffects(randomGifUpdate(model.right, action), RIGHT)
-    };
 
+  switch (type) {
   case LEFT:
     return {
-      ...incomingModel,
+      ...model,
       left: yield* mapEffects(randomGifUpdate(model.left, payload), LEFT)
     };
 
   case RIGHT:
     return {
-      ...incomingModel,
+      ...model,
       right: yield* mapEffects(randomGifUpdate(model.right, payload), RIGHT)
     };
 
