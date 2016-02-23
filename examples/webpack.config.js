@@ -3,9 +3,9 @@ var webpack = require('webpack');
 
 module.exports = {
   debug: true,
+  target: 'web',
   devtool: 'sourcemap',
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin()
   ],
   entry: [
@@ -20,11 +20,11 @@ module.exports = {
   module: {
     loaders: [{
       test: /\.jsx$|\.js$/,
-      loaders: ['react-hot', 'babel'],
+      loaders: ['babel-loader'],
       include: path.join(__dirname, './src')
     }]
   },
   resolve: {
-    extensions: ['', '.js']
+    extensions: ['', '.js', '.jsx']
   }
 };

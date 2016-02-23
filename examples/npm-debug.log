@@ -1,0 +1,26 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/tomasweiss/.nvm/versions/node/v5.0.0/bin/node',
+1 verbose cli   '/Users/tomasweiss/.nvm/versions/node/v5.0.0/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'build:lib' ]
+2 info using npm@3.3.6
+3 info using node@v5.0.0
+4 verbose stack Error: missing script: build:lib
+4 verbose stack     at run (/Users/tomasweiss/.nvm/versions/node/v5.0.0/lib/node_modules/npm/lib/run-script.js:148:19)
+4 verbose stack     at /Users/tomasweiss/.nvm/versions/node/v5.0.0/lib/node_modules/npm/lib/run-script.js:58:5
+4 verbose stack     at /Users/tomasweiss/.nvm/versions/node/v5.0.0/lib/node_modules/npm/node_modules/read-package-json/read-json.js:345:5
+4 verbose stack     at checkBinReferences_ (/Users/tomasweiss/.nvm/versions/node/v5.0.0/lib/node_modules/npm/node_modules/read-package-json/read-json.js:309:45)
+4 verbose stack     at final (/Users/tomasweiss/.nvm/versions/node/v5.0.0/lib/node_modules/npm/node_modules/read-package-json/read-json.js:343:3)
+4 verbose stack     at then (/Users/tomasweiss/.nvm/versions/node/v5.0.0/lib/node_modules/npm/node_modules/read-package-json/read-json.js:113:5)
+4 verbose stack     at ReadFileContext.<anonymous> (/Users/tomasweiss/.nvm/versions/node/v5.0.0/lib/node_modules/npm/node_modules/read-package-json/read-json.js:284:20)
+4 verbose stack     at ReadFileContext.callback (/Users/tomasweiss/.nvm/versions/node/v5.0.0/lib/node_modules/npm/node_modules/graceful-fs/graceful-fs.js:76:16)
+4 verbose stack     at FSReqWrap.readFileAfterOpen [as oncomplete] (fs.js:324:13)
+5 verbose cwd /Users/tomasweiss/dev/redux-elm/examples
+6 error Darwin 15.2.0
+7 error argv "/Users/tomasweiss/.nvm/versions/node/v5.0.0/bin/node" "/Users/tomasweiss/.nvm/versions/node/v5.0.0/bin/npm" "run" "build:lib"
+8 error node v5.0.0
+9 error npm  v3.3.6
+10 error missing script: build:lib
+11 error If you need help, you may report this error at:
+11 error     <https://github.com/npm/npm/issues>
+12 verbose exit [ 1, true ]
