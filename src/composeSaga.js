@@ -4,11 +4,12 @@ import unwrap from './unwrap';
 
 // TODO: opinionated
 
-export default (saga, pattern) => iterable => iterable
-  .filter(({ action }) => !!unwrap(action, pattern))
-  .flatMap(input => {
-    const unwrapped = unwrap(input.action, pattern);
+export default (saga, pattern) => iterable => {
+  const compiledUnwrap = unwrap(pattern);
 
-    return saga(Observable.of({ ...input, action: unwrapped }))
-      .map(action => wrap(action, pattern, unwrapped.match));
-  });
+  return iterable
+    .map(input => ({ ...input, action: compiledUnwrap(input.action) }))
+    .filter(input => !!input.action)
+    .flatMap(input => saga(Observable.of(input))
+      .map(action => wrap(action, pattern, input.action.match)));
+};

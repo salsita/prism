@@ -5,8 +5,8 @@ export default initialModel => {
 
   const reducer = (model = initialModel, action) => {
     if (action) {
-      return updaters.reduce((partialModel, { updater, pattern }) => {
-        const unwrappedAction = unwrap(action, pattern);
+      return updaters.reduce((partialModel, { updater, compiledUnwrap }) => {
+        const unwrappedAction = compiledUnwrap(action);
 
         if (unwrappedAction) {
           return updater(partialModel, unwrappedAction);
@@ -21,8 +21,8 @@ export default initialModel => {
 
   reducer.case = (pattern, updater) => {
     updaters.push({
-      pattern,
-      updater
+      updater,
+      compiledUnwrap: unwrap(pattern)
     });
 
     return reducer;

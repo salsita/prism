@@ -1,26 +1,28 @@
-import parsePattern from './parsePattern';
+import compilePattern from './compilePattern';
 
 const last = arr => arr[arr.length - 1];
 
-export default (action, pattern) => {
-  const parsedPattern = parsePattern(pattern);
+export default pattern => {
+  const compiledPattern = compilePattern(pattern);
 
-  const regExpMatch = action.type.match(parsedPattern.regExp);
-  if (regExpMatch) {
-    regExpMatch.shift();
-    const type = last(regExpMatch);
+  return action => {
+    const regExpMatch = action.type.match(compiledPattern.regExp);
+    if (regExpMatch) {
+      regExpMatch.shift();
+      const type = last(regExpMatch);
 
-    const match = parsedPattern
-      .patterns
-      .filter(current => current.dynamic)
-      .reduce((memo, current, index) => ({ ...memo, [current.name]: regExpMatch[index] }), {});
+      const match = compiledPattern
+        .patterns
+        .filter(current => current.dynamic)
+        .reduce((memo, current, index) => ({ ...memo, [current.name]: regExpMatch[index] }), {});
 
-    return {
-      ...action,
-      type,
-      match
-    };
-  } else {
-    return false;
-  }
+      return {
+        ...action,
+        type,
+        match
+      };
+    } else {
+      return false;
+    }
+  };
 };
