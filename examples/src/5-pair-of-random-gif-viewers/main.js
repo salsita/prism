@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react';
 import { Observable } from 'rxjs';
 
-import { patternMatch, forwardTo, composeSaga } from 'redux-elm';
+import { patternMatch, forwardTo } from 'redux-elm';
 import { View as RandomGif, update as randomGifUpdate, saga as randomGifSaga, Actions as RandomGifActions } from '../4-random-gif-viewer/main';
+import composeSaga from '../composeSaga';
 
 // UPDATE
 

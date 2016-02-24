@@ -7,10 +7,11 @@ import LogMonitor from 'redux-devtools-log-monitor';
 import DockMonitor from 'redux-devtools-dock-monitor';
 import { syncHistoryWithStore, routerReducer as routing, LOCATION_CHANGE } from 'react-router-redux';
 import { hashHistory, Router, Route, Link } from 'react-router';
-import { forwardTo, patternMatch, composeSaga } from 'redux-elm';
+import { forwardTo, patternMatch } from 'redux-elm';
 import sagaMiddleware from 'redux-saga-rxjs';
 import { Observable } from 'rxjs';
 
+import composeSaga from './composeSaga';
 import { View as FirstExampleView, update as firstExampleUpdate } from './1-counter/main';
 import { View as SecondExampleView, update as secondExampleUpdate } from './2-pair-of-counters/main';
 import { View as ThirdExampleView, update as thirdExampleUpdate } from './3-a-dynamic-list-of-counters/main';

@@ -1,8 +1,5 @@
 import { Observable } from 'rxjs';
-import wrap from './wrap';
-import unwrap from './unwrap';
-
-// TODO: opinionated
+import { wrap, unwrap } from 'redux-elm';
 
 export default (saga, pattern) => iterable => {
   const compiledUnwrap = unwrap(pattern);
