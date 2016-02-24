@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { render } from 'react-dom';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { connect, Provider } from 'react-redux';
@@ -11,8 +11,8 @@ import { Observable } from 'rxjs';
 import { View as FirstExampleView, update as firstExampleUpdate } from './1-counter/main';
 import { View as SecondExampleView, update as secondExampleUpdate } from './2-pair-of-counters/main';
 import { View as ThirdExampleView, update as thirdExampleUpdate } from './3-a-dynamic-list-of-counters/main';
-import { View as FourthExampleView, update as fourthExampleUpdate, saga as fourthExampleSaga } from './4-random-gif-viewer/main';
-import { View as FifthExampleView, update as fifthExampleUpdate, saga as fifthExampleSaga } from './5-pair-of-random-gif-viewers/main';
+import { View as FourthExampleView, update as fourthExampleUpdate, saga as fourthExampleSaga, Actions as FourthExampleActions } from './4-random-gif-viewer/main';
+import { View as FifthExampleView, update as fifthExampleUpdate, saga as fifthExampleSaga, Actions as FifthExampleActions } from './5-pair-of-random-gif-viewers/main';
 import { View as SixthExampleView, update as sixthExampleUpdate, saga as sixthExampleSaga } from './6-list-of-random-gif-viewers/main';
 
 const INDEX_PAGE = '/';
@@ -57,7 +57,7 @@ const EXAMPLE_6 = {
   title: 'List of Random GIF Viewers',
   View: SixthExampleView,
   update: sixthExampleUpdate
-}
+};
 
 const PAGES = [
   EXAMPLE_1,
@@ -81,9 +81,9 @@ const update = patternMatch(initialState)
     }
   });
 
-const IndexPage = ({ dispatch }) => (
+const IndexPage = () => (
   <ol>
-    {PAGES.map(view => <li><Link to={`/${view.id}`}>{view.title}</Link></li>)}
+    {PAGES.map(view => <li key={view.id}><Link to={`/${view.id}`}>{view.title}</Link></li>)}
   </ol>
 );
 
@@ -95,10 +95,14 @@ const MainView = ({ history }) => {
     <Router history={history}>
       <Route path={INDEX_PAGE} component={IndexPage} />
       <Route path={INDEX_PAGE}>
-        {PAGES.map(page => <Route path={page.id} component={buildComponent(page)} />)}
+        {PAGES.map(page => <Route key={page.id} path={page.id} component={buildComponent(page)} />)}
       </Route>
     </Router>
   );
+};
+
+MainView.propTypes = {
+  history: PropTypes.object.isRequired
 };
 
 const reducer = combineReducers({
@@ -106,20 +110,15 @@ const reducer = combineReducers({
   routing
 });
 
-
-// TODO: this breaks encapsulation
 const initSaga = iterable => iterable
   .filter(({ action }) => action.type === LOCATION_CHANGE)
   .flatMap(({ action }) => {
     switch (action.payload.pathname.substring(1)) {
     case EXAMPLE_4.id:
-      return Observable.of({ type: `${EXAMPLE_4.id}.RequestMore`, payload: 'cat'});
+      return Observable.of({ type: `${EXAMPLE_4.id}.${FourthExampleActions.Init}`, payload: 'cat' });
 
     case EXAMPLE_5.id:
-      return Observable.of(
-        { type: `${EXAMPLE_5.id}.Left.RequestMore`, payload: 'cat'},
-        { type: `${EXAMPLE_5.id}.Right.RequestMore`, payload: 'dog'}
-      );
+      return Observable.of({ type: `${EXAMPLE_5.id}.${FifthExampleActions.InitPair}` });
 
     default:
       return Observable.of();

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Observable } from 'rxjs';
 
 import { patternMatch, forwardTo, composeSaga } from 'redux-elm';
@@ -68,7 +68,7 @@ const inputStyle = {
   textAlign: 'center'
 };
 
-export const View = ({dispatch, model}) => (
+export const View = ({ dispatch, model }) => (
   <div>
     <input
       placeholder="What kind of gifs do you want?"
@@ -86,3 +86,8 @@ export const View = ({dispatch, model}) => (
     </div>
   </div>
 );
+
+View.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  model: PropTypes.object.isRequired
+};

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import { patternMatch, forwardTo } from 'redux-elm';
 import { View as Counter, update as counterUpdate } from '../1-counter/main';
@@ -59,7 +59,7 @@ export const update = patternMatch(initialModel)
 
 const viewCounter = (dispatch, model, id) => <Counter key={id} dispatch={forwardTo(dispatch, `${Actions.Counter}.${id}`)} model={model} />;
 
-export const View = ({dispatch, model}) => (
+export const View = ({ dispatch, model }) => (
   <div>
     <button onClick={() => dispatch({ type: Actions.Remove })}>Remove</button>
     <button onClick={() => dispatch({ type: Actions.Insert })}>Add</button>
@@ -67,3 +67,7 @@ export const View = ({dispatch, model}) => (
   </div>
 );
 
+View.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  model: PropTypes.object.isRequired
+};

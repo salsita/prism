@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { patternMatch } from 'redux-elm';
 
 // UPDATE
@@ -22,10 +22,15 @@ const countStyle = {
 
 // VIEW
 
-export const View = ({dispatch, model}) => (
+export const View = ({ dispatch, model }) => (
   <div>
     <button onClick={() => dispatch({ type: Actions.Decrement })}>-</button>
     <div style={countStyle}>{model}</div>
     <button onClick={() => dispatch({ type: Actions.Increment })}>+</button>
   </div>
 );
+
+View.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  model: PropTypes.number.isRequired
+};
