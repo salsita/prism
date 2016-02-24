@@ -1,7 +1,7 @@
 import React from 'react';
 import { Observable } from 'rxjs';
 
-import { patternMatch, forwardTo, composeSaga, unwrap, wrap } from 'redux-elm';
+import { patternMatch, forwardTo, composeSaga } from 'redux-elm';
 import { View as RandomGif, update as randomGifUpdate, saga as randomGifSaga } from '../4-random-gif-viewer/main';
 
 // UPDATE
@@ -18,8 +18,8 @@ const initialAppState = {
   uid: 0
 };
 
-const create = model => {
-  const { uid } = model;
+const create = (model, { payload }) => {
+  const { uid } = payload;
 
   return {
     ...model,
@@ -28,12 +28,12 @@ const create = model => {
       uid,
       model: randomGifUpdate()
     }],
-    uid: model.uid + 1
+    uid: uid + 1
   };
 };
 
 export const update = patternMatch(initialAppState)
-  .case(Actions.Topic, (model, { payload }) => ({ ...model, topic: payload.topic }))
+  .case(Actions.Topic, (model, { payload }) => ({ ...model, topic: payload }))
   .case(Actions.Create, create)
   .case(`${Actions.Submsg}.[GifViewerId]`, (model, action) => {
     return {
@@ -52,7 +52,10 @@ export const update = patternMatch(initialAppState)
   });
 
 export const saga = iterable => Observable.merge(
-  randomGifSaga(iterable)
+  iterable
+    .filter(({ action }) => action.type === Actions.Create)
+    .map(({ action }) => ({ type: `${Actions.Submsg}.${action.payload.uid}.RequestMore`, payload: action.payload.value })),
+  composeSaga(randomGifSaga, 'Submsg.[GifViewerId]')(iterable)
 );
 
 // VIEW
@@ -70,7 +73,7 @@ export const View = ({dispatch, model}) => (
     <input
       placeholder="What kind of gifs do you want?"
       value={model.topic}
-      onKeyDown={ev => ev.keyCode === 13 ? dispatch({ type: Actions.Create, payload: ev.target.value }) : null}
+      onKeyDown={ev => ev.keyCode === 13 ? dispatch({ type: Actions.Create, payload: { value: ev.target.value, uid: model.uid } }) : null}
       onChange={ev => dispatch({ type: Actions.Topic, payload: ev.target.value })}
       style={inputStyle} />
     <div style={{display: 'flex', flexWrap: 'wrap'}}>
