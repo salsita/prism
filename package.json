@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tomkis1/redux-elm.git"
+    "url": "git+https://github.com/salsita/redux-elm.git"
   },
   "keywords": [
     "redux",
@@ -32,9 +32,9 @@
   "author": "Tomas Weiss <tomas.weiss2@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tomkis1/redux-elm/issues"
+    "url": "https://github.com/salsita/redux-elm/issues"
   },
-  "homepage": "https://github.com/tomkis1/redux-elm#readme",
+  "homepage": "https://github.com/salsita/redux-elm#readme",
   "devDependencies": {
     "babel-cli": "^6.5.1",
     "babel-core": "^6.5.2",
