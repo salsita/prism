@@ -11,10 +11,9 @@ Just give it a chance and see the examples:
  1. **[Counter](./examples/src/1-counter/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/1/Counter.elm)
  2. **[Pair of Counters](./examples/src/2-pair-of-counters/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/2/CounterPair.elm)
  3. **[Dynamic list of Counters](./examples/src/3-a-dynamic-list-of-counters/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/3/CounterList.elm)
- 4. **[Fancier list of Counters](./examples/src/4-a-fancier-list-of-counters/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/4/CounterList.elm)
- 5. **[Random GIF Viewer](./examples/src/5-random-gif-viewer/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/5/RandomGif.elm)
- 6. **[Pair of Random GIF Viewers](./examples/src/6-pair-of-random-gif-viewers/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/6/RandomGifPair.elm)
- 7. **[List of Random GIF Viewers](./examples/src/7-list-of-random-gif-viewers/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/7/RandomGifList.elm)
+ 4. **[Random GIF Viewer](./examples/src/4-random-gif-viewer/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/5/RandomGif.elm)
+ 5. **[Pair of Random GIF Viewers](./examples/src/5-pair-of-random-gif-viewers/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/6/RandomGifPair.elm)
+ 6. **[List of Random GIF Viewers](./examples/src/6-list-of-random-gif-viewers/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/7/RandomGifList.elm)
 
 # Demo
 
