@@ -1,7 +1,10 @@
 import React, { PropTypes } from 'react';
 import { render } from 'react-dom';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { connect, Provider } from 'react-redux';
+import { createDevTools } from 'redux-devtools';
+import LogMonitor from 'redux-devtools-log-monitor';
+import DockMonitor from 'redux-devtools-dock-monitor';
 import { syncHistoryWithStore, routerReducer as routing, LOCATION_CHANGE } from 'react-router-redux';
 import { hashHistory, Router, Route, Link } from 'react-router';
 import { forwardTo, patternMatch, composeSaga } from 'redux-elm';
@@ -125,20 +128,30 @@ const initSaga = iterable => iterable
     }
   });
 
-const store = createStore(reducer, undefined, applyMiddleware(
+const DevTools = createDevTools(
+  <DockMonitor toggleVisibilityKey="ctrl-h"
+               changePositionKey="ctrl-w">
+    <LogMonitor />
+  </DockMonitor>
+);
+
+const store = createStore(reducer, undefined, compose(applyMiddleware(
   sagaMiddleware(
     initSaga,
     composeSaga(fourthExampleSaga, '[ExamplePageId]'),
     composeSaga(fifthExampleSaga, '[ExamplePageId]'),
     composeSaga(sixthExampleSaga, '[ExamplePageId]')
   )
-));
+), DevTools.instrument()));
 const history = syncHistoryWithStore(hashHistory, store);
 
 const Application = () => (
-  <Provider store={store}>
-    <MainView history={history} />
-  </Provider>
+  <div>
+    <Provider store={store}>
+      <MainView history={history} />
+    </Provider>
+    <DevTools store={store} />
+  </div>
 );
 
 render(<Application />, document.getElementById('app'));
