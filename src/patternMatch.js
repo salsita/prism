@@ -4,7 +4,6 @@ export default initialModel => {
   const updaters = [];
 
   const reducer = (model = initialModel, action) => {
-    console.log(action);
     if (action) {
       return updaters.reduce((partialModel, { updater, compiledUnwrap }) => {
         const unwrappedAction = compiledUnwrap(action);
