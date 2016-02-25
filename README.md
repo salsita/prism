@@ -1,6 +1,6 @@
 # redux-elm
 
-> Redux is great, Elm is great too, why not to have Elm architecture in Redux?
+> Redux is great, Elm is great too, why not to have The Elm Architecture in Redux?
 
 Global application state is a great concept, yet it requires a lot of discipline to write maintanable and extendable applications. Elm solves the problem by heavily relying on Composition which is a new Encapsulation in FP lingo. Let's compose Views, State (Model), Reducers (Updaters), **Actions** and **Side Effects**.
 
@@ -26,4 +26,4 @@ open http://localhost:3000
 
 # Why not npm?
 
-Because it's work in progress.
+Because *WIP*
