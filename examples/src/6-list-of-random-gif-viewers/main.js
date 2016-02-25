@@ -81,7 +81,7 @@ export const View = ({ dispatch, model }) => (
       {model.gifList.map(item => (
         <RandomGif
           key={item.uid}
-          dispatch={forwardTo(dispatch, `${Actions.Submsg}.${item.uid}`)}
+          dispatch={forwardTo(dispatch, Actions.Submsg, item.uid)}
           model={item.model} />
       ))}
     </div>

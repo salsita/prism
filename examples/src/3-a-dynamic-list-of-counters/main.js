@@ -57,7 +57,7 @@ export const update = patternMatch(initialModel)
 
 // VIEW
 
-const viewCounter = (dispatch, model, id) => <Counter key={id} dispatch={forwardTo(dispatch, `${Actions.Counter}.${id}`)} model={model} />;
+const viewCounter = (dispatch, model, id) => <Counter key={id} dispatch={forwardTo(dispatch, Actions.Counter, id)} model={model} />;
 
 export const View = ({ dispatch, model }) => (
   <div>
