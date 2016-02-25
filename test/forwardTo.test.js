@@ -28,4 +28,12 @@ describe('forwardTo', () => {
       assert.equal(ex.message, 'Action type can\'t contain dot');
     }
   });
+
+  it('should allow to enter non string action types', () => {
+    const dispatch = spy();
+    const forwardedDispatch = forwardTo(dispatch, 1, 'Bar');
+    forwardedDispatch({ type: 'Baz' });
+
+    assert.equal(dispatch.firstCall.args[0].type, '1.Bar.Baz');
+  });
 });
