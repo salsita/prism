@@ -1,5 +1,13 @@
 import unwrap from './unwrap';
 
+/**
+ * Returns reducer enhanced with `case` function which registers updater
+ * for specific pattern. It's unwrapping the action automatically.
+ *
+ * @param {any} Initial model
+ *
+ * @return {Function} Enhanced reducer
+ */
 export default initialModel => {
   const updaters = [];
 
