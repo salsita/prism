@@ -19,4 +19,13 @@ describe('patternMatch', () => {
       }
     }]);
   });
+
+  it('should look for exact match when static chunk is provided', () => {
+    const reducer = spy();
+    const rootReducer = patternMatch(42)
+      .case('Foo.Bar', reducer);
+
+    rootReducer(undefined, { type: 'Foo.BarXYZ', payload: 43 });
+    assert.isFalse(reducer.called);
+  });
 });

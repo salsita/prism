@@ -13,10 +13,10 @@ export default initialModel => {
 
   const reducer = (model = initialModel, action) => {
     if (action) {
-      return updaters.reduce((partialModel, { updater, compiledUnwrap }) => {
+      return updaters.reduce((partialModel, { updater, compiledUnwrap, pattern }) => {
         const unwrappedAction = compiledUnwrap(action);
 
-        if (unwrappedAction) {
+        if (unwrappedAction && (unwrappedAction.type !== '' || action.type === pattern)) {
           return updater(partialModel, unwrappedAction);
         } else {
           return partialModel;
@@ -30,7 +30,8 @@ export default initialModel => {
   reducer.case = (pattern, updater) => {
     updaters.push({
       updater,
-      compiledUnwrap: unwrap(pattern)
+      compiledUnwrap: unwrap(pattern),
+      pattern
     });
 
     return reducer;
