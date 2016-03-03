@@ -50,13 +50,11 @@ const splitPatternToChunks = pattern => pattern
  * @return {RegExp}
  */
 const buildRegExpOfChunks = chunks => chunks
-  .reduce((memo, chunk, index) => {
-    const isLast = index === chunks.length - 1;
-
+  .reduce((memo, chunk) => {
     if (chunk.dynamic) {
-      return memo + ALPHANUMERICAL_GROUP_REGEXP_STRING + `\\.${isLast ? '?' : ''}`;
+      return memo + ALPHANUMERICAL_GROUP_REGEXP_STRING + '\\.';
     } else {
-      return memo + chunk.name + `\\.${isLast ? '?' : ''}`;
+      return memo + chunk.name + '\\.';
     }
   }, '') + '(.*)';
 

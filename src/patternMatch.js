@@ -14,12 +14,20 @@ export default initialModel => {
   const reducer = (model = initialModel, action) => {
     if (action) {
       return updaters.reduce((partialModel, { updater, compiledUnwrap, pattern }) => {
-        const unwrappedAction = compiledUnwrap(action);
+        if (compiledUnwrap) {
+          const unwrappedAction = compiledUnwrap(action);
 
-        if (unwrappedAction && (unwrappedAction.type !== '' || action.type === pattern)) {
-          return updater(partialModel, unwrappedAction);
+          if (unwrappedAction && (unwrappedAction.type !== '' || action.type === pattern)) {
+            return updater(partialModel, unwrappedAction);
+          } else {
+            return partialModel;
+          }
         } else {
-          return partialModel;
+          if (pattern === action.type) {
+            return updater(partialModel, action);
+          } else {
+            return partialModel;
+          }
         }
       }, model);
     } else {
@@ -31,6 +39,15 @@ export default initialModel => {
     updaters.push({
       updater,
       compiledUnwrap: unwrap(pattern),
+      pattern
+    });
+
+    return reducer;
+  };
+
+  reducer.caseExact = (pattern, updater)=> {
+    updaters.push({
+      updater,
       pattern
     });
 
