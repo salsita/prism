@@ -28,4 +28,13 @@ describe('patternMatch', () => {
     rootReducer(undefined, { type: 'Foo.BarXYZ', payload: 43 });
     assert.isFalse(reducer.called);
   });
+
+  it('should not match the action when action type does not start by the pattern', () => {
+    const reducer = spy();
+    const rootReducer = patternMatch(42)
+      .case('Foo', reducer);
+
+    rootReducer(undefined, { type: 'Bar.Foo.Xyz', payload: 43 });
+    assert.isFalse(reducer.called);
+  });
 });

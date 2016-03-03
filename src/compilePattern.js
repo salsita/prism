@@ -56,7 +56,7 @@ const buildRegExpOfChunks = chunks => chunks
     } else {
       return memo + chunk.name + '\\.';
     }
-  }, '') + '(.*)';
+  }, '^') + '(.*)';
 
 /**
  * Compiles String pattern which may look like: Foo.Bar.[Baz]
