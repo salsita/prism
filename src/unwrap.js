@@ -32,7 +32,10 @@ export default pattern => {
       return {
         ...action,
         type,
-        match
+        match: {
+          ...(action.match || {}),
+          [pattern]: match
+        }
       };
     } else {
       return false;

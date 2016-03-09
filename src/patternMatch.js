@@ -18,7 +18,7 @@ export default initialModel => {
           const unwrappedAction = compiledUnwrap(action);
 
           if (unwrappedAction && (unwrappedAction.type !== '' || action.type === pattern)) {
-            return updater(partialModel, unwrappedAction);
+            return updater(partialModel, { ...unwrappedAction, match: unwrappedAction.match[pattern] });
           } else {
             return partialModel;
           }
