@@ -10,8 +10,10 @@ describe('unwrap', () => {
       type: 'Foobar',
       payload: 42,
       match: {
-        arg1: '42',
-        arg2: '43'
+        'Baz.Qux.[arg1].[arg2]': {
+          arg1: '42',
+          arg2: '43'
+        }
       }
     });
   });
