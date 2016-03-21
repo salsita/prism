@@ -1,11 +1,11 @@
-import wrap from './wrap';
-import unwrap from './unwrap';
-import patternMatch from './patternMatch';
+import Matcher from './matchers/Matcher';
+import Updater from './Updater';
+import * as Generators from './generators';
 import forwardTo from './forwardTo';
 
 export {
-  wrap,
-  unwrap,
-  patternMatch,
+  Matcher,
+  Updater,
+  Generators,
   forwardTo
 };
