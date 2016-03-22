@@ -8,13 +8,47 @@ import * as Generators from './generators';
  * Simple abstraction which mimics behaviour of Elm Updater.
  * Updater should be converted to Redux Reducer by calling `toReducer` to make it compatible with
  * plain old Redux.
+ *
+ * Updater is responsible for matching action with corresponding updater function. redux-elm
+ * ships with three basic matching implementations:
+ *
+ * 1) Matcher - This is default matcher. Action type must start with provided pattern, the tail which does not match the pattern is considered
+ *              as "sub-action" and is passed as second argument to corresponding updater function.
+ *              Example: pattern Foo matches these actions:
+ *                - Foo.Bar
+ *                - Foo.Baz
+ *                - Foo.Bar.Baz
+ *                - Foo.....
+ *
+ * 2) ExactMatcher - Action type must exactly match the provided pattern, there's no "sub-action" concept
+ *                   it's just like a plain old switch in Redux application.
+ *                   Example: pattern Foo matches only action Foo, therefore action Foo.Bar will not match
+ *
+ * 3) ParameterizedMatcher - Action type is splitted into three parts Pattern.Parameter.SubAction
+ *                           Therefore action type must start with provided pattern (same like Matcher) and unwraps the "sub-action" (same like Matcher).
+ *                           However, very important part of the action is Parameter in the middle which is something dynamic. This matching implementation helps with
+ *                           dynamic lists of component like for example list of Counters.
+ *                           Parameter is provided as third argument to updater.
+ *                           Example:
+ *                           Pattern Counters will match:
+ *                           { type: Counters.1.Increment }
+ *                           { type: Counters.2.Increment }
+ *                           { type: Counters.XYZ.Increment }
+ *                           { type: Counters.XYZ.Decrement }
+ *                           { type: Counters.XYZ.Decrement.Foo }
+ *                           etc. and the updater function would look like:
+ *
+ *                           function* updater(model, action, counterId) {
+ *                             // counterId would be: 1 or 2 or XYZ
+ *                             // action would be { type: 'Increment' } or { type: 'Decrement' } or { type: 'Decrement.Foo'}
+ *                           }
  */
 export default class Updater {
 
   /**
    * @constructor
-   * @param {Any} Init Generator function or initial model
-   * @param {Function} Default matcher implementation
+   * @param {Any} Init Generator function or Initial model
+   * @param {Function} Default Matcher implementation
    */
   constructor(init, defaultMatcherImpl = defaultMacher) {
     if (Utils.isFunction(init) && !Utils.isGenerator(init)) {
