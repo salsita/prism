@@ -1,7 +1,4 @@
-import Matcher from './matchers/Matcher';
-import ExactMatcher from './matchers/ExactMatcher';
-import UnwrapMatcher from './matchers/UnwrapMatcher';
-import DynamicUnwrapMatcher from './matchers/DynamicUnwrapMatcher';
+import exactMatcher from './matchers/exactMatcher';
 import * as Utils from './utils';
 import * as Generators from './generators';
 
@@ -29,78 +26,24 @@ export default class Updater {
   }
 
   /**
-   * Registers provided matcher and updater.
+   * Registers updater with corresponding pattern. May optionally provide
+   * Matcher implementation, default is Exact Matcher.
    *
-   * @protected
-   * @param {Matcher} Matcher instance
-   * @param {Function} Generator function which is used as updater when Matcher matches action
+   * @param {String} A pattern to match
+   * @param {Function} Reducer in form of generator
+   * @param {Function} A matcher to be used for matching, default is ExactMatcher
    *
-   * @return {Updater} Updater
+   * @return {Updater}
    */
-  registerMatcher(matcher, updater) {
-    if (!(matcher instanceof Matcher)) {
-      throw new Error('Provided matcher is not instance of Matcher');
-    }
-
+  case(pattern, updater, matcherClass = exactMatcher) {
     if (!Utils.isGenerator(updater)) {
       throw new Error('Provided updater must be a Generator function');
     }
 
+    const matcher = matcherClass(pattern);
     this.matchers.push({ matcher, updater });
 
     return this;
-  }
-
-  /**
-   * Exact pattern matching
-   * Pattern 'Foo' matches only action 'Foo'
-   *
-   * @param {String} Action Pattern
-   * @param {Function} Generator Updater
-   */
-  caseExact(pattern, updater) {
-    return this.registerMatcher(new ExactMatcher(pattern), updater);
-  }
-
-  /**
-   * Matches action starting with pattern and unwraps the tail of the action: [Pattern].[UnwrappedTail]
-   * Pattern 'Foo' matches any action starting with 'Foo' and provides
-   * the tail as unwrapped action. For example pattern 'Foo' and
-   * action 'Foo.Bar' would match and provided action argument in
-   * updater function would be 'Bar'
-   *
-   * @param {String} Action Pattern
-   * @param {Function} Generator Updater
-   */
-  caseUnwrap(pattern, updater) {
-    return this.registerMatcher(new UnwrapMatcher(pattern), updater);
-  }
-
-  /**
-   * Action is split into three parts: [Pattern].[DynamicPart].[UnwrappedTail]
-   * 1) Pattern provided as function argument, action must start with this pattern
-   * 2) Dynamic part is considered a parameter for the action
-   * 3) Tail of the action
-   *
-   * This is especially very handy for handling dynamic components.
-   * Pattern `Counters` will match for example:
-   * - 'Counters.1.Increment'
-   * - 'Counters.2.Increment'
-   * - 'Counters.1.Decrement'
-   * - 'Counters.XXX.XYZ'
-   *
-   * Updater gets unwrapped action and the dynamic part:
-   *
-   * function* updater(model, action, counterId) {
-   *   // action type is 'Increment' or 'Decrement'...
-   *   // counterId is 1 or 2...
-   * }
-   *
-   * @param {String} Action Pattern
-   * @param {Function} Generator Updater
-   */
-  caseDynamicUnwrap(pattern, updater) {
-    return this.registerMatcher(new DynamicUnwrapMatcher(pattern), updater);
   }
 
   /**
@@ -127,7 +70,7 @@ export default class Updater {
 
       if (action) {
         const matchingMatchers = matchers
-          .map(({ matcher, updater }) => ({ match: matcher.match(action), updater }))
+          .map(({ matcher, updater }) => ({ match: matcher(action), updater }))
           .filter(({ match }) => !!match);
 
         return yield* Generators.reduce(matchingMatchers, function* matcherReducer(partialReduction, { match, updater }) {
