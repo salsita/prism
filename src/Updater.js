@@ -1,4 +1,4 @@
-import exactMatcher from './matchers/exactMatcher';
+import defaultMacher from './matchers/matcher';
 import * as Utils from './utils';
 import * as Generators from './generators';
 
@@ -6,7 +6,6 @@ import * as Generators from './generators';
  * @class Updater
  *
  * Simple abstraction which mimics behaviour of Elm Updater.
- * You can extend it and provide your own matching implementation by registering custom Matchers.
  * Updater should be converted to Redux Reducer by calling `toReducer` to make it compatible with
  * plain old Redux.
  */
@@ -15,13 +14,15 @@ export default class Updater {
   /**
    * @constructor
    * @param {Any} Init Generator function or initial model
+   * @param {Function} Default matcher implementation
    */
-  constructor(init) {
+  constructor(init, defaultMatcherImpl = defaultMacher) {
     if (Utils.isFunction(init) && !Utils.isGenerator(init)) {
       throw new Error('Init can\'t be just a function, it must be Generator');
     }
 
     this.init = init;
+    this.defaultMatcherImpl = defaultMatcherImpl;
     this.matchers = [];
   }
 
@@ -35,12 +36,12 @@ export default class Updater {
    *
    * @return {Updater}
    */
-  case(pattern, updater, matcherClass = exactMatcher) {
+  case(pattern, updater, matcherImpl) {
     if (!Utils.isGenerator(updater)) {
       throw new Error('Provided updater must be a Generator function');
     }
 
-    const matcher = matcherClass(pattern);
+    const matcher = matcherImpl ? matcherImpl(pattern) : this.defaultMatcherImpl(pattern);
     this.matchers.push({ matcher, updater });
 
     return this;

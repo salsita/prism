@@ -1,9 +1,9 @@
+import matcher from './matcher';
 import exactMatcher from './exactMatcher';
-import unwrapMatcher from './unwrapMatcher';
-import dynamicUnwrapMatcher from './dynamicUnwrapMatcher';
+import parameterizedMatcher from './parameterizedMatcher';
 
 export {
+  matcher,
   exactMatcher,
-  unwrapMatcher,
-  dynamicUnwrapMatcher
+  parameterizedMatcher
 };
