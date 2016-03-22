@@ -1,8 +1,8 @@
 import { assert } from 'chai';
 
 import Updater from '../src/Updater';
-import unwrapMatcher from '../src/matchers/unwrapMatcher';
-import dynamicUnwrapMatcher from '../src/matchers/dynamicUnwrapMatcher';
+import exactMatcher  from '../src/matchers/exactMatcher';
+import parameterizedMatcher from '../src/matchers/parameterizedMatcher';
 
 describe('Updater interface', () => {
   it('should not allow to pass plain old init function', () => {
@@ -62,29 +62,12 @@ describe('Updater interface', () => {
     }
   });
 
-  it('should allow shipped-in exact matching', () => {
-    const updater = new Updater(42);
-    updater.case('Foo', function*(model) {
-      return model + 1;
-    });
-
-    const reducer = updater.toReducer();
-
-    let state = undefined;
-
-    state = reducer(state, { type: 'Foo.Bar' }).next().value;
-    assert.equal(state, 42);
-
-    state = reducer(state, { type: 'Foo' }).next().value;
-    assert.equal(state, 43);
-  });
-
-  it('should allow shipped-in matching with unwrapping', () => {
+  it('should use unwrapping matching as default matching implementation', () => {
     const updater = new Updater(42);
     updater.case('Foo', function*(model, action) {
       yield action.type;
       return model + 1;
-    }, unwrapMatcher);
+    });
 
     const reducer = updater.toReducer();
 
@@ -104,12 +87,29 @@ describe('Updater interface', () => {
     });
   });
 
-  it('should allow shipped-in matching with dynamic unwrapping', () => {
+  it('should allow shipped-in exact matching', () => {
+    const updater = new Updater(42);
+    updater.case('Foo', function*(model) {
+      return model + 1;
+    }, exactMatcher);
+
+    const reducer = updater.toReducer();
+
+    let state = undefined;
+
+    state = reducer(state, { type: 'Foo.Bar' }).next().value;
+    assert.equal(state, 42);
+
+    state = reducer(state, { type: 'Foo' }).next().value;
+    assert.equal(state, 43);
+  });
+
+  it('should allow shipped-in parametrized unwrapping matching', () => {
     const updater = new Updater(42);
     updater.case('Foo', function*(model, action, baz) {
       yield baz + action.type;
       return model + 1;
-    }, dynamicUnwrapMatcher);
+    }, parameterizedMatcher);
 
     const reducer = updater.toReducer();
 
@@ -126,6 +126,25 @@ describe('Updater interface', () => {
     assert.deepEqual(reduction.next(), {
       done: true,
       value: 43
+    });
+  });
+
+  it('should allow to provide default matcher implementation for updater', () => {
+    const mockMatcher = () => () => [42];
+
+    const reducer = new Updater(0, mockMatcher)
+      .case('anything', function*(model, action) {
+        return model + action.type;
+      })
+      .case('anything else', function*(model, action) {
+        return model + action.type;
+      })
+      .toReducer();
+
+    const reduction = reducer(undefined, { type: 'xyz' });
+    assert.deepEqual(reduction.next(), {
+      done: true,
+      value: 84
     });
   });
 });
@@ -151,7 +170,7 @@ describe('Converting Updater to Reducer', () => {
     assert.equal(reducer(undefined, {}).next().value, 42);
   });
 
-  it('should', () => {
+  it('should allow passing custom matching implementation', () => {
     const unwrappingMatcher = () => () => [0, 1, 2, 3];
 
     const reduction = new Updater(0)
