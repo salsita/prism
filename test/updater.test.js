@@ -1,22 +1,8 @@
 import { assert } from 'chai';
 
 import Updater from '../src/Updater';
-import Matcher from '../src/matchers/Matcher';
-
-class MockMatcher extends Matcher {
-  constructor(value) {
-    super();
-    this.value = value;
-  }
-
-  match(action) {
-    if (action.type === this.value) {
-      return [ this.value, this.value ];
-    } else {
-      return false;
-    }
-  }
-}
+import unwrapMatcher from '../src/matchers/unwrapMatcher';
+import dynamicUnwrapMatcher from '../src/matchers/dynamicUnwrapMatcher';
 
 describe('Updater interface', () => {
   it('should not allow to pass plain old init function', () => {
@@ -63,52 +49,22 @@ describe('Updater interface', () => {
     });
   });
 
-  it('should be allowed to register new Matcher', () => {
-    function* updater(model, action) {
-      return action.type;
-    }
-
-    const reducer = new Updater(0)
-      .registerMatcher(new MockMatcher('foobar'), updater)
-      .toReducer();
-
-    const iterable = reducer(undefined, {type: 'foobar'});
-    assert.deepEqual(iterable.next(), {
-      done: true,
-      value: 'foobar'
-    });
-  });
-
-  it('should require valid instance of Matcher and updater in form of Generator function', () => {
+  it('should require an updater in form of Generator function', () => {
     const updater = new Updater(0);
 
-    updater.registerMatcher(new MockMatcher('foobar'), function*() {});
+    updater.case('foobar', function*() {});
 
     try {
-      updater.registerMatcher(new MockMatcher('foobar'));
+      updater.case('foobar', function() {});
       assert.isTrue(false);
     } catch (ex) {
       assert.equal(ex.message, 'Provided updater must be a Generator function');
-    }
-
-    try {
-      updater.registerMatcher(new MockMatcher('foobar'), () => {});
-      assert.isTrue(false);
-    } catch (ex) {
-      assert.equal(ex.message, 'Provided updater must be a Generator function');
-    }
-
-    try {
-      updater.registerMatcher();
-      assert.isTrue(false);
-    } catch (ex) {
-      assert.equal(ex.message, 'Provided matcher is not instance of Matcher');
     }
   });
 
   it('should allow shipped-in exact matching', () => {
     const updater = new Updater(42);
-    updater.caseExact('Foo', function*(model) {
+    updater.case('Foo', function*(model) {
       return model + 1;
     });
 
@@ -125,10 +81,10 @@ describe('Updater interface', () => {
 
   it('should allow shipped-in matching with unwrapping', () => {
     const updater = new Updater(42);
-    updater.caseUnwrap('Foo', function*(model, action) {
+    updater.case('Foo', function*(model, action) {
       yield action.type;
       return model + 1;
-    });
+    }, unwrapMatcher);
 
     const reducer = updater.toReducer();
 
@@ -150,10 +106,10 @@ describe('Updater interface', () => {
 
   it('should allow shipped-in matching with dynamic unwrapping', () => {
     const updater = new Updater(42);
-    updater.caseDynamicUnwrap('Foo', function*(model, action, baz) {
+    updater.case('Foo', function*(model, action, baz) {
       yield baz + action.type;
       return model + 1;
-    });
+    }, dynamicUnwrapMatcher);
 
     const reducer = updater.toReducer();
 
@@ -176,44 +132,32 @@ describe('Updater interface', () => {
 
 describe('Converting Updater to Reducer', () => {
   it('should return initial reduction if there\'s no matcher matching action', () => {
-    class FalsyMatcher extends Matcher {
-      match() {
-        return false;
-      }
-    }
+    const falsyMatcher = () => () => false;
 
     const reducer = new Updater(42)
-      .registerMatcher(new FalsyMatcher(), function*() {})
+      .case('', function*() {}, falsyMatcher)
       .toReducer();
 
     assert.equal(reducer(undefined, {}).next().value, 42);
   });
 
   it('should call the updater when matcher matches action', () => {
-    class TruthyMatcher extends Matcher {
-      match() {
-        return ['foo'];
-      }
-    }
+    const truthyMatcher = () => () => ['foo'];
 
     const reducer = new Updater(0)
-      .registerMatcher(new TruthyMatcher(), function*() { return 42; })
+      .case('', function*() { return 42; }, truthyMatcher)
       .toReducer();
 
     assert.equal(reducer(undefined, {}).next().value, 42);
   });
 
   it('should', () => {
-    class UnwrappingMatcher extends Matcher {
-      match() {
-        return [0, 1, 2, 3];
-      }
-    }
+    const unwrappingMatcher = () => () => [0, 1, 2, 3];
 
     const reduction = new Updater(0)
-      .registerMatcher(new UnwrappingMatcher(), function*(model, action, first, second, third) {
+      .case('', function*(model, action, first, second, third) {
         return first + second + third;
-      })
+      }, unwrappingMatcher)
       .toReducer();
 
     assert.equal(reduction(undefined, {}).next().value, 6);
