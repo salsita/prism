@@ -7,10 +7,9 @@ export default pattern => {
     const match = action.type.match(regexp);
 
     if (match) {
-      return match;
+      return [ match[0] ];
     } else {
       return false;
     }
   };
 };
-
