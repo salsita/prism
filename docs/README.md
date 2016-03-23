@@ -154,9 +154,22 @@ We are defininig the mutation of the model in our Updater by using `case` method
 1. A String pattern for matching the Action and because we are using `Matchers.exactMatcher`, as default Matcher for the entire Updater it will also be used for this specific `case` matching. We can override the default matching implementation by providing the matcher as third argument to `case` method. `Matchers.exactMatcher` is expecting exact match of Action type and provided pattern, therefore only action with type `SayHi` will match.
 2. An updater generator function which is responsible for the mutation onto Model.
 
-The third optional argument is Matcher implementation but we will cover this in later chapters.
+The third argument is optional and it's Matcher implementation but we will cover this in later chapters.
 
-TODO: new references
+Let's take a closer look at Updater function:
+
+```javascript
+function*(model) {
+  return {
+    ...model,
+    greeted: true
+  }
+}
+```
+
+As you can see all it does, it just takes current model as argument and outputs new model which has been somehow mutated. It's very important that you *always return a new reference of the model in the Updater function*, otherwise `redux` wouldn't know that Model changed and therefore wouldn't re-render your View. That's why we utilize ES2015 [spread operator](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/Spread_operator) because it gives us new copy of the model and we'll just change field which we want (`greeted`).
+
+##### Side Effects
 
 You might have spotted asterisk symbol in function definition:
 
@@ -166,7 +179,7 @@ function*(model) {
 }
 ```
 
-The asterisk in function defintion means that the function is generator. **redux-elm takes heavy assumption that all your Updater functions must be Generators**, this prejudice is especially very useful when working with side effects in the Updaters. We've already covered the part where we said that Updaters basically defines mutations of the Model. In other words the Updater function takes Model as the input and outputs new Model which has been somehow mutated. You might have spotted again the similarity with mathematical function.
+The asterisk in function defintion means that the function is generator. **redux-elm takes heavy assumption that all your Updater functions must be Generators**, this prejudice is especially very useful when working with side effects in the Updaters. We've already covered the part where we said that Updaters basically defines mutations of the Model. In other words the Updater function takes Model as the input and outputs new Model which has been somehow mutated. You might have spotted again a similarity with mathematical function.
 
 ```
 y = f(x);
