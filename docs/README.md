@@ -409,6 +409,6 @@ export default new Updater(init('funny cats'), Matchers.exactMatcher)
 
 ```
 
-In the `fetchGif` we've dispatched `NewGif` action which provides `url` of the GIF and we only need to handle this action in Updater and mutate the Model appropriately, in our case it's we just need to change `gifUrl` field of the model to `action.url`. Now you should see some GIF after refreshing the application:
+In the `fetchGif` we've dispatched `NewGif` action which provides `url` of the GIF and we only need to handle this action in Updater and mutate the Model appropriately, in our case it's we just need to change `gifUrl` field of the model to `action.url`. Now you should be able to see some GIF after refreshing the application:
 
 ![gif-viewer-2](./assets/6.png)
