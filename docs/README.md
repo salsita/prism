@@ -8,6 +8,7 @@ TODO
 - Componentization
 - Encapsulation
 - Component, first class citizen
+- You will find all the examples: here TODO
 
 ## Getting Started Tutorial
 
@@ -222,7 +223,7 @@ function* updater(model) {
 }
 ```
 
-Let's take a closer look at [Generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*), we'll not dive into details but Generator function is basically same like plain old JavaScript function except it can `yield` values. We can leverage that fact and use `yield` keyword for "yielding" side effects. Just imagine you wrap all your side effects in functions and then just yield these functions. These functions will not be executed inside the reducer, they just declaratively describes some side effect, the execution of the side effect is hidden in the function.
+Let's take a closer look at [Generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*), we'll not dive into details but Generator function is basically same like plain old JavaScript function except it can `yield` values. We can leverage that fact and use `yield` keyword for "yielding" side effects. Just imagine you wrap all your side effects in functions and then just yield these functions. These functions will not be executed inside the Updater, they just declaratively describes some side effect, the execution of the side effect is hidden in the function.
 
 ```javascript
 const sideEffect = () => {
@@ -267,3 +268,76 @@ console.log(iterable.next()) // {done: true, value: 4}
 Because we've covered basics of `redux-elm` we may want try to build something. Let's build an application which shows Random GIF fetched from http://giphy.com/ we'll fetch GIFs only for specific topic which will be a parameter of the Component. We'll also allow user to interact by showing a "More Please!" button which fetches next GIF.
 
 ![gif-viewer-1](./assets/4.png)
+
+Let's start by creating a folder called `gif-viewer` in `src` folder of `redux-elm-skeleton`. The folder should contain two files `updater.js` and `view.js`. Because we want to use the Component as Root of our redux-elm-skeleton repo, we need to change `main.js` accordingly.
+
+Now change `main.js` to use the newly created Component:
+
+```javascript
+import run from './boilerplate';
+
+// Import appropriate Component
+import view from './gif-viewer/view';
+import updater from './gif-viewer/updater';
+
+run('app', view, updater);
+```
+
+### Shaping out initial Model
+
+Shape of the model is fairly simple, it needs just two fields `topic` and `gifUrl` and because we want to be able to configure topic externally we'll turn our initial model into init function which can be parametrized. See that `init` is a function which returns a Generator function. The reason we did it this way is that `Updater` takes Generator function as argument and internally calls the function without arguments, so we need to pass those arguments in closure. In Functional Programming this is quite often technique and it's called [thunk function](https://en.wikipedia.org/wiki/Thunk).
+
+```javascript
+import { Updater, Matchers } from 'redux-elm';
+
+export const init = topic => function*() {
+  return {
+    topic,
+    gifUrl: null
+  };
+}
+
+export default new Updater(init('funny cats'))
+  .toReducer();
+
+```
+
+Now just imagine that we'll have a parent component which will handle initialization of many instances of GifViewers. The parent component could use the exported `init` function to build parameterized initial model which would then be just passed to GifViewer updater. We will cover this in next examples.
+
+Right now we just need to call the `init` function to create init generator which will create initial model for the Component and we want to have the initial model parametrized with topic 'funny cats'.
+
+### Rendering View
+
+The model is ready, now it's right time to build View which projects the model onto HTML markup.
+
+```javascript
+import React from 'react';
+
+const renderGif = url => {
+  if (url) {
+    return <img src={url} width="200" height="200" />;
+  } else {
+    return <img src="/assets/waiting.gif" width="200" height="200" />;
+  }
+}
+```
+
+We've started by importing React and implementing our `renderGif` function which takes `url` as argument and renders either Loading spinner or the actual GIF. Keep in mind that `url` can be `null` and if that happens it means that we are waiting for new GIF.
+
+Every View must export default React component and here it is:
+
+```javascript
+export default ({ model, dispatch }) => (
+  <div style={{ width: '200px' }}>
+    <h2 style={{ width: '200px', textAlign: 'center' }}>{model.topic}</h2>
+    {renderGif(model.gifUrl)}
+    <button onClick={() => dispatch({ type: 'RequestMore' })}>More Please!</button>
+  </div>
+);
+```
+
+The essential part is using the `renderGif` function and passing it `gifUrl` from Model. We also need User interaction therefore button "More Please!" dispatches new action `RequestMore` which we will handle in our Updater.
+
+Now you should be able to see something like this:
+
+![gif-viewer-1](./assets/5.png)
