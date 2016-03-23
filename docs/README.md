@@ -138,7 +138,7 @@ To define the mutation we need to say when it should happen and that's where **`
 
 When user clicks the button we will dispatch an Action with type `SayHi` it's just a declarative description of some Event which is the actual interaction. When Action is dispatched, it also needs to be handled and it should be handled in appropriate Updater and that's exactly where **`case`** method comes handy:
 
-```
+```javascript
 export default new Updater(initialModel, Matchers.exactMatcher)
   .case('SayHi', function*(model) {
     return {
