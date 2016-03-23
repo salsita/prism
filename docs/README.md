@@ -299,7 +299,7 @@ export function init(topic) {
   };
 };
 
-export default new Updater(init('funny cats'))
+export default new Updater(init('funny cats'), Matchers.exactMatcher)
   .toReducer();
 
 ```
@@ -394,3 +394,21 @@ const effectFunction = (dispatch, arg1, arg2, arg3) => {
   // Side Effect execution implementation 
 }
 ```
+
+Even though API call is being called now we stil can't see anything in the UI and it's because we are not handling `NewGif` action in the Updater. We'd need to update the model with the `gifUrl` when `NewGif` action kicks in so that View would be re-rendered with newly fetched GIF. Let's change the Updater:
+
+```javascript
+export default new Updater(init('funny cats'), Matchers.exactMatcher)
+  .case('NewGif', function*(model, action) {
+    return {
+      ...model,
+      gifUrl: action.url
+    }
+  })
+  .toReducer();
+
+```
+
+In the `fetchGif` we've dispatched `NewGif` action which provides `url` of the GIF and we only need to handle this action in Updater and mutate the Model appropriately, in our case it's we just need to change `gifUrl` field of the model to `action.url`. Now you should see some GIF after refreshing the application:
+
+![gif-viewer-2](./assets/6.png)
