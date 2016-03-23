@@ -36,3 +36,45 @@ npm start
 which after clicking the button shows Hello World message
 
 ![hello-world-app-1](./assets/2.png)
+
+#### Hello World!
+
+In `main.js` there's just one function `run` which starts the application.
+
+```javascript
+import run from './boilerplate';
+
+import view from './hello-world/view';
+import updater from './hello-world/updater';
+
+run('app', view, updater);
+
+```
+
+`run` starts the application, we only need to provide **Root component** and every Elmish component consists of two parts **updater** and **view**. We call the component Root component because it's typical for Elmish architecture that application is modeled in form of component tree and every tree has its root. In our Hello World example we will have just one component therefore it's also Root component.
+
+![hello-world-app-1](./assets/3.png)
+
+It's obvious from the diagram that the Root component is `PairOfCounters` and it embeds three child components: `TopCounter` `BottomCounter` and `ResetButton` which resets both the counters.
+
+`run` takes three arguments:
+- first argument is `id` attribute of HTML node we would like to mount the component in. In the example, its 'app' because there's `<div id="app"></div>` inside our `index.html`.
+- second argument is `view` which is just plain old React component, it can be either `class` which `extends` from `Component` or a stateless function.
+- third argument is `updater`, updater is very similiar to Redux reducer except it's not plain old JavaScript function but *it's generator* function.
+
+
+Let's have a look at `view.js` inside `hello-world` repository:
+
+```javascript
+import React from 'react';
+
+export default ({ model, dispatch }) => {
+  if (model.greeted) {
+    return <div>Hello World!</div>;
+  } else {
+    return <button onClick={() => dispatch({ type: 'SayHi' })}>Say Hi</button>;
+  }
+};
+
+```
+
