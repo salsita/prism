@@ -2,13 +2,20 @@
 
 WIP
 
-### Getting Started Tutorial
+## Why the Elm Architecture matters?
+TODO
+- Composition
+- Componentization
+- Encapsulation
+- Component, first class citizen
+
+## Getting Started Tutorial
 
 This tutorial will guide you through basics of `redux-elm` by implementing simple application and explaining concepts on top of that.
 
  TODO: describe the application
 
-#### Necessary boilerplate
+### Necessary boilerplate
 Before we get into coding let's start by cloning [https://github.com/salsita/redux-elm-skeleton](skeleton) project which will abstract away all the boilerplate needed for initializing modern ES2016/React/Webpack project. Throughout the code examples we'll probably not strictly use all the ES2016 features as it may be confusing for newcomers.
 
 The directory structure of the skeleton project is fairly straightforward:
@@ -37,7 +44,7 @@ which after clicking the button shows Hello World message
 
 ![hello-world-app-2](./assets/2.png)
 
-#### Hello World!
+### Hello World!
 
 In `main.js` there's just one function `run` which starts the application.
 
@@ -169,7 +176,7 @@ function*(model) {
 
 As you can see all it does, it just takes current model as argument and outputs new model which has been somehow mutated. It's very important that you *always return a new reference of the model in the Updater function*, otherwise `redux` wouldn't know that Model changed and therefore wouldn't re-render your View. That's why we utilize ES2015 [spread operator](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/Spread_operator) because it gives us new copy of the model and we'll just change field which we want (`greeted`).
 
-##### Side Effects
+#### Side Effects
 
 You might have spotted asterisk symbol in function definition:
 
@@ -254,3 +261,9 @@ console.log(iterable.next()) // {done: false, value: 3}
 console.log(iterable.next()) // {done: true, value: 4}
 ```
 **END-ADVANCED**
+
+## GifViewer tutorial
+
+Because we've covered basics of `redux-elm` we may want try to build something. Let's build an application which shows Random GIF fetched from http://giphy.com/ we'll fetch GIFs only for specific topic which will be a parameter of the Component. We'll also allow user to interact by showing a "More Please!" button which fetches next GIF.
+
+![gif-viewer-1](./assets/4.png)
