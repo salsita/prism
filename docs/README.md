@@ -290,12 +290,14 @@ Shape of the model is fairly simple, it needs just two fields `topic` and `gifUr
 ```javascript
 import { Updater, Matchers } from 'redux-elm';
 
-export const init = topic => function*() {
-  return {
-    topic,
-    gifUrl: null
+export function init(topic) {
+  return function*() {
+    return {
+      topic,
+      gifUrl: null
+    };
   };
-}
+};
 
 export default new Updater(init('funny cats'))
   .toReducer();
@@ -341,3 +343,54 @@ The essential part is using the `renderGif` function and passing it `gifUrl` fro
 Now you should be able to see something like this:
 
 ![gif-viewer-1](./assets/5.png)
+
+
+### AJAX & Side Effects in practice
+
+As you can see, there's not much going on now we can see infinite loading of Funny cats and after clicking the button nothing happens. We'd ideally want our application to initiate loading of GIF in init function of our Updater, but how can we do it? That's exactly when Side effects comes to play. So first of all we need to define implementation of side effect which triggers the API call. Let's create a new file within `gif-viewer` directory and call it `effects.js`. This file will only contain single function called `fetchGif`:
+
+```javascript
+import request from 'superagent-bluebird-promise';
+
+export const fetchGif = (dispatch, topic) => {
+  request(`http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=${topic}`)
+    .then(response => dispatch({ type: 'NewGif', url: response.body.data.image_url }));
+};
+```
+
+Every Effect function always take 1st argument which is `dispatch` and infinite number of optional arguments which are specific for the Effect. Therefore our `fetchGif` function takes `dispatch` and `topic` as arguments. Inside the function we just need to trigger the XHR request (we're using [superagent library](https://www.npmjs.com/package/superagent-bluebird-promise) in the example). Because we have `dispatch` function available, we can simply `dispatch` new action when API response arrives and we'll also provide `url` in the action, which is extracted from the API response. The function is now prepared to be yielded from our Init function.
+
+Let's open `updater.js` again and do slight modification in our `init` function:
+
+```javascript
+import { sideEffect } from 'redux-side-effects';
+import * as Effects from './effects';
+
+export function init(topic) {
+  return function*() {
+    yield sideEffect(Effects.fetchGif, topic);
+
+    return {
+      topic,
+      gifUrl: null
+    };
+  };
+};
+
+```
+
+It's obvious that we are utilizing the full power of Generators here because we are yielding Side Effect to `fetchGif` in our `init` function. `Yield`ing Side Effects is as easy as yielding Effect wrapped in `sideEffect` function which is exposed by `redux-side-effects` library. We are using this declarative approach so that unit testing is breeze.
+
+We can abstract any Side Effect to calling following line:
+
+```javascript
+yield sideEffect(effectFunction, arg1, arg2, arg3....);
+```
+
+And `redux-side-effects` will automatically take care of effect execution while providing `dispatch` and all the arguments. In other words it will call your `effectFunction` with arguments `dispatch`, `arg1`, `arg2`, `arg3`...
+
+```javascript
+const effectFunction = (dispatch, arg1, arg2, arg3) => {
+  // Side Effect execution implementation 
+}
+```
