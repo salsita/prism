@@ -89,10 +89,11 @@ const initialModel = {
 };
 
 export default new Updater(initialModel, Matchers.exactMatcher)
-  .case('SayHi', function*() {
+  .case('SayHi', function*(model) {
     return {
+      ...model,
       greeted: true
-    };
+    }
   })
   .toReducer();
 ```
@@ -104,21 +105,139 @@ When implementing Updater there are two conditions which every Updater must meet
 1. Every Updater must be provided with initial Model. Initial Model is first argument of the `Updater` constructor, the argument can be basically any type (except Function, only Generator Function is allowed) you can think of: String, Object, Number
 2. Every Updater must be converted to Reducer by calling `toReducer()` method on the Updater instance.
 
-Please ignore the second argument of `Updater` constructor now, we'll explain this in following chapters, for now you always use `Matchers.exactMatcher` import from `redux-elm` package.
+Please ignore the second argument of `Updater` constructor now, we'll explain this in following chapters, for now you always use `Matchers.exactMatcher` imported from `redux-elm` package.
 
 Updater in its simplest form could look like this:
 
 ```javascript
-export default new Updater(0)
+import { Updater, Matchers } from 'redux-elm';
+
+export default new Updater(0, Matchers.exactMatcher)
   .toReducer();
 ```
 
-However, this updater is not really handy because it does not define any mutations on the model, its Model consist of Integer with its initial value 0. If you have used this as Root Updater with following Root View:
+Its Model consist of Integer with its initial value 0. If you have used this as Root Updater with following Root View:
 
 ```javascript
+import React from 'react';
+
 export default ({ model, dispatch }) => <div>{model}</div>;
 ```
 
 Then you'd see only 0 on the screen because it's initial value of the model and we've defined this in our Updater.
 
 ![hello-world-app-3](./assets/3.png)
+
+However, this Updater is not really handy, because it does not define any mutations on the model. In real world applications, you want to allow user to interact with the UI and interaction with the UI is basically some mutation of the Model. Something like: Whenever user clicks this button, a boolean flag in the model should be set to 1 and because as I've already mentioned, our View is a function of Model, we could define how markup should look like when the flag is truthy, for example we can display Greeting message.
+
+To define the mutation we need to say when it should happen and that's where **`dispatch`** function in our View comes handy.
+
+```javascript
+<button onClick={() => dispatch({ type: 'SayHi' })}>Say Hi</button>;
+```
+
+When user clicks the button we will dispatch an Action with type `SayHi` it's just a declarative description of some Event which is the actual interaction. When Action is dispatched, it also needs to be handled and it should be handled in appropriate Updater and that's exactly where **`case`** method comes handy:
+
+```
+export default new Updater(initialModel, Matchers.exactMatcher)
+  .case('SayHi', function*(model) {
+    return {
+      ...model,
+      greeted: true
+    }
+  })
+  .toReducer();
+```
+
+We are defininig the mutation of the model in our Updater by using `case` method. It has two required arguments:
+
+1. A String pattern for matching the Action and because we are using `Matchers.exactMatcher`, as default Matcher for the entire Updater it will also be used for this specific `case` matching. We can override the default matching implementation by providing the matcher as third argument to `case` method. `Matchers.exactMatcher` is expecting exact match of Action type and provided pattern, therefore only action with type `SayHi` will match.
+2. An updater generator function which is responsible for the mutation onto Model.
+
+The third optional argument is Matcher implementation but we will cover this in later chapters.
+
+TODO: new references
+
+You might have spotted asterisk symbol in function definition:
+
+```javascript
+function*(model) {
+  
+}
+```
+
+The asterisk in function defintion means that the function is generator. **redux-elm takes heavy assumption that all your Updater functions must be Generators**, this prejudice is especially very useful when working with side effects in the Updaters. We've already covered the part where we said that Updaters basically defines mutations of the Model. In other words the Updater function takes Model as the input and outputs new Model which has been somehow mutated. You might have spotted again the similarity with mathematical function.
+
+```
+y = f(x);
+```
+
+or
+
+```javascript
+const value = Math.sin(Math.PI);
+```
+
+or
+
+```javascript
+const currentModel = updater(previousModel, action);
+```
+
+See the similarities? Calling `Math.sin` does not execute any side effects, it means that it does not mutate anything outside the function nor causing anything that is not related with the function itself (XHR calls, logging...). In Functional Programming lingo when we talk about function without side effects we mostly likely talk about [Pure function](https://en.wikipedia.org/wiki/Pure_function). Pure function is a function which does not execute any side effects and given the same arguments the result of the function is still the same. In Redux, all the Reducers must be Pure so that we can leverage all the nice features:
+
+- Easy unit testing
+- Time travel
+- Devtools
+- Undo/Redo
+- ... and many others
+
+For example calling `console.log` directly in the Updater would be considered an impurity and therefore the Updater (Reducer) wouldn't be Pure function.
+
+```javascript
+function* updater(model) {
+  console.log('This is impurity');
+
+  return model + 1;
+}
+```
+
+Let's take a closer look at [Generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*), we'll not dive into details but Generator function is basically same like plain old JavaScript function except it can `yield` values. We can leverage that fact and use `yield` keyword for "yielding" side effects. Just imagine you wrap all your side effects in functions and then just yield these functions. These functions will not be executed inside the reducer, they just declaratively describes some side effect, the execution of the side effect is hidden in the function.
+
+```javascript
+const sideEffect = () => {
+  console.log('This is execution of some side effect');
+}
+```
+
+See? Unless you call the function, the side effect is not executed and therefore if we `yield` these functions in our Updaters we can keep them pure and that's the ultimate goal. Nice thing about Generators is that you can `yield` as many values as you need.
+
+```javascript
+function* updater(model) {
+  yield () => console.log('This is first impurity');
+  yield () => console.log('This is second impurity');
+
+  return model + 1;
+}
+```
+
+This Updater function yields two side effects **which are not executed** in the Updater and it also returns mutated Model. We said that these side effects are not executed, but how are these side effects useful when they are not executed? A good message for you, there's a library for Redux, which is also used in `redux-skeleton`. The library is called [redux-side-effects](https://github.com/salsita/redux-side-effects) which is doing exactly what we need, it collects all the yielded values in Reducers and executes them "out of order" so that they are executed right after updater mutates the Model.
+
+**ADVANCED**
+In fact, calling a Generator returns an Iterable. Iterable is an interface which implements `next()` method. Therefore we can iterate over result of Generator result.
+
+```javascript
+function* generatorFunction() {
+  yield 1;
+  yield 2;
+  yield 3;
+  return 4;
+}
+
+const iterable = generatorFunction();
+console.log(iterable.next()) // {done: false, value: 1}
+console.log(iterable.next()) // {done: false, value: 2}
+console.log(iterable.next()) // {done: false, value: 3}
+console.log(iterable.next()) // {done: true, value: 4}
+```
+**END-ADVANCED**
