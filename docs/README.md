@@ -35,7 +35,7 @@ npm start
 
 which after clicking the button shows Hello World message
 
-![hello-world-app-1](./assets/2.png)
+![hello-world-app-2](./assets/2.png)
 
 #### Hello World!
 
@@ -53,15 +53,10 @@ run('app', view, updater);
 
 `run` starts the application, we only need to provide **Root component** and every Elmish component consists of two parts **updater** and **view**. We call the component Root component because it's typical for Elmish architecture that application is modeled in form of component tree and every tree has its root. In our Hello World example we will have just one component therefore it's also Root component.
 
-![hello-world-app-1](./assets/3.png)
-
-It's obvious from the diagram that the Root component is `PairOfCounters` and it embeds three child components: `TopCounter` `BottomCounter` and `ResetButton` which resets both the counters.
-
 `run` takes three arguments:
 - first argument is `id` attribute of HTML node we would like to mount the component in. In the example, its 'app' because there's `<div id="app"></div>` inside our `index.html`.
 - second argument is `view` which is just plain old React component, it can be either `class` which `extends` from `Component` or a stateless function.
 - third argument is `updater`, updater is very similiar to Redux reducer except it's not plain old JavaScript function but *it's generator* function.
-
 
 Let's have a look at `view.js` inside `hello-world` repository:
 
@@ -78,3 +73,52 @@ export default ({ model, dispatch }) => {
 
 ```
 
+There's basically nothing special about View, it's just a stateless function which conditionally returns either Greeting or Button. Every View gets at least two mandatory `props`:
+1. `dispatch` - this is a plain old Redux dispatch function, we can use this function for dispatching an action
+2. `model` - This is a model for specific View, based on the model we can render some markup. In other words (mathematical words) View is function of Model. **You can only query the model in View, all mutations happens in Updater**.
+
+Think of your View as a declarative definition of how the HTML markup should look like based on the state of Model.
+
+Trickier part is Updater.
+
+```javascript
+import { Updater, Matchers } from 'redux-elm';
+
+const initialModel = {
+  greeted: false
+};
+
+export default new Updater(initialModel, Matchers.exactMatcher)
+  .case('SayHi', function*() {
+    return {
+      greeted: true
+    };
+  })
+  .toReducer();
+```
+
+For now think about your Updater as series of functions which gets applied onto Model whenever an action matches provided pattern.
+
+When implementing Updater there are two conditions which every Updater must meet:
+
+1. Every Updater must be provided with initial Model. Initial Model is first argument of the `Updater` constructor, the argument can be basically any type (except Function, only Generator Function is allowed) you can think of: String, Object, Number
+2. Every Updater must be converted to Reducer by calling `toReducer()` method on the Updater instance.
+
+Please ignore the second argument of `Updater` constructor now, we'll explain this in following chapters, for now you always use `Matchers.exactMatcher` import from `redux-elm` package.
+
+Updater in its simplest form could look like this:
+
+```javascript
+export default new Updater(0)
+  .toReducer();
+```
+
+However, this updater is not really handy because it does not define any mutations on the model, its Model consist of Integer with its initial value 0. If you have used this as Root Updater with following Root View:
+
+```javascript
+export default ({ model, dispatch }) => <div>{model}</div>;
+```
+
+Then you'd see only 0 on the screen because it's initial value of the model and we've defined this in our Updater.
+
+![hello-world-app-3](./assets/3.png)
