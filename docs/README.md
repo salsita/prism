@@ -412,3 +412,26 @@ export default new Updater(init('funny cats'), Matchers.exactMatcher)
 In the `fetchGif` we've dispatched `NewGif` action which provides `url` of the GIF and we only need to handle this action in Updater and mutate the Model appropriately, in our case we just need to change `gifUrl` field of the model to `action.url`. Now you should be able to see some GIF after refreshing the application:
 
 ![gif-viewer-2](./assets/6.png)
+
+Last mandatory requirement for our GifViewer is that once user clicks the "More Please!" button, it should fetch new GIF but now after clicking the button nothing happens. Adding this functionality is fairly simple, we just need to define what should happen when `RequestMore` is handled. `RequestMore` is action which is being dispatched after clicking the button.
+
+```javascript
+export default new Updater(init('funny cats'), Matchers.exactMatcher)
+  .case('NewGif', function*(model, action) {
+    return {
+      ...model,
+      gifUrl: action.url
+    }
+  })
+  .case('RequestMore', function*(model, action) {
+    yield sideEffect(Effects.fetchGif, model.topic);
+
+    return {
+      ...model,
+      gifUrl: null
+    };
+  })
+  .toReducer();
+```
+
+In the implementation we can re-use the effect for fetching GIF, which is already implemented. Topic is provided from Model and we also set `gifUrl` to `null` which will cause to display loading indicator in the UI. The application should now be fully implemented.
