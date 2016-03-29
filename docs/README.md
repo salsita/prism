@@ -541,8 +541,14 @@ describe('GifViewer Updater Behaviour Description', () => {
   it('should contain null gifUrl right after Component is initialized', () => {
     const iterator = updater(undefined, { type: 'NonExistingAction' });
 
+    // We ignore result of first `next()` call because we know
+    // that first value yielded in the reducer is Side Effect
     iterator.next();
+
+    // Second call of `iterator.next()` will return appropriate mutated Model
     assert.equal(iterator.next().value.gifUrl, null);
   });
 });
 ```
+
+`Updater` function always takes two arguments first is Model and second is Action because we are testing initial Model we provide `undefined` as Model and some `NonExistingAction` as second argument, we don't mind that Updater will not handle the action, we just need to provide **some** action so that Model gets initialized.
