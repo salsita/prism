@@ -440,3 +440,5 @@ In the implementation we can re-use the effect for fetching GIF, which is alread
 
 ### Writing Unit Tests
 
+We've got our first `redux-elm` Component implemented, let's write some unit tests. We'll not be testing our Views even though we could but since all the business logic lies in Updaters it's not essential. Before starting working on any production app you should consider how much code coverage is needed but generally we could say having unit tests for Updaters is enough in most cases, especially given the fact that all the Side effects are kept in Updaters along with Model mutations.
+
