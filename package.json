@@ -51,6 +51,6 @@
     "escape-string-regexp": "^1.0.5"
   },
   "peerDependencies": {
-    "redux-side-effects": "^0.3.0"
+    "redux-side-effects": "^1.0.0"
   }
 }
