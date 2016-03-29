@@ -13,6 +13,8 @@
    * Deeper generator understanding
 * Composition - List of GifViwers example **TODO**
  WIP - describe composition, matchers, how composition is related to encapsulation
+* Understanding boilerplate **TODO**
+  * We don't need switch unlike Redux
 
 ## Why the Elm Architecture matters?
 **TODO**
