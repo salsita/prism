@@ -442,3 +442,33 @@ In the implementation we can re-use the effect for fetching GIF, which is alread
 
 We've got our first `redux-elm` Component implemented, let's write some unit tests. We'll not be testing our Views even though we could but since all the business logic lies in Updaters it's not essential. Before starting working on any production app you should consider how much code coverage is needed but generally we could say having unit tests for Updaters is enough in most cases, especially given the fact that all the Side effects are kept in Updaters along with Model mutations.
 
+Before we got into writing some code a decent description of Component's behaviour should be clearly defined:
+
+* It should display a loading indicator right after Component is initialized
+* It should start loading a GIF right after Component is initialized where topic is funny cats
+* It should not display loading indicator anymore when new GIF is fetched, instead newly fetched GIF should be displayed
+* It should trigger loading of next GIF with selected topic and display loading indiciator right after user clicks Plese More button
+
+It's easy to convert described behaviour into Unit tests. Start by creating an empty folder called `gif-viewer` inside `test` folder. We'll have just single file holding all the Unit tests for the Updater, therfore create a new empty file called `updater.js` within `test/gif-viewer` folder.
+
+```javascript
+describe('GifViewer Updater Behaviour Description', () => {
+  it('should contain null gifUrl right after Component is initialized', () => {
+
+  });
+
+  it('should yield a side effect to trigger loading some funny cat GIF right after Component is initialized', () => {
+
+  });
+
+  it('should replace gifUrl with newly provided url when NewGif kicks in', () => {
+
+  });
+
+  it('should yield a side effect to trigger loading a GIF with topic specified in model and null gifUrl when RequestMore kicks in', () => {
+
+  });
+});
+```
+
+As you might have spotted, we've translated some domain specific concepts into more concrete implementation concepts. Like for example we assume that `null` `gifUrl` means that we are showing a loading indicator in the UI.
