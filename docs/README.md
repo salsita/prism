@@ -27,6 +27,8 @@ The directory structure of the skeleton project is fairly straightforward:
     * `view.js` - React stateless Component
   * `boilerplate.js` - this file abstracts away all the boilerplate needed for using react/redux/redux-elm, it exports just single function, which we call `run`. You don't need to understand the code for now
   * `main.js` - your main file which uses function exposed from `boilerplate.js` and calls it with specific root component, which in our case is `hello-world`
+* `test` - Folder containing all your tests related source files
+  * `hello-world` - Unit tests for `hello-world` Component
 * `index.html` - index file needed for displaying HTML
 * `package.json` - dependencies description
 
@@ -435,3 +437,6 @@ export default new Updater(init('funny cats'), Matchers.exactMatcher)
 ```
 
 In the implementation we can re-use the effect for fetching GIF, which is already implemented. Topic is provided from Model and we also set `gifUrl` to `null` which will cause to display loading indicator in the UI. The application should now be fully implemented.
+
+### Writing Unit Tests
+
