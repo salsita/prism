@@ -452,23 +452,97 @@ Before we got into writing some code a decent description of Component's behavio
 It's easy to convert described behaviour into Unit tests. Start by creating an empty folder called `gif-viewer` inside `test` folder. We'll have just single file holding all the Unit tests for the Updater, therfore create a new empty file called `updater.js` within `test/gif-viewer` folder.
 
 ```javascript
+import { assert } from 'chai';
+
 describe('GifViewer Updater Behaviour Description', () => {
   it('should contain null gifUrl right after Component is initialized', () => {
-
+    assert.isTrue(false);
   });
 
   it('should yield a side effect to trigger loading some funny cat GIF right after Component is initialized', () => {
-
+    assert.isTrue(false);
   });
 
   it('should replace gifUrl with newly provided url when NewGif kicks in', () => {
-
+    assert.isTrue(false);
   });
 
   it('should yield a side effect to trigger loading a GIF with topic specified in model and null gifUrl when RequestMore kicks in', () => {
-
+    assert.isTrue(false);
   });
 });
 ```
 
-As you might have spotted, we've translated some domain specific concepts into more concrete implementation concepts. Like for example we assume that `null` `gifUrl` means that we are showing a loading indicator in the UI.
+As you might have spotted, we've translated some domain specific concepts into more concrete implementation concepts. Like for example we assume that `null` `gifUrl` means that we are showing a loading indicator in the UI. **You can try running failing tests by executing `npm run test:watch`**.
+
+Writing Unit tests in `redux-elm` consists of two parts
+1. Assert that Model was correctly mutated when specific Action is handled
+2. Assert that Model yields expected Side Effects when specific Action is handled
+
+
+To understand how to write Unit tests we need to understand how Generators work because our Updater is nothing else than Generator function.
+
+```javascript
+function* updater(model, action) {
+  yield 1;
+  yield 2;
+  return model + 1;
+}
+```
+
+Calling a generator does not return value but it returns [Iterator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators#Iterators), think of an Object which has one method `next`:
+
+```javascript
+const iterator = updater(42, {type: 'SomeAction'});
+```
+
+Calling next on Iterator changes its internal state while returning the next element where element has always same shape:
+
+```javascript
+const nextElement = iterator.next();
+
+console.log(nextElement); // nextElement is object with two fields, done and value where done is false for all the calls except the last one
+                          // value contains either yielded or returned expression
+                          //
+                          // { done: false, value: 1 }
+
+console.log(iterator.next()); // { done: false, value: 2 }
+console.log(iterator.next()); // { done: true, value: 43 }
+```
+
+Now it's pretty obvious that testing our reducer is just matter of calling `next()` on the returned generator and expecting some values.
+
+```javascript
+function* updater(input) {
+  yield 1;
+  return input + 42;
+}
+
+const iterator = updater(12);
+
+assert.deepEqual(iterator.next(), {
+  done: false,
+  value: 1
+});
+
+assert.deepEqual(iterator.next(), {
+  done: true,
+  value: 53
+})
+```
+
+Let's have a look how we would write the first test which is testing correct State mutation:
+
+```javascript
+import { assert } from 'chai';
+import updater from '../../src/gif-viewer/updater';
+
+describe('GifViewer Updater Behaviour Description', () => {
+  it('should contain null gifUrl right after Component is initialized', () => {
+    const iterator = updater(undefined, { type: 'NonExistingAction' });
+
+    iterator.next();
+    assert.equal(iterator.next().value.gifUrl, null);
+  });
+});
+```
