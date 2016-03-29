@@ -1,14 +1,21 @@
 ## Table of Contents
 
-WIP
+* Why the Elm Architecture matters? **TODO**
+* Getting Started Tutorial
+ * Necessary boilerplate
+ * Hello World!
+ * Side Effects
+* More practical example - GifViewer
+ * Shaping out initial Model
+ * Rendering View
+ * AJAX & Side Effects in practice
+ * Writing Unit Tests
+  * Deeper generator understanding
+* Composition - List of GifViwers example **TODO**
+ WIP - describe composition, matchers, how composition is related to encapsulation
 
 ## Why the Elm Architecture matters?
-TODO
-- Composition
-- Componentization
-- Encapsulation
-- Component, first class citizen
-- You will find all the examples: here TODO
+**TODO**
 
 ## Getting Started Tutorial
 
@@ -479,6 +486,7 @@ Writing Unit tests in `redux-elm` consists of two parts
 1. Assert that Model was correctly mutated when specific Action is handled
 2. Assert that Model yields expected Side Effects when specific Action is handled
 
+#### Deeper generator understanding
 
 To understand how to write Unit tests we need to understand how Generators work because our Updater is nothing else than Generator function.
 
