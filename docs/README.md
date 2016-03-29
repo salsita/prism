@@ -10,7 +10,7 @@
  * Rendering View
  * AJAX & Side Effects in practice
  * Writing Unit Tests
-  * Deeper generator understanding
+   * Deeper generator understanding
 * Composition - List of GifViwers example **TODO**
  WIP - describe composition, matchers, how composition is related to encapsulation
 
