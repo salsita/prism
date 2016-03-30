@@ -670,4 +670,53 @@ const ChildView = ({ model, onTextFieldChanged }) => ({
   <input type="text" onChange={onTextFieldChanged} value={model.value} />
 });
 ```
-Now parent only knows that it has Child and the Child has its own Model but Parent does not need to know anything about implementation details of Child.
+
+Now parent only knows that it has Child and the Child has its own Model but Parent does not need to know anything about implementation details of Child. The Model Composition is pretty obvious:
+
+```javascript
+{
+  parentViewModel: {
+    childViewModel: {
+      value: 'Text Field Value'
+    }
+  }
+  }
+}
+```
+
+It's pretty common to compose Application State (Model) and Views in `react` with `redux`, so what's actually the main (and probably only) distinction between `redux` and The Elm Architecture?
+
+### Action Composition
+
+The part which makes the Elm Architecture unique is Action Composition, the idea is pretty simple. Just imagine how it works in Redux, in really deeply nested View you can `dipsatch` an action and the action can be handled basically by any Reducer, that's **key principle of Redux: any Reducer can handle any Action** because action hierarchy is flat, there's no Action composition.
+
+```javascript
+// Traditional Redux Action
+{
+ type: 'FLAT_ACTION_TYPE',
+ payload: 'payload'
+}
+```
+
+**The Elm Architecture allows Action nesting** and therefore Action Composition:
+
+```javascript
+{
+  type: 'PARENT_COMPONENT',
+  payload: {
+    type: 'CHILD_COMPONENT',
+    payload: 'payload'
+  }
+}
+```
+
+What we mean by Action nesting is simply having sub-action as `payload` of parent action. However, you might protest that working with nested actions may be a bit clumsy therefore `redux-elm` simplifies that by defining Action composition in Action `type` by simply using `.` delimited nested types, therefore above example actually looks like this:
+
+```javascript
+{
+  type: 'PARENT_COMPONENT.CHILD_COMPONENT',
+  payload: 'payload'
+}
+```
+
+From `redux` perspective there's no difference between traditional plain old `redux` Action and nested `redux-elm` Action except there's some convention in Action type.
