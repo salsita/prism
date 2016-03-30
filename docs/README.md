@@ -834,5 +834,5 @@ First things first, we know that `init` function exposed by `GifViewer` is thunk
 It's apparent from the screenshot that we can now see `GifViewer` topics and two API calls have been called.
 
 **ADVANCED**
-Are you wondering what's the nice browser extension on the right side in the screenshot above? It's [`redux-devtools-skeleton`](https://github.com/zalmoxisus/redux-devtools-extension) which allows you very nicely debug your Redux applications, it comes really handy and you should check it out. `redux-elm-skeleton` already integrates it, so you just need to install the [extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) in your browser and restart it, you should see Redux tab in your Chrome Dev Tools.
+Are you wondering what's the nice browser extension on the right side in the screenshot above? It's [`redux-devtools-extension`](https://github.com/zalmoxisus/redux-devtools-extension) which allows you very nicely debug your Redux applications, it comes really handy and you should check it out. `redux-elm-skeleton` already integrates it, so you just need to install the [extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) in your browser and restart it, you should see Redux tab in your Chrome Dev Tools.
 **END-ADVANCED**
