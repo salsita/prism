@@ -15,6 +15,11 @@
   * Action Composition
   * Real Composition Example
    * Updater Composition
+   * Action Composition in Practice
+   * Introducing Matchers
+    * exactMatcher
+    * matcher
+    * parameterizedMatcher
 * Understanding boilerplate **TODO**
   * We don't need switch unlike Redux
 * Custom Matchers
@@ -885,3 +890,35 @@ export default new Updater(init).toReducer();
 After running the application, you should now be able to see in [`redux-devtools-extension`](https://github.com/zalmoxisus/redux-devtools-extension) that Actions are actually composed!
 
 ![gif-viewer-pair-3](./assets/9.png)
+
+Time for plumbing, we need to proxy all the actions tagged with `Top` or `Bottom` to `GifViewer` Updater which does the mutation and potentially emits Side effects. Imagine our `GifViewerPair` Updater as a person who unwraps a package which may contain another package and hand it over to another person (`GifViewer` Updater) who's responsible for handling content of the package and keep in mind that the package can be wrapped many times for many people (Component Updaters). Therefore we'd need to strip `Top.` or `Bottom.` off the beggining of the Action type and provide rest to underlying Child Updater as unwrapped Action.
+
+#### Introducing Matchers
+
+Every Updater must be provided with Matcher implementation. Matcher is responsible for matching action and passing it to corresponding Handler and it's the second argument when creating instance of `Updater`:
+
+```javascript
+import { Updater, Matchers } from 'redux-elm';
+
+const initialModel = {};
+
+export default new Updater(initialModel, Matchers.exactMatcher)
+  .case('ExactMatch', function*(model) {
+    return model;
+  })
+  .toReducer();
+```
+
+So far we've been always providing `exactMatcher`, you can write your own implementation of Matcher and we will cover this. `redux-elm` is shipped with three basic implementations:
+
+1. `exactMatcher`
+2. `matcher`
+3. `parameterizedMatcher`
+
+If you don't provide any Matcher to Updater, `matcher` is taken as default.
+
+##### exactMatcher
+
+##### matcher
+
+##### parameterizedMatcher
