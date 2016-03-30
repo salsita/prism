@@ -20,6 +20,7 @@
      * exactMatcher
      * matcher
      * parameterizedMatcher
+   * Utilizing Matchers for Action Composition
 * Understanding boilerplate **TODO**
   * We don't need switch unlike Redux
 * Custom Matchers
@@ -261,7 +262,7 @@ function* updater(model) {
 }
 ```
 
-This Updater function yields two side effects **which are not executed** in the Updater and it also returns mutated Model. We said that these side effects are not executed, but how are these side effects useful when they are not executed? A good message for you, there's a library for Redux, which is also used in `redux-skeleton`. The library is called [redux-side-effects](https://github.com/salsita/redux-side-effects) which is doing exactly what we need, it collects all the yielded values in Reducers and executes them "out of order" so that they are executed right after updater mutates the Model.
+This Updater function yields two side effects **which are not executed** in the Updater and it also returns mutated Model. We said that these side effects are not executed, but how are these side effects useful when they are not executed? A good message for you, there's a library for Redux, which is also used in `redux-skeleton`. The library is called [redux-side-effects](https://github.com/salsita/redux-side-effects) which is doing exactly what we need, it collects all the yielded values in Updater and executes them "out of order" so that they are executed right after updater mutates the Model.
 
 **ADVANCED**
 In fact, calling a Generator returns an Iterable. Iterable is an interface which implements `next()` method. Therefore we can iterate over result of Generator result.
@@ -528,7 +529,7 @@ console.log(iterator.next()); // { done: false, value: 2 }
 console.log(iterator.next()); // { done: true, value: 43 }
 ```
 
-Now it's pretty obvious that testing our reducer is just matter of calling `next()` on the returned generator and expecting some values.
+Now it's pretty obvious that testing our updater is just matter of calling `next()` on the returned generator and expecting some values.
 
 ```javascript
 function* updater(input) {
@@ -560,7 +561,7 @@ describe('GifViewer Updater Behaviour Description', () => {
     const iterator = updater(undefined, { type: 'NonExistingAction' });
 
     // We ignore result of first `next()` call because we know
-    // that first value yielded in the reducer is Side Effect
+    // that first value yielded in the updater is Side Effect
     iterator.next();
 
     // Second call of `iterator.next()` will return appropriate mutated Model
@@ -893,8 +894,6 @@ After running the application, you should now be able to see in [`redux-devtools
 
 ![gif-viewer-pair-3](./assets/9.png)
 
-Time for plumbing, we need to proxy all the actions tagged with `Top` or `Bottom` to `GifViewer` Updater which does the mutation and potentially emits Side effects. Imagine our `GifViewerPair` Updater as a person who unwraps a package which may contain another package and hand it over to another person (`GifViewer` Updater) who's responsible for handling content of the package and keep in mind that the package can be wrapped many times for many people (Component Updaters). Therefore we'd need to strip `Top.` or `Bottom.` off the beggining of the Action type and provide rest to underlying Child Updater as unwrapped Action.
-
 #### Introducing Matchers
 
 Every Updater must be provided with Matcher implementation. Matcher is responsible for matching action and passing it to corresponding Handler and it's the second argument when creating instance of `Updater`:
@@ -974,3 +973,45 @@ export default new Updater(initialModel, Matchers.parameterizedMatcher)
   })
   .toReducer();
 ```
+
+#### Utilizing Matchers for Action Composition
+
+Time for plumbing, we need to proxy all the actions tagged with `Top` or `Bottom` to `GifViewer` Updater which does the mutation and potentially emits Side effects. Imagine our `GifViewerPair` Updater as a person who unwraps a package which may contain another package and hand it over to another person (`GifViewer` Updater) who's responsible for handling content of the package and keep in mind that the package can be wrapped many times for many people (Component Updaters). Therefore we'd need to strip `Top.` or `Bottom.` off the beggining of the Action type and provide rest to underlying Child Updater as unwrapped Action.
+
+```javascript
+import { Updater, mapEffects } from 'redux-elm';
+
+import gifViewerUpdater, { init as gifViewerInit } from '../gif-viewer/updater';
+
+const funnyCatsGifViewerInit = gifViewerInit('funny cats');
+const funnyDogsGifViewerInit = gifViewerInit('funny dogs');
+
+export function* init() {
+  return {
+    top: yield* mapEffects(funnyCatsGifViewerInit(), 'Top'),
+    bottom: yield* mapEffects(funnyDogsGifViewerInit(), 'Bottom')
+  };
+}
+
+export default new Updater(init)
+  .case('Top', function*(model, action) {
+    return {
+      ...model,
+      top: yield* mapEffects(gifViewerUpdater(model.top, action), 'Top')
+    };
+  })
+  .case('Bottom', function*(model, action) {
+    return {
+      ...model,
+      bottom: yield* mapEffects(gifViewerUpdater(model.bottom, action), 'Bottom')
+    };
+  })
+  .toReducer();
+
+```
+
+We've basically implemented the behaviour with guys unwrapping packages and delegating them to someone else. `GifViewerPair` Updater just takes any Action starting with `Top` or `Bottom` unwraps its content and passes it down to `GifViewer` Updater along with corresponding Model slice. We can't of course forget on `mapEffects` because handling that Action in `GifViewer` Updater may potentially dispatch another Action and we would need to "wrap" it back so that when it gets back to the Updater loop everything will be wrapped again starting in the top of the Updater hierarchy.
+
+And this is it, now try to compile and run the Application and see the result:
+
+![gif-viewer-pair-4](./assets/10.png)
