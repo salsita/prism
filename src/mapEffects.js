@@ -9,9 +9,9 @@ export default function* mapEffects(iterable, ...types) {
   if (unwoundIterable.length > 1) {
     for (let i = 0; i < unwoundIterable.length - 1; i++) {
       const executor = unwoundIterable[i].shift();
-      const mappedExecutor = dispatch => executor(forwardTo(dispatch, ...types));
+      const mappedExecutor = (dispatch, ...executorArgs) => executor(forwardTo(dispatch, ...types), ...executorArgs);
 
-      yield sideEffect(mappedExecutor, ...unwoundIterable[i]);
+      yield sideEffect(mappedExecutor, ...(unwoundIterable[i]));
     }
   }
 
