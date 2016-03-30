@@ -14,9 +14,9 @@
 * Composition - List of GifViwers
   * Action Composition
   * Real Composition Example
- WIP - describe composition, matchers, how composition is related to encapsulation
 * Understanding boilerplate **TODO**
   * We don't need switch unlike Redux
+* Custom Matchers
 
 ## Why the Elm Architecture matters?
 **TODO**
