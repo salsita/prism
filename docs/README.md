@@ -835,7 +835,9 @@ export default new Updater(init).toReducer();
 
 ```
 
-First things first, we know that `init` function exposed by `GifViewer` is thunk (function which returns a function) therefore we need to call it "twice" `gifViewerInit('funny cats')()` to actually call it, first call takes one argument which is a topic for the `GifViewer`, we'll use Cats for top `GifViewer` and Dogs for bottom. So hypothetically the app should now correctly show Topic above the `GifViewer` and also trigger initial API call.
+First things first, we know that `init` function exposed by `GifViewer` is thunk (function which returns a function) therefore we need to call it "twice" to actually call it, first call takes one argument which is a topic for the `GifViewer` and returns initialize function which can be later used for initializing the Model, we'll use Cats for top `GifViewer` and Dogs for bottom. So hypothetically the app should now correctly show Topic above the `GifViewer` and also trigger initial API call.
+
+Also you might have spotted `yield*` keyword, this is essential because Generators does not automatically propagate upper the call hierarchy and you need to explicitly say that you want to propagate `yield`s. Therefore anytime you call a generator function in your Updater, don't forget to prepend `yield*` keyword.
 
 ![gif-viewer-pair-2](./assets/8.png)
 
@@ -924,7 +926,51 @@ So far we've been always providing `exactMatcher`, you can write your own implem
 If you don't provide any Matcher to Updater, `matcher` is taken as default.
 
 ##### exactMatcher
+This is simplest matcher which is looking for exact match in Action type. Provided action for the handler is exactly the same as dispatched action. This is basically `redux` `switch` in Reducer alternative. This is specifically not very useful for Action composition but is mandatory for "leaf" Actions, these are Actions which does not have any child Action. Therefore we used this Matcher for our examples so far because there was no Action Composition needed.
 
 ##### matcher
+Default Matcher implementation, which you will probably need for most Actions. This Matcher unwraps action, what does it mean? Assuming that `Top` is provided as Matching pattern to `case` function and action starting with `Top.` is dispatched this Matcher will match the Action and strips off the `Top.` prefix passing the rest of action type to corresponding updater, see example:
+
+```javascript
+// Assuming { type: 'Top.NewGif', payload: 'some magic url' } has been dispatched:
+
+export default new Updater(initialModel, Matchers.matcher)
+  .case('Top', function*(model, action) {
+    // Action is matched and therefore handler is called however `action` argument is not `Top.NewGif` but it's
+    //
+    // {
+    //   type: 'NewGif',
+    //   url: 'some magic url'
+    // }
+    //
+
+    return model;
+  })
+  .toReducer();
+```
+
+Cool, isn't it?
 
 ##### parameterizedMatcher
+Very similiar to `matcher` but it allows to parameterize the Action with single parameter, this is especially very useful for dynamic structures like some dynamic lists of Components, we will cover its usage later.
+
+```javascript
+// Assuming { type: 'GifViewers.42.NewGif', payload: 'some magic url' } has been dispatched:
+
+export default new Updater(initialModel, Matchers.matcher)
+  .case('GifViewers', function*(model, action, gifViewerId) {
+
+    // gifViewerId plays a role of the parameter here
+    //
+    // Action is matched and therefore handler is called however `action` argument is not `GifViewers.42.NewGif` but it's
+    //
+    // {
+    //   type: 'NewGif',
+    //   url: 'some magic url'
+    // }
+    //
+
+    return model;
+  })
+  .toReducer();
+```
