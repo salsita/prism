@@ -903,7 +903,13 @@ import { Updater, Matchers } from 'redux-elm';
 const initialModel = {};
 
 export default new Updater(initialModel, Matchers.exactMatcher)
-  .case('ExactMatch', function*(model) {
+  .case('ExactMatch', function*(model, action) {
+    // where action is:
+    // {
+    //   type: 'ExactMatch',
+    //   payload: 'anything'
+    // }
+
     return model;
   })
   .toReducer();
