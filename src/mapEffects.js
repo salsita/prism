@@ -7,7 +7,7 @@ export default function* mapEffects(iterable, ...types) {
   const unwoundIterable = Utils.unwindIterable(iterable);
 
   if (unwoundIterable.length > 1) {
-    for (let i = 0; i < unwoundIterable.length - 2; i++) {
+    for (let i = 0; i < unwoundIterable.length - 1; i++) {
       const executor = unwoundIterable[i].shift();
       const mappedExecutor = dispatch => executor(forwardTo(dispatch, ...types));
 
