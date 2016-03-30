@@ -21,6 +21,7 @@
      * matcher
      * parameterizedMatcher
    * Utilizing Matchers for Action Composition
+   * Using public interface in parent Components
 * Understanding boilerplate **TODO**
   * We don't need switch unlike Redux
 * Custom Matchers
@@ -1019,3 +1020,43 @@ And this is it, now try to compile and run the Application and see the result:
 However, after you click More Please! button on either Top or Bottom Viewer nothing happens and here's the reason why:
 
 ![gif-viewer-pair-5](./assets/11.png)
+
+`RequestMore` action is not wrapped, therefore we need to do one small adjustment in our `GifViewerPair' View.
+
+```javascript
+import React from 'react';
+
+import GifViewer from '../gif-viewer/view';
+
+export default ({ model, dispatch }) => (
+  <div>
+    <GifViewer model={model.top} dispatch={dispatch} />
+    <GifViewer model={model.bottom} dispatch={dispatch} />
+    <br />
+    <button onClick={() => dispatch({ type: 'Load' })}>Load Both!</button>
+  </div>
+);
+
+```
+
+Dispatch function passed to corresponding View instance should automatically tag all the Actions with `Top` or `Bottom` prefix (wrap the action), we did exactly the same within our Updater using `mapEffects` function. `redux-elm` provides a function which does this automatically for you, the function is called `forwardTo` which takes `dispatch` function as first argument and infinite number of Strings which defines action wrapping.
+
+```javascript
+import React from 'react';
+import { forwardTo } from 'redux-elm';
+
+import GifViewer from '../gif-viewer/view';
+
+export default ({ model, dispatch }) => (
+  <div>
+    <GifViewer model={model.top} dispatch={forwardTo(dispatch, 'Top')} />
+    <GifViewer model={model.bottom} dispatch={forwardTo(dispatch, 'Bottom')} />
+    <br />
+    <button onClick={() => dispatch({ type: 'Load' })}>Load Both!</button>
+  </div>
+);
+```
+
+Save & hit refresh button and voila! Now your application also reacts to clicking on More Please! button.
+
+#### Using public interface in parent Components
