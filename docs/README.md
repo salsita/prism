@@ -17,9 +17,9 @@
    * Updater Composition
    * Action Composition in Practice
    * Introducing Matchers
-    * exactMatcher
-    * matcher
-    * parameterizedMatcher
+     * exactMatcher
+     * matcher
+     * parameterizedMatcher
 * Understanding boilerplate **TODO**
   * We don't need switch unlike Redux
 * Custom Matchers
