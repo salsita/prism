@@ -1015,3 +1015,7 @@ We've basically implemented the behaviour with guys unwrapping packages and dele
 And this is it, now try to compile and run the Application and see the result:
 
 ![gif-viewer-pair-4](./assets/10.png)
+
+However, after you click More Please! button on either Top or Bottom Viewer nothing happens and here's the reason why:
+
+![gif-viewer-pair-5](./assets/11.png)
