@@ -31,3 +31,27 @@ export const isGenerator = fn => {
     return false;
   }
 };
+
+/**
+ * Iterates over iterable and returns list of all values.
+ *
+ * @param {Iterable} iterable
+ *
+ * @returns {Array} List of all values
+ */
+export const unwindIterable = iterable => {
+  const data = [];
+
+  const recur = it => {
+    const next = it.next();
+    data.push(next.value);
+
+    if (next.done) {
+      return data;
+    } else {
+      return recur(it);
+    }
+  };
+
+  return recur(iterable);
+};
