@@ -1,6 +1,6 @@
 ## Table of Contents
 
-* Why the Elm Architecture matters? **TODO**
+* Why the Elm Architecture matters?
 * Getting Started Tutorial
  * Necessary boilerplate
  * Hello World!
@@ -11,7 +11,7 @@
  * AJAX & Side Effects in practice
  * Writing Unit Tests
    * Deeper generator understanding
-* Composition - List of GifViwers example **TODO**
+* Composition - List of GifViwers
  WIP - describe composition, matchers, how composition is related to encapsulation
 * Understanding boilerplate **TODO**
   * We don't need switch unlike Redux
@@ -627,3 +627,5 @@ With fundamental knowledge writing two more remaining tests is trivial:
     });
   });
 ```
+
+## Composition - List of GifViewers
