@@ -800,4 +800,8 @@ export default ({ model, dispatch }) => (
 );
 ```
 
-Again, nothing but Composition, just render two `GifViewers` and provide corresponding Model instance. Top `GifViewer` gets `model.top` and Bottom gets `model.bottom` and as you can see we also provide `dispatch`. When you are nesting Views you **always need to pass two props: model and dispatch function**. 
+Again, nothing but Composition, just render two `GifViewers` and provide corresponding Model instance. Top `GifViewer` gets `model.top` and Bottom gets `model.bottom` and as you can see we also provide `dispatch`. When you are nesting Views you **always need to pass two props: model and dispatch function**.
+
+You should be able to run the application now and see two `GifViewers` but nothing really works.
+
+![gif-viewer-pair-1](./assets/7.png)
