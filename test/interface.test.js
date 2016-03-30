@@ -5,6 +5,7 @@ import * as Interface from '../src/index';
 import Updater from '../src/Updater';
 import * as Matchers from '../src/matchers';
 import forwardTo from '../src/forwardTo';
+import mapEffects from '../src/mapEffects';
 import * as Generators from '../src/generators';
 
 describe('Library interface', () => {
@@ -13,6 +14,7 @@ describe('Library interface', () => {
       Updater,
       Matchers,
       forwardTo,
+      mapEffects,
       Generators
     });
   });
