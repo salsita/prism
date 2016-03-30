@@ -957,7 +957,7 @@ Very similiar to `matcher` but it allows to parameterize the Action with single 
 ```javascript
 // Assuming { type: 'GifViewers.42.NewGif', payload: 'some magic url' } has been dispatched:
 
-export default new Updater(initialModel, Matchers.matcher)
+export default new Updater(initialModel, Matchers.parameterizedMatcher)
   .case('GifViewers', function*(model, action, gifViewerId) {
 
     // gifViewerId plays a role of the parameter here
