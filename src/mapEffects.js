@@ -3,7 +3,7 @@ import * as Utils from './utils';
 import { sideEffect } from 'redux-side-effects';
 
 // TODO: docs & tests
-export function* mapEffects(iterable, ...types) {
+export default function* mapEffects(iterable, ...types) {
   const unwoundIterable = Utils.unwindIterable(iterable);
 
   if (unwoundIterable.length > 1) {
