@@ -14,6 +14,7 @@
 * Composition - List of GifViwers
   * Action Composition
   * Real Composition Example
+   * Updater Composition
 * Understanding boilerplate **TODO**
   * We don't need switch unlike Redux
 * Custom Matchers
@@ -805,3 +806,27 @@ Again, nothing but Composition, just render two `GifViewers` and provide corresp
 You should be able to run the application now and see two `GifViewers` but nothing really works.
 
 ![gif-viewer-pair-1](./assets/7.png)
+
+#### Updater Composition
+
+The reason why nothing really works now is that we haven't plumbed `GifViewer` Updater in yet. And we also need to initialize Child models properly therefore we need to turn initial Model into function:
+
+```javascript
+import { Updater } from 'redux-elm';
+
+import { init as gifViewerInit } from '../gif-viewer/updater';
+
+export function* init() {
+  return {
+    top: yield* gifViewerInit('funny cats')(),
+    bottom: yield* gifViewerInit('funny dogs')()
+  };
+}
+
+export default new Updater(init).toReducer();
+
+```
+
+First things first, we know that `init` function exposed by `GifViewer` is thunk (function which returns a function) therefore we need to call it "twice" `gifViewerInit('funny cats')()` to actually call it, first call takes one argument which is a topic for the `GifViewer`, we'll use Cats for top `GifViewer` and Dogs for bottom. So hypothetically the app should now correctly show Topic above the `GifViewer` and also trigger initial API call.
+
+![gif-viewer-pair-2](./assets/8.png)
