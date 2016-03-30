@@ -45,6 +45,7 @@
     "eslint": "^2.1.0",
     "isparta": "^4.0.0",
     "mocha": "^2.4.5",
+    "redux-side-effects": "^1.0.0",
     "sinon": "^1.17.3"
   },
   "dependencies": {
