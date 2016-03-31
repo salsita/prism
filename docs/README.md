@@ -11,7 +11,7 @@
  * AJAX & Side Effects in practice
  * Writing Unit Tests
    * Deeper generator understanding
-* Composition - List of GifViwers
+* Composition
   * Action Composition
   * Real Composition Example
    * Updater Composition
@@ -22,6 +22,7 @@
      * parameterizedMatcher
    * Utilizing Matchers for Action Composition
    * Using public interface in parent Components
+  * Dynamic List of Components
 * Understanding boilerplate **TODO**
   * We don't need switch unlike Redux
 * Custom Matchers
@@ -638,7 +639,7 @@ With fundamental knowledge writing two more remaining tests is trivial:
   });
 ```
 
-## Composition - List of GifViewers
+## Composition
 
 If Redux is really missing something out of the box, it's some kind of Encapsulation and **Composition is a new Encapsulation in functional programming lingo**. Redux gives programmer a huge power by having single instance of application state in one place. However, with great power comes great responsibility and that's why sometimes it tends people to abuse that power, which can gradually lead to very coupled Components and hardly maintanable code base. `redux-elm` is strict, it defines hard boundaries between components and does not allow to break them. Decoupling is one of the benefits of `redux-elm`.
 
@@ -1138,4 +1139,7 @@ export default new Updater(init)
   }, Matchers.exactMatcher)
   .toReducer();
 ```
+## Dynamic List of Components
+We know how Composition works and why it's essential for `redux-elm` so we can try to build an example which is a bit more realistic. This tutorial guides you through process of implementing dynamic list of `GifViewer`s. User will be allowed to dynamically add infinite number of `GifViewer`s with specified topics.
 
+![gif-viewer-list-1](./assets/12.png)
