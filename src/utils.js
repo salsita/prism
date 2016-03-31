@@ -1,4 +1,19 @@
 /**
+ * Simple invariant check.
+ *
+ * @param {Boolean} A condition to be met
+ *
+ * @param {String} An exception message to be thrown
+ * @returns {void}
+ */
+export const invariant = (condition, message) => {
+  if (!condition) {
+    throw new Error(`Invariant violation: ${message}`);
+  }
+};
+
+
+/**
  * Checks whether provided argument is a function.
  *
  * @param {any} Anything
