@@ -40,5 +40,4 @@ describe('isGenerator function', () => {
     assert.isFalse(Utils.isGenerator({}));
     assert.isFalse(Utils.isGenerator('generator'));
   });
-
 });
