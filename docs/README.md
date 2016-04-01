@@ -81,7 +81,7 @@ run('app', view, updater);
 
 ```
 
-`run` starts the application, we only need to provide **Root component** and every Elmish component consists of two parts **updater** and **view**. We call the component Root component because it's typical for Elmish architecture that application is modeled in form of component tree and every tree has its root. In our Hello World example we will have just one component therefore it's also Root component.
+`run` starts the application, we only need to provide **Root component** and every Elmish component consists of two parts **updater** and **view**. We call the component Root component because it's typical for Elmish architecture that application is modeled in form of component tree and every tree has its root. In Hello World example we will have just one component therefore it's also Root component.
 
 `run` takes three arguments:
 - first argument is `id` attribute of HTML node we would like to mount the component in. In the example, its 'app' because there's `<div id="app"></div>` inside our `index.html`.
@@ -154,13 +154,13 @@ import React from 'react';
 export default ({ model, dispatch }) => <div>{model}</div>;
 ```
 
-Then you'd see only 0 on the screen because it's initial value of the model and we've defined this in our Updater.
+Then you'd see only 0 on the screen because it's initial value of the model and we've defined this in the Updater.
 
 ![hello-world-app-3](./assets/3.png)
 
 However, this Updater is not really handy, because it does not define any mutations on the model. In real world applications, you want to allow user to interact with the UI and interaction with the UI is basically some mutation of the Model. Something like: Whenever user clicks this button, a boolean flag in the model should be set to 1 and because as I've already mentioned, our View is a function of Model, we could define how markup should look like when the flag is truthy, for example we can display Greeting message.
 
-To define the mutation we need to say when it should happen and that's where **`dispatch`** function in our View comes handy.
+To define the mutation we need to say when it should happen and that's where **`dispatch`** function in the View comes handy.
 
 ```javascript
 <button onClick={() => dispatch({ type: 'SayHi' })}>Say Hi</button>;
@@ -179,7 +179,7 @@ export default new Updater(initialModel, Matchers.exactMatcher)
   .toReducer();
 ```
 
-We are defininig the mutation of the model in our Updater by using `case` method. It has two required arguments:
+We are defininig the mutation of model in the Updater by using `case` method. It has two required arguments:
 
 1. A String pattern for matching the Action and because we are using `Matchers.exactMatcher`, as default Matcher for the entire Updater it will also be used for this specific `case` matching. We can override the default matching implementation by providing the matcher as third argument to `case` method. `Matchers.exactMatcher` is expecting exact match of Action type and provided pattern, therefore only action with type `SayHi` will match.
 2. An updater generator function which is responsible for the mutation onto Model.
@@ -1143,3 +1143,72 @@ export default new Updater(init)
 We know how Composition works and why it's essential for `redux-elm` so we can try to build an example which is a bit more realistic. This tutorial guides you through process of implementing dynamic list of `GifViewer`s. User will be allowed to dynamically add infinite number of `GifViewer`s with specified topics.
 
 ![gif-viewer-list-1](./assets/12.png)
+
+After we create a new folder `gif-viewer-list` inside `src` with `updater.js` and view.js` files, we shouldn't forget about updating the Root component in `main.js`:
+
+```javascript
+import run from './boilerplate';
+
+import view from './gif-viewer-list/view';
+import updater from './gif-viewer-list/updater';
+
+run('app', view, updater);
+``` 
+
+Let's shape out initial model, we know that there will be list of child `GifViewer` components and we also need to keep `topic` because it will correspond with value provided by Input element.
+
+```javascript
+import { Updater } from 'redux-elm';
+
+const initialModel = {
+  topic: '',
+  gifViewers: []
+};
+
+export default new Updater(initialModel)
+  .toReducer();
+
+```
+
+We should prepare the View now:
+
+```javascript
+import React from 'react';
+import { forwardTo } from 'redux-elm';
+
+import GifViewer from '../gif-viewer/view';
+
+const inputStyle = {
+  width: '100%',
+  height: '40px',
+  padding: '10px 0',
+  fontSize: '2em',
+  textAlign: 'center'
+};
+
+export default ({ model, dispatch }) => (
+  <div>
+    <input
+      placeholder="What kind of gifs do you want?"
+      value={model.topic}
+      onKeyDown={ev => ev.keyCode === 13 ? dispatch({ type: 'Create' }) : null}
+      onChange={ev => dispatch({ type: 'ChangeTopic', value: ev.target.value })}
+      style={inputStyle} />
+    <div style={{display: 'flex', flexWrap: 'wrap'}}>
+      {model.gifViewers.map((gifViewerModel, index) =>
+        <GifViewer key={index} model={gifViewerModel} dispatch={forwardTo(dispatch, 'GifViewer', index)} />)}
+    </div>
+  </div>
+);
+```
+
+Input element just renders value `topic` provided by model. User can change its value by dispatching `ChangeTopic` action, after hitting Return (Enter) key `Create` is dispatched because that's what we want to happen. It should crate a new `GifViewer` Component in the Model given the `topic`.
+
+`gifViewers` is array holding all the models for dynamic list of `GifViewers` it just needs to be mapped to `GifViewer` component passing the Model slice. We want to wrap all the actions by `GifViewer.Index` and we used `forwardTo` function:
+
+```javascript
+dispatch={forwardTo(dispatch, 'GifViewer', index)}
+```
+
+For example when `NewGif` is dispatched in second `GifViewer` the action will be wrapped to `GifViewer.1.NewGif`.
+
