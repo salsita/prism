@@ -462,14 +462,14 @@ In the implementation we can re-use effect for fetching GIF, which has already b
 
 ### Writing Unit Tests
 
-We've got our first `redux-elm` Component implemented, let's write some unit tests. We'll not be testing our Views even though we could but since all the business logic lies in Updaters it's not essential. Before starting working on any production app you should consider how much code coverage is needed but generally we could say having unit tests for Updaters is enough in most cases, especially given the fact that all the Side effects are kept in Updaters along with Model mutations.
+We've got our first `redux-elm` Component implemented, let's write some unit tests. We'll not be testing our Views even though we could, but since all the business logic lies in Updaters it's not essential. Before starting working on any production app, you should consider how much code coverage is needed but generally we could say having unit tests for Updaters is enough, especially given the fact that all the Side effects are kept in Updaters along with Model mutations.
 
 Before we got into writing some code a decent description of Component's behaviour should be clearly defined:
 
 * It should display a loading indicator right after Component is initialized
 * It should start loading a GIF right after Component is initialized where topic is funny cats
 * It should not display loading indicator anymore when new GIF is fetched, instead newly fetched GIF should be displayed
-* It should trigger loading of next GIF with selected topic and display loading indiciator right after user clicks Plese More button
+* It should trigger loading of next GIF with selected topic and display loading indiciator right after user clicks Please More button
 
 It's easy to convert described behaviour into Unit tests. Start by creating an empty folder called `gif-viewer` inside `test` folder. We'll have just single file holding all the Unit tests for the Updater, therfore create a new empty file called `updater.js` within `test/gif-viewer` folder.
 
@@ -498,12 +498,13 @@ describe('GifViewer Updater Behaviour Description', () => {
 As you might have spotted, we've translated some domain specific concepts into more concrete implementation concepts. Like for example we assume that `null` `gifUrl` means that we are showing a loading indicator in the UI. **You can try running failing tests by executing `npm run test:watch`**.
 
 Writing Unit tests in `redux-elm` consists of two parts
+
 1. Assert that Model was correctly mutated when specific Action is handled
 2. Assert that Model yields expected Side Effects when specific Action is handled
 
 #### Deeper generator understanding
 
-To understand how to write Unit tests we need to understand how Generators work because our Updater is nothing else than Generator function.
+To understand how to write Unit tests we need to understand how Generators work, because our Updater is nothing else than Generator function.
 
 ```javascript
 function* updater(model, action) {
@@ -533,7 +534,7 @@ console.log(iterator.next()); // { done: false, value: 2 }
 console.log(iterator.next()); // { done: true, value: 43 }
 ```
 
-Now it's pretty obvious that testing our updater is just matter of calling `next()` on the returned generator and expecting some values.
+Now it's pretty obvious that testing our updater is just a matter of calling `next()` on the returned generator and expecting some values.
 
 ```javascript
 function* updater(input) {
