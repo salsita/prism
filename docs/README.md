@@ -28,35 +28,35 @@
 
 ## Why the Elm Architecture matters?
 
-You've probably spotted all the buzz around Redux and React lately, there's no doubt these two pieces of technology have inevitably changed JavaScript Front-End world. [Redux](https://github.com/reactjs/redux) albeit it's a great framework is still very low level, which is great for newcomers because there's no need to understand complex abstractions so it's pretty easy to grasp all the basic concepts and get up to speed fairly quickly. On the other hand, it lacks those neccessary abstractions for real world, maintainable, scalable applications. It requires really experienced engineers which by trial & error defines those abstractions.
+You've probably spotted all the buzz around [Redux](https://github.com/reactjs/redux) and [React](http://facebook.github.io/react/) lately, there's no doubt these two pieces of technology have inevitably changed JavaScript Front-End world. Redux albeit it's a great framework is still very low level, which is great for newcomers because there's no need to understand complex abstractions so it's pretty easy to grasp all the basic concepts and get up to speed fairly quickly. On the other hand, it lacks those neccessary abstractions for real world, maintainable, scalable applications. It requires really experienced engineers which by trial & error defines those abstractions.
 
 There's an opposite approach, which are full scoped frameworks like for example Angular / Ember and many others which contains a lot of abstractions. Obvious drawback of these frameworks is their complexity. It's very easy to understand Redux, because if something doesn't work, you can still look into Redux codebase and understand what happens under the hood (which will give you the big picture), this is very difficult with fully scoped frameworks.
 
 Ideally, we should find a balance, something that's still very easy to understand and does not involve reading thousands lines of code. That's why patterns are more important than over-engineered frameworks. [The Elm Architecture](https://github.com/evancz/elm-architecture-tutorial) which is an application architecture for [Elm programming language](http://elm-lang.org/) is good example. It's great set of patterns and ideas which helps solving hard problems:
 
 * **Side Effects** - API calls, Logging, anything that's not directly related to your domain logic
-* **Fractability** - Are your Components isolated? Can you at any time publish the deeply nested Component as independent npm package?
-* **Encapsulation** - People do not often talk about Encapsulation in Front-End world, but without it, it's nearly impossible to decouple Components and decoupling is secret sauce for any scalable architecture
-* **Local Component State** - Imagine you want to instantiate a Component, multiple instances of Calendar widget in your UI
+* **[Fractability](http://staltz.com/unidirectional-user-interface-architectures.html)** - Are your Components isolated? Can you at any time publish the deeply nested Component as independent npm package?
+* **[Encapsulation](http://blog.javascripting.com/2016/02/02/encapsulation-in-redux/)** - People do not often talk about Encapsulation in Front-End world, but without it, it's nearly impossible to decouple Components and decoupling is secret sauce for any scalable architecture
+* **Local Component State** - Imagine you want to instantiate a Component, multiple instances of Calendar widget in the UI
 
 This repository aims to utilize the full power of The Elm Architecture in JavaScript. Some Elm folks would protest that it does not make sense to use The Elm Architecture in JavaScript because JavaScript does not have any guarantees unlike Elm. However, I do not share that view as Redux obviously suffers some issues which The Elm Architecture effectively solves and by The Elm Architecture I really mean the architecture not language itself. Goal of `redux-elm` is not to precisly follow the principles of The Elm Architecture, what it tries instead is taking advantage of the architecture where it makes sense and use JavaScript capabilities to squeeze everything out of the architecture where strict Elm cloning would be just awkward.
 
 ## Getting Started Tutorial
 
-This tutorial will guide you through basics of `redux-elm` by implementing simple hello world application and explaining very basic concepts on top of that.
+Geting Started Tutorial will guide you through basics of `redux-elm` by implementing simple Hello World application and explaining basic concepts on top of that.
 
 ### Necessary boilerplate
-Before we get into coding let's start by cloning [https://github.com/salsita/redux-elm-skeleton](skeleton) project which will abstract away all the boilerplate needed for initializing modern ES2016/React/Webpack project. Throughout the code examples we'll probably not strictly use all the ES2016 features as it may be confusing for newcomers.
+Before we get into coding let's start by cloning [https://github.com/salsita/redux-elm-skeleton](skeleton) project which will abstract away all the boilerplate needed for initializing modern ES2016/React/Webpack project. Throughout the code examples we'll probably not strictly use all the [ES2016](http://www.2ality.com/2016/01/ecmascript-2016.html) features as it may be confusing for newcomers.
 
 The directory structure of the skeleton project is fairly straightforward:
 
-* `src` - Folder containing all your source files
+* `src` - Folder containing all the source files
   * `hello-world` - Our first `redux-elm` component, every component must expose two mandatory files: `updater` and `view`
-    * `updater.js` - Elmish `updater` - we'll explain this later
-    * `view.js` - React stateless Component
+    * `updater.js` - Elmish `Updater` - we'll explain this later
+    * `view.js` - [React stateless Component](https://facebook.github.io/react/docs/reusable-components.html#stateless-functions)
   * `boilerplate.js` - this file abstracts away all the boilerplate needed for using react/redux/redux-elm, it exports just single function, which we call `run`. You don't need to understand the code for now
-  * `main.js` - your main file which uses function exposed from `boilerplate.js` and calls it with specific root component, which in our case is `hello-world`
-* `test` - Folder containing all your tests related source files
+  * `main.js` - main file which uses function exposed from `boilerplate.js` and calls it with specific root component, which in our case is `hello-world`
+* `test` - Folder containing all the tests related source files
   * `hello-world` - Unit tests for `hello-world` Component
 * `index.html` - index file needed for displaying HTML
 * `package.json` - dependencies description
@@ -68,7 +68,7 @@ npm install
 npm start
 ```
 
-`npm start` will start local HTTP server on port 3000 so you can simply open your browser with http://localhost:3000 you should see following Hello World application:
+`npm start` will start local HTTP server on port 3000 so you can simply open the browser with http://localhost:3000 and you should see following Hello World application:
 
 ![hello-world-app-1](./assets/1.png)
 
