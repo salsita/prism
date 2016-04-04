@@ -283,7 +283,7 @@ Because we've covered basics of `redux-elm` we may want try to build something. 
 
 ![gif-viewer-1](./assets/4.png)
 
-Let's start by creating a folder called `gif-viewer` in `src` folder of `redux-elm-skeleton`. The folder should contain two files `updater.js` and `view.js`. Because we want to use the Component as Root of our redux-elm-skeleton repo, we need to change `main.js` accordingly.
+Let's start by creating a folder called `gif-viewer` in `src` folder of `redux-elm-skeleton`. The folder should contain two files `updater.js` and `view.js`. Because we want to use the Component as Root of our `redux-elm-skeleton` repo, we need to change `main.js` accordingly.
 
 Now change `main.js` to use the newly created Component:
 
@@ -320,7 +320,7 @@ export default new Updater(init('funny cats'), Matchers.exactMatcher)
 
 Now just imagine that we'll have a parent component which will handle initialization of many instances of GifViewers. The parent component could use the exported `init` function to build parameterized initial model which would then be just passed to GifViewer updater. We will cover this in next examples.
 
-Right now we just need to call the `init` function to create init generator which will create initial model for the Component and we want to have the initial model parametrized with topic 'funny cats'.
+Right now, we just need to call the `init` function to create init generator which will create initial model for the Component and we want to have the initial model parametrized with topic 'funny cats'.
 
 ### Rendering View
 
@@ -338,11 +338,21 @@ const renderGif = url => {
 }
 ```
 
-We've started by importing React and implementing our `renderGif` function which takes `url` as argument and renders either Loading spinner or the actual GIF. Keep in mind that `url` can be `null` and if that happens it means that we are waiting for new GIF.
+Just import `React` and get to implementing the `renderGif` function which takes `url` as argument and renders either Loading spinner or the actual GIF. Keep in mind that `url` can be `null` and if that happens it means that we are waiting for new GIF.
 
 Every View must export default React component and here it is:
 
 ```javascript
+import React from 'react';
+
+const renderGif = url => {
+  if (url) {
+    return <img src={url} width="200" height="200" />;
+  } else {
+    return <img src="/assets/waiting.gif" width="200" height="200" />;
+  }
+}
+
 export default ({ model, dispatch }) => (
   <div style={{ width: '200px' }}>
     <h2 style={{ width: '200px', textAlign: 'center' }}>{model.topic}</h2>
@@ -352,7 +362,7 @@ export default ({ model, dispatch }) => (
 );
 ```
 
-The essential part is using the `renderGif` function and passing it `gifUrl` from Model. We also need User interaction therefore button "More Please!" dispatches new action `RequestMore` which we will handle in our Updater.
+The essential part is using the `renderGif` function and passing it `gifUrl` from Model. We also need User interaction therefore button "More Please!" dispatches new action `RequestMore` which we will handle in the Updater.
 
 Now you should be able to see something like this:
 
@@ -361,7 +371,7 @@ Now you should be able to see something like this:
 
 ### AJAX & Side Effects in practice
 
-As you can see, there's not much going on now we can see infinite loading of Funny cats and after clicking the button nothing happens. We'd ideally want our application to initiate loading of GIF in init function of our Updater, but how can we do it? That's exactly when Side effects comes to play. So first of all we need to define implementation of side effect which triggers the API call. Let's create a new file within `gif-viewer` directory and call it `effects.js`. This file will only contain single function called `fetchGif`:
+As you can see, there's not much going on now, we can just see infinite loading of Funny cats and after clicking the button nothing happens. We'd ideally want our application to initiate loading of GIF in the `init` generator function, but how can we do it? That's exactly when Side effects comes to play. First of all, we need to define implementation of side effect which triggers the API call. Let's create a new file within `gif-viewer` directory and call it `effects.js`. This file will only contain single function called `fetchGif`:
 
 ```javascript
 import request from 'superagent-bluebird-promise';
@@ -372,7 +382,7 @@ export const fetchGif = (dispatch, topic) => {
 };
 ```
 
-Every Effect function always take 1st argument which is `dispatch` and infinite number of optional arguments which are specific for the Effect. Therefore our `fetchGif` function takes `dispatch` and `topic` as arguments. Inside the function we just need to trigger the XHR request (we're using [superagent library](https://www.npmjs.com/package/superagent-bluebird-promise) in the example). Because we have `dispatch` function available, we can simply `dispatch` new action when API response arrives and we'll also provide `url` in the action, which is extracted from the API response. The function is now prepared to be yielded from our Init function.
+Every Effect function always take 1st argument which is `dispatch` and infinite number of optional arguments which are specific for the Effect. Therefore our `fetchGif` function takes `dispatch` and `topic` as arguments. Inside the function we just need to trigger the XHR request (we're using [superagent library](https://www.npmjs.com/package/superagent-bluebird-promise) in the example). Because we have `dispatch` function available, we can simply `dispatch` new action when API response arrives, providing `url` in the newly dispatched action, which is extracted from the API response. The function is now prepared to be yielded from our `init` function.
 
 Let's open `updater.js` again and do slight modification in our `init` function:
 
@@ -393,7 +403,7 @@ export function init(topic) {
 
 ```
 
-It's obvious that we are utilizing the full power of Generators here because we are yielding Side Effect to `fetchGif` in our `init` function. `Yield`ing Side Effects is as easy as yielding Effect wrapped in `sideEffect` function which is exposed by `redux-side-effects` library. We are using this declarative approach so that unit testing is breeze.
+It's obvious that we are utilizing full power of Generators here because, we are yielding Side Effect to `fetchGif` in our `init` function. `Yield`ing Side Effects is as easy as yielding Effect wrapped in `sideEffect` function, which is exposed by `redux-side-effects` library. Declarative approach is used, so that unit testing is a breeze.
 
 We can abstract any Side Effect to calling following line:
 
@@ -423,11 +433,11 @@ export default new Updater(init('funny cats'), Matchers.exactMatcher)
 
 ```
 
-In the `fetchGif` we've dispatched `NewGif` action which provides `url` of the GIF and we only need to handle this action in Updater and mutate the Model appropriately, in our case we just need to change `gifUrl` field of the model to `action.url`. Now you should be able to see some GIF after refreshing the application:
+In the `fetchGif` Effect we've dispatched `NewGif` action which provides `url` of the GIF and we only need to handle this action in Updater and mutate the Model appropriately, in our case we just need to change `gifUrl` field of the model to `action.url`. Now you should be able to see some GIF after refreshing the application:
 
 ![gif-viewer-2](./assets/6.png)
 
-Last mandatory requirement for our GifViewer is that once user clicks the "More Please!" button, it should fetch new GIF but now after clicking the button nothing happens. Adding this functionality is fairly simple, we just need to define what should happen when `RequestMore` is handled. `RequestMore` is action which is being dispatched after clicking the button.
+Last mandatory requirement for our GifViewer is that once user clicks the "More Please!" button, it should fetch new GIF however after clicking the button nothing happens. Adding this functionality is fairly simple, we just need to define what should happen when `RequestMore` is handled. `RequestMore` is action which is being dispatched after clicking the button.
 
 ```javascript
 export default new Updater(init('funny cats'), Matchers.exactMatcher)
@@ -448,7 +458,7 @@ export default new Updater(init('funny cats'), Matchers.exactMatcher)
   .toReducer();
 ```
 
-In the implementation we can re-use the effect for fetching GIF, which is already implemented. Topic is provided from Model and we also set `gifUrl` to `null` which will cause to display loading indicator in the UI. The application should now be fully implemented.
+In the implementation we can re-use effect for fetching GIF, which has already been implemented. Topic is provided from Model and we also set `gifUrl` to `null` which will cause loading indicator to display in the UI. The application should now be fully implemented.
 
 ### Writing Unit Tests
 
