@@ -24,7 +24,7 @@
    * Using public interface in parent Components
   * Dynamic List of Components
    * Updater with Parameterized Matcher
-* Custom Matchers
+* Custom Matchers - **TODO**
 
 ## Why the Elm Architecture matters?
 
