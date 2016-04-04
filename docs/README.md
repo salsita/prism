@@ -1383,3 +1383,95 @@ export default new Updater(initialModel)
   }, Matchers.parameterizedMatcher)
   .toReducer();
 ```
+
+Good news, it was the hard part, now comes the easy part. We just need to handle two more actions: `ChangeTopic` and `Create` where `ChangeTopic` simply changes `topic` in model and we use `exactMatcher` for both of the actions because they are leaf Actions:
+
+```javascript
+import { Updater, Matchers, mapEffects, Generators } from 'redux-elm';
+
+import gifViewerUpdater, { init as gifViewerInit } from '../gif-viewer/updater';
+
+const initialModel = {
+  topic: '',
+  gifViewers: []
+};
+
+export default new Updater(initialModel)
+  .case('ChangeTopic', function*(model, action) {
+    return {
+      ...model,
+      topic: action.value
+    };
+  }, Matchers.exactMatcher)
+  .case('Create', function*(model) {
+    return model;
+  }, Matchers.exactMatcher)
+  .case('GifViewer', function*(model, action, gifViewerIndex) {
+    const numericGifViewerIndex = parseInt(gifViewerIndex, 10);
+
+    return {
+      ...model,
+      gifViewers: yield* Generators.map(model.gifViewers, function* (gifViewerModel, index) {
+        if (index === numericGifViewerIndex) {
+          return yield* mapEffects(gifViewerUpdater(gifViewerModel, action), 'GifViewer', gifViewerIndex);
+        } else {
+          return gifViewerModel;
+        }
+      })
+    };
+  }, Matchers.parameterizedMatcher)
+  .toReducer();
+```
+
+So what should happen when `Create` actions kicks in? Name of the action sounds quite descriptive, the handler should be responsible for creating model for newly added `GifViewer` so let's get index of newly created model (this is equal to length of `gifViewers`) and call topic specified init function:
+
+```javascript
+import { Updater, Matchers, mapEffects, Generators } from 'redux-elm';
+
+import gifViewerUpdater, { init as gifViewerInit } from '../gif-viewer/updater';
+
+const initialModel = {
+  topic: '',
+  gifViewers: []
+};
+
+export default new Updater(initialModel)
+  .case('ChangeTopic', function*(model, action) {
+    return {
+      ...model,
+      topic: action.value
+    };
+  }, Matchers.exactMatcher)
+  .case('Create', function*(model) {
+    const newModelIndex = model.gifViewers.length;
+    const topicSpecificInitGifViewer = gifViewerInit(model.topic); // Provide topic which is currently in the model
+
+    return {
+      ...model,
+      topic: '',
+      gifViewers: [
+        ...model.gifViewers,
+        yield* mapEffects(topicSpecificInitGifViewer(), 'GifViewer', newModelIndex)
+      ]
+    };
+  }, Matchers.exactMatcher)
+  .case('GifViewer', function*(model, action, gifViewerIndex) {
+    const numericGifViewerIndex = parseInt(gifViewerIndex, 10);
+
+    return {
+      ...model,
+      gifViewers: yield* Generators.map(model.gifViewers, function* (gifViewerModel, index) {
+        if (index === numericGifViewerIndex) {
+          return yield* mapEffects(gifViewerUpdater(gifViewerModel, action), 'GifViewer', gifViewerIndex);
+        } else {
+          return gifViewerModel;
+        }
+      })
+    };
+  }, Matchers.parameterizedMatcher)
+  .toReducer();
+```
+
+Voila! We've got fully functional List of `GifViewers` implemented:
+
+![gif-viewer-list-2](./assets/13.png)
