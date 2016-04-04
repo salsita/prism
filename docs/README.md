@@ -577,7 +577,7 @@ describe('GifViewer Updater Behaviour Description', () => {
 
 `Updater` function always takes two arguments first is Model and second is Action because we are testing initial Model we provide `undefined` as Model and some `NonExistingAction` as second argument, we don't mind that Updater will not handle the action, we just need to provide **some** action so that Model gets initialized.
 
-Now comes the nice part and it's testing of Side effects. **Updater does not execute any Side effect it only yields an intention to execute them in next exection frame** and the intetion is declarative `sideEffect` wrapper of the called function.
+Now comes the nice part and it's testing of Side effects. **Updater does not execute any Side effect it only yields an intention to execute them in next execution frame** and the intetion is declarative `sideEffect` wrapper of the called function.
 
 ```javascript
   it('should yield a side effect to trigger loading some funny cat GIF right after Component is initialized', () => {
