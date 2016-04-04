@@ -24,8 +24,6 @@
    * Using public interface in parent Components
   * Dynamic List of Components
    * Updater with Parameterized Matcher
-* Understanding boilerplate **TODO**
-  * We don't need switch unlike Redux
 * Custom Matchers
 
 ## Why the Elm Architecture matters?
