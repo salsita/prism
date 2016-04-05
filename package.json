@@ -17,7 +17,12 @@
     "postversion": "git push && git push --tags",
     "prepublish": "npm run build:lib",
     "test": "./node_modules/.bin/mocha --require babel-core/register --require babel-polyfill --recursive",
-    "test:watch": "npm test -- --watch"
+    "test:watch": "npm test -- --watch",
+    "docs:clean": "rimraf _book",
+    "docs:prepare": "gitbook install",
+    "docs:build": "npm run docs:prepare && gitbook build -g salsita/redux-elm",
+    "docs:watch": "npm run docs:prepare && gitbook serve",
+    "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:salsita/redux-elm gh-pages --force"
   },
   "repository": {
     "type": "git",
@@ -46,6 +51,7 @@
     "isparta": "^4.0.0",
     "mocha": "^2.4.5",
     "redux-side-effects": "^1.0.0",
+    "rimraf": "^2.5.2",
     "sinon": "^1.17.3"
   },
   "dependencies": {
