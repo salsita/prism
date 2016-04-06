@@ -38,6 +38,10 @@
   "bugs": {
     "url": "https://github.com/salsita/redux-elm/issues"
   },
+  "engines": {
+    "node": ">=5.0.0",
+    "npm": ">=3.0.0"
+  },
   "homepage": "https://github.com/salsita/redux-elm#readme",
   "devDependencies": {
     "babel-cli": "^6.5.1",
