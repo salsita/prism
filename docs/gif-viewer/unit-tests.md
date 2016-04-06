@@ -118,6 +118,12 @@ describe('GifViewer Updater Behaviour Description', () => {
 Now comes the nice part and it's testing of Side effects. **Updater does not execute any Side effect it only yields an intention to execute them in next execution frame** and the intetion is declarative `sideEffect` wrapper of the called function.
 
 ```javascript
+import { assert } from 'chai';
+import { sideEffect } from 'redux-side-effects';
+
+import updater from '../../src/gif-viewer/updater';
+import * as Effects from '../../src/gif-viewer/effects';
+
   it('should yield a side effect to trigger loading some funny cat GIF right after Component is initialized', () => {
     const iterator = updater(undefined, { type: 'NonExistingAction' });
 
