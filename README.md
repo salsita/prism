@@ -1,33 +1,75 @@
-# redux-elm
+# [redux-elm](http://salsita.github.io/redux-elm)
 
-[![Join the chat at https://gitter.im/salsita/redux-elm](https://badges.gitter.im/salsita/redux-elm.svg)](https://gitter.im/salsita/redux-elm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+> [The Elm Arhicture](https://github.com/evancz/elm-architecture-tutorial) in JavaScript for building really scalable applications.
 
-> Redux is great, Elm is great too, why not to have The Elm Architecture in Redux?
+`redux-elm` is framework specifically tailored for solving difficult problems that people have to face in modern front-end application development, it is heavily based on [Composition](http://salsita.github.io/redux-elm/composition/).
 
-### 1.x in development, https://github.com/salsita/redux-elm/issues/5 stay tuned
+Goal of this project is to solve hard problems **by defining patterns, not implementation**. Library is very lightweight and you should be able to fully understand the codebase. Main building block is **[redux](http://github.com/reactjs/redux)** which serves as predictable state container and because `redux-elm` is built on top of that, you will be able to benefit from all of its tooling:
 
-Global application state is a great concept, yet it requires a lot of discipline to write maintanable and extendable applications. Elm solves the problem by heavily relying on Composition which is a new Encapsulation in FP lingo. Let's compose Views, State (Model), Reducers (Updaters), **Actions** and **Side Effects**.
 
-This repo is port of [The Elm Architecture](https://github.com/evancz/elm-architecture-tutorial) in [Redux](https://github.com/rackt/redux) and JavaScript. Please, keep in mind that we can't get all the benefits of Elm without [Elm](http://elm-lang.org/) itself :-) but we can certainly think about our Redux application as composable components and that's the goal.
+* [DevTools](https://github.com/zalmoxisus/redux-devtools-extension)
+* Time Travel
+* Immutable application snapshots
+* Easy unit testing
 
-Just give it a chance and see the examples:
+Because `redux-elm` is about Patterns, we have really [thorough documentation](http://salsita.github.io/redux-elm) which guides you to utilize all the ideas that `redux-elm` provides.
 
- 1. **[Counter](./examples/src/1-counter/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/1/Counter.elm)
- 2. **[Pair of Counters](./examples/src/2-pair-of-counters/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/2/CounterPair.elm)
- 3. **[Dynamic list of Counters](./examples/src/3-a-dynamic-list-of-counters/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/3/CounterList.elm)
- 4. **[Random GIF Viewer](./examples/src/4-random-gif-viewer/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/5/RandomGif.elm)
- 5. **[Pair of Random GIF Viewers](./examples/src/5-pair-of-random-gif-viewers/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/6/RandomGifPair.elm)
- 6. **[List of Random GIF Viewers](./examples/src/6-list-of-random-gif-viewers/main.js)** - [original](https://github.com/evancz/elm-architecture-tutorial/blob/master/examples/7/RandomGifList.elm)
+## How does it look?
 
-# Demo
+`redux-elm` is about Components and every Component must define two pieces `Updater` and `View` where `Updater` is very similar to Redux [`reducer`](http://redux.js.org/docs/basics/Reducers.html) and `View` is simple [`React`](https://facebook.github.io/react/) Component, of course you can use your own View library.
+
+### Counter Updater
+
+```javascript
+import { Updater, Matchers } from 'redux-elm';
+
+const initialModel = 0;
+
+export default new Updater(initialModel, Matchers.exactMatcher)
+  .case('Increment', function*(model) {
+    return model + 1;
+  })
+  .case('Decrement', function*(model) {
+    return model - 1;
+  })
+  .toReducer();
+```
+
+### Counter View
+
+```javascript
+import React from 'react';
+
+export default ({ model, dispatch }) => (
+  <div>
+    <button onClick={() => dispatch({ type: 'Decrement' })}>-</button>
+    <div>{model}</div>
+    <button onClick={() => dispatch({ type: 'Increment' })}>+</button>
+  </div>
+);
 
 ```
-cd examples
-npm install
-npm start
-open http://localhost:3000
-```
 
-# Why not npm?
+## Documentation
 
-Because *WIP*
+Goal of documentation is explaining basic principle of `redux-elm` and this is Composition, it's divided into few chapters to gradually increase amount of complexity. 
+
+1. [Getting Started Tutorial](http://salsita.github.io/redux-elm/getting-started/)
+2. [GifViewer Tutorial](http://salsita.github.io/redux-elm/gif-viewer/)
+3. [Composition](http://salsita.github.io/redux-elm/composition/)
+
+First two chapters describes basic principles, while Composition part is the most important part explaining how `redux-elm` helps you building really scalable application.
+
+## Examples
+
+You will find original Elm Architecture examples written in JavaScript using `redux-elm`:
+
+1. [Counter](./examples/counter)
+2. [Counters Pair](./examples/pair-of-counters)
+2. [Dynamic List of Counters](./examples/dynamic-list-of-counters)
+2. [Random GIF Viewer](./examples/random-gif-viewer)
+2. [Random GIF Viewers Pair](./examples/gif-viewer-pair)
+2. [Dynamic List of Random GIF Viewers](./examples/gif-viewers-dynamic-list)
+
+## Discussion
+Join the [discussion on gitter](https://gitter.im/salsita/redux-elm)
