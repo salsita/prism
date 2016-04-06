@@ -1,6 +1,6 @@
 ## Necessary boilerplate
 
-Before we get into coding let's start by cloning [https://github.com/salsita/redux-elm-skeleton](skeleton) project which will abstract away all the boilerplate needed for initializing modern ES2016/React/Webpack project. Throughout the code examples we'll probably not strictly use all the [ES2016](http://www.2ality.com/2016/01/ecmascript-2016.html) features as it may be confusing for newcomers.
+Before we get into coding let's start by cloning [skeleton](https://github.com/salsita/redux-elm-skeleton) project which will abstract away all the boilerplate needed for initializing modern ES2016/React/Webpack project. Throughout the code examples we'll probably not strictly use all the [ES2016](http://www.2ality.com/2016/01/ecmascript-2016.html) features as it may be confusing for newcomers.
 
 The directory structure of the skeleton project is fairly straightforward:
 
