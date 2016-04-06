@@ -1,5 +1,9 @@
 # [redux-elm](http://salsita.github.io/redux-elm)
 
+[![NPM version][npm-image]][npm-url]
+[![Dependencies][dependencies]][npm-url]
+[![Build status][travis-image]][travis-url]
+[![Downloads][downloads-image]][downloads-url]
 [![Join the chat at https://gitter.im/salsita/redux-elm](https://badges.gitter.im/salsita/redux-elm.svg)](https://gitter.im/salsita/redux-elm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 > [The Elm Architecture](https://github.com/evancz/elm-architecture-tutorial) in JavaScript for building really scalable applications.
@@ -97,3 +101,11 @@ You will find original Elm Architecture examples written in JavaScript using `re
 
 ## Discussion
 Join the [discussion on gitter](https://gitter.im/salsita/redux-elm)
+
+[npm-image]: https://img.shields.io/npm/v/redux-elm.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/redux-elm
+[travis-image]: https://img.shields.io/travis/salsita/redux-elm.svg?style=flat-square
+[travis-url]: https://travis-ci.org/salsita/redux-elm
+[downloads-image]: http://img.shields.io/npm/dm/redux-elm.svg?style=flat-square
+[downloads-url]: https://npmjs.org/package/redux-elm
+[dependencies]: https://david-dm.org/salsita/redux-elm.svg
