@@ -1,5 +1,7 @@
 # [redux-elm](http://salsita.github.io/redux-elm)
 
+[![Join the chat at https://gitter.im/salsita/redux-elm](https://badges.gitter.im/salsita/redux-elm.svg)](https://gitter.im/salsita/redux-elm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 > [The Elm Architecture](https://github.com/evancz/elm-architecture-tutorial) in JavaScript for building really scalable applications.
 
 `redux-elm` is framework specifically tailored for solving difficult problems that people have to face in modern front-end application development, it is heavily based on [Composition](http://salsita.github.io/redux-elm/composition/).
