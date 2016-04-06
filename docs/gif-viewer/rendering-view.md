@@ -11,7 +11,7 @@ const renderGif = url => {
   } else {
     return <img src="/assets/waiting.gif" width="200" height="200" />;
   }
-}
+};
 ```
 
 Just import `React` and get to implementing the `renderGif` function which takes `url` as argument and renders either Loading spinner or the actual GIF. Keep in mind that `url` can be `null` and if that happens it means that we are waiting for new GIF.
@@ -27,7 +27,7 @@ const renderGif = url => {
   } else {
     return <img src="/assets/waiting.gif" width="200" height="200" />;
   }
-}
+};
 
 export default ({ model, dispatch }) => (
   <div style={{ width: '200px' }}>
