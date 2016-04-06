@@ -17,7 +17,7 @@ run('app', view, updater);
 `run` takes three arguments:
 - first argument is `id` attribute of HTML node we would like to mount the component in. In `redux-elm-skeleton`, its 'app' because there's `<div id="app"></div>` inside our `index.html`.
 - second argument is `view` which is just plain old React component, it can be either `class` which `extends` from `Component` or a stateless function.
-- third argument is `updater`, Updater is very similiar to [Redux Reducer](http://redux.js.org/docs/basics/Reducers.html) except it's not plain old JavaScript function but *it's [generator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*)* function.
+- third argument is `updater`, Updater is very similiar to [Redux Reducer](http://redux.js.org/docs/basics/Reducers.html) except it's not plain old JavaScript function but it's [generator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) function.
 
 Let's have a look at `view.js` inside `hello-world` repository:
 
