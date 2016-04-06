@@ -1,5 +1,7 @@
 # redux-elm
 
+[![Join the chat at https://gitter.im/salsita/redux-elm](https://badges.gitter.im/salsita/redux-elm.svg)](https://gitter.im/salsita/redux-elm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 > Redux is great, Elm is great too, why not to have The Elm Architecture in Redux?
 
 ### 1.x in development, https://github.com/salsita/redux-elm/issues/5 stay tuned
