@@ -11,6 +11,12 @@ export const fetchGif = (dispatch, topic) => {
 };
 ```
 
+We will be using `superagent-bluebird-promise` which needs to be installed with its peer dependencies therefore run following command:
+
+```
+npm install --save bluebird superagent superagent-bluebird-promise
+```
+
 Every Effect function always take 1st argument which is `dispatch` and infinite number of optional arguments which are specific for the Effect. Therefore our `fetchGif` function takes `dispatch` and `topic` as arguments. Inside the function we just need to trigger the XHR request (we're using [superagent library](https://www.npmjs.com/package/superagent-bluebird-promise) in the example). Because we have `dispatch` function available, we can simply `dispatch` new action when API response arrives, providing `url` in the newly dispatched action, which is extracted from the API response. The function is now prepared to be yielded from our `init` function.
 
 Let's open `updater.js` again and do slight modification in our `init` function:
