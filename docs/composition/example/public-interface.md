@@ -15,7 +15,7 @@ export function* init() {
     top: yield* mapEffects(funnyCatsGifViewerInit(), 'Top'),
     bottom: yield* mapEffects(funnyDogsGifViewerInit(), 'Bottom')
   };
-}
+};
 
 export default new Updater(init)
   .case('Top', function*(model, action) {
@@ -53,7 +53,7 @@ export function* init() {
     top: yield* mapEffects(funnyCatsGifViewerInit(), 'Top'),
     bottom: yield* mapEffects(funnyDogsGifViewerInit(), 'Bottom')
   };
-}
+};
 
 export default new Updater(init)
   .case('Top', function*(model, action) {
@@ -73,7 +73,7 @@ export default new Updater(init)
       ...model,
       top: yield* mapEffects(fetchGif(model.top), 'Top'),
       bottom: yield* mapEffects(fetchGif(model.bottom), 'Bottom')
-    }
+    };
   }, Matchers.exactMatcher)
   .toReducer();
 ```

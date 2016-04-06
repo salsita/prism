@@ -28,7 +28,7 @@ export default new Updater(init('funny cats'), Matchers.exactMatcher)
     return {
       ...model,
       gifUrl: action.url
-    }
+    };
   })
   .case('RequestMore', fetchGif)
   .toReducer();
