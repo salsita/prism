@@ -33,7 +33,7 @@ export function* init() {
     top: yield* mapEffects(funnyCatsGifViewerInit(), 'Top'),
     bottom: yield* mapEffects(funnyDogsGifViewerInit(), 'Bottom')
   };
-}
+};
 
 export default new Updater(init).toReducer();
 

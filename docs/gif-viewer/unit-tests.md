@@ -78,7 +78,7 @@ Now it's pretty obvious that testing our updater is just a matter of calling `ne
 function* updater(input) {
   yield 1;
   return input + 42;
-}
+};
 
 const iterator = updater(12);
 
@@ -90,7 +90,7 @@ assert.deepEqual(iterator.next(), {
 assert.deepEqual(iterator.next(), {
   done: true,
   value: 53
-})
+});
 ```
 
 Let's have a look how we would write the first test which is testing correct State mutation:

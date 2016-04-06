@@ -15,7 +15,7 @@ export function* init() {
     top: yield* funnyCatsGifViewerInit(),
     bottom: yield* funnyDogsGifViewerInit()
   };
-}
+};
 
 export default new Updater(init).toReducer();
 

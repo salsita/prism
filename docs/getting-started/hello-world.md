@@ -54,7 +54,7 @@ export default new Updater(initialModel, Matchers.exactMatcher)
     return {
       ...model,
       greeted: true
-    }
+    };
   })
   .toReducer();
 ```
@@ -107,7 +107,7 @@ export default new Updater(initialModel, Matchers.exactMatcher)
     return {
       ...model,
       greeted: true
-    }
+    };
   })
   .toReducer();
 ```
@@ -126,7 +126,7 @@ function*(model) {
   return {
     ...model,
     greeted: true
-  }
+  };
 }
 ```
 
