@@ -50,6 +50,26 @@ export default ({ model, dispatch }) => (
 
 ```
 
+### Installation & Usage
+You can install `redux-elm` via npm. You also need to install `redux-side-effects` as it's a peer dependency.
+
+```
+npm install redux-elm --save
+npm install redux-side-effects --save
+```
+
+**We didn't want to keep all the boilerplate in `redux-elm` repo therefore we've prepared simple [`redux-elm-skeleton`](http://github.com/salsita/redux-elm-skeleton) repositiory which will serve as easiest way to start using `redux-elm`**.
+
+```
+git clone git@github.com:salsita/redux-elm-skeleton.git
+cd redux-elm-skeleton
+npm install
+npm start
+open http://localhost:3000
+```
+
+You will see Hello World so that you can immediately open your favorite Text Editor and start writing your own application. Skeleton repo integrates [`redux-devtools` Chrome extension](https://github.com/zalmoxisus/redux-devtools-extension), so we strongly reccomend installing the extension.
+
 ## Documentation
 
 Goal of documentation is explaining basic principle of `redux-elm` and this is Composition, it's divided into few chapters to gradually increase amount of complexity. 
