@@ -1,6 +1,6 @@
 # [redux-elm](http://salsita.github.io/redux-elm)
 
-> [The Elm Arhicture](https://github.com/evancz/elm-architecture-tutorial) in JavaScript for building really scalable applications.
+> [The Elm Architecture](https://github.com/evancz/elm-architecture-tutorial) in JavaScript for building really scalable applications.
 
 `redux-elm` is framework specifically tailored for solving difficult problems that people have to face in modern front-end application development, it is heavily based on [Composition](http://salsita.github.io/redux-elm/composition/).
 
@@ -13,6 +13,8 @@ Goal of this project is to solve hard problems **by defining patterns, not imple
 * Easy unit testing
 
 Because `redux-elm` is about Patterns, we have really [thorough documentation](http://salsita.github.io/redux-elm) which guides you to utilize all the ideas that `redux-elm` provides.
+
+See [why the Elm Architecture matters](http://salsita.github.io/redux-elm/).
 
 ## How does it look?
 
@@ -88,7 +90,7 @@ You will find original Elm Architecture examples written in JavaScript using `re
 2. [Counters Pair](./examples/pair-of-counters)
 2. [Dynamic List of Counters](./examples/dynamic-list-of-counters)
 2. [Random GIF Viewer](./examples/random-gif-viewer)
-2. [Random GIF Viewers Pair](./examples/gif-viewer-pair)
+2. [Random GIF Viewers Pair](./examples/gif-viewers-pair)
 2. [Dynamic List of Random GIF Viewers](./examples/gif-viewers-dynamic-list)
 
 ## Discussion
