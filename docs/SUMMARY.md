@@ -19,3 +19,5 @@
       * [Using public interface](/composition/example/public-interface.md)
    * [Dynamic List of Components](/composition/dynamic-list/README.md)
       * [Updater with ParmeterizedMatcher](/composition/dynamic-list/updater-parameterized-matcher.md)
+* [Custom Matchers](/custom-matchers/README.md)
+   * [Writing Custom Matcher](/custom-matchers/writing-custom-matcher.md)
