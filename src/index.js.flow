@@ -1,0 +1,34 @@
+/* @flow */
+
+type Action = {
+  type: string
+};
+
+type Dispatch = (action : Action) => void;
+type EffectExecutor = (dispatch : Dispatch, ...rest : Array<any>) => void;
+type SideEffect = Array<any>;
+
+type Matcher = (pattern : string) => ((action : Action) => Array<any> | boolean);
+
+export interface Generators {
+  static map<T>(list : Array<T>, mapper : (model : T, index : number) => Generator<SideEffect, T, void>) : Generator<SideEffect, Array<T>, void>;
+  static reduce<T, K>(list : Array<T>, reducer : (memo : K, value : T, index : number) => Generator<SideEffect, K, void>, initialReduction : K) : Generator<SideEffect, K, void>;
+}
+
+export interface Matchers {
+  static matcher : Matcher;
+  static exactMatcher : Matcher;
+  static parameterizedMatcher : Matcher;
+}
+
+declare export class Updater<M> {
+  constructor(init : (() => Generator<SideEffect, M, void>) | M, matcher? : Matcher) : Updater<M>;
+  case(pattern : string, handler : (model : M, action : Action) => Generator<SideEffect, M, void>, matcher? : Matcher) : Updater<M>;
+  toReducer() : (model : M, action : Action) => Generator<SideEffect, M, void>
+};
+
+declare export function mapEffects<M>(generator : Generator<SideEffect, M, void>, ...rest : Array<string>) : Generator<SideEffect, M, void>;
+
+declare export function sideEffect(executor : EffectExecutor, ...rest : Array<any>) : SideEffect;
+
+declare export function forwardTo(dispatch : function, ...rest : Array<any>) : function;

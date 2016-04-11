@@ -1,4 +1,5 @@
 import { assert } from 'chai';
+import { sideEffect } from 'redux-side-effects';
 
 import * as Interface from '../src/index';
 
@@ -15,7 +16,8 @@ describe('Library interface', () => {
       Matchers,
       forwardTo,
       mapEffects,
-      Generators
+      Generators,
+      sideEffect
     });
   });
 });
