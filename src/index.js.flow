@@ -1,9 +1,6 @@
-/* @flow */
+* @flow */
 
-type Action = {
-  type: string
-};
-
+type Action = Object;
 type Dispatch = (action : Action) => void;
 type EffectExecutor = (dispatch : Dispatch, ...rest : Array<any>) => void;
 type SideEffect = Array<any>;
@@ -23,7 +20,7 @@ export interface Matchers {
 
 declare export class Updater<M> {
   constructor(init : (() => Generator<SideEffect, M, void>) | M, matcher? : Matcher) : Updater<M>;
-  case(pattern : string, handler : (model : M, action : Action) => Generator<SideEffect, M, void>, matcher? : Matcher) : Updater<M>;
+  case(pattern : string, handler : (model : M, action : Action, ...rest : Array<any>) => Generator<SideEffect, M, void>, matcher? : Matcher) : Updater<M>;
   toReducer() : (model : M, action : Action) => Generator<SideEffect, M, void>
 };
 
