@@ -3,7 +3,7 @@
 type Action = Object;
 type Dispatch = (action : Action) => void;
 type EffectExecutor = (dispatch : Dispatch, ...rest : Array<any>) => void;
-type SideEffect = Array<any>;
+export type SideEffect = Array<any>;
 
 type Matcher = (pattern : string) => ((action : Action) => Array<any> | boolean);
 
