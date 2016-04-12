@@ -113,6 +113,8 @@ Flow checks:
 * `yielding` only side effects
 * and many more...
 
+All the examples implemented throughout tutorials in documentation have been ported to Flow version too and you can find them in [examples-flow branch of redux-elm-skeleton repo](https://github.com/salsita/redux-elm-skeleton/tree/examples-flow).
+
 For further information [see documentation](http://salsita.github.io/redux-elm/static-typing/)
 
 ## Discussion
