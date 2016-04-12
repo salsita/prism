@@ -102,7 +102,7 @@ You will find original Elm Architecture examples written in JavaScript using `re
 ## Static Typing
 Definitely one of the most important features of Elm programming language is its type system. Elm is statically typed language and fully supports type inference, unfortunately this is not same for JavaScript, however you can still use [flowtype](http://flowtype.org/) because redux-elm provides type definitions for everything that's publicly exposed. We strongly encourage you to do so, because Flow is a great help for spotting subtle bugs before they actually appear. 
 
-![static-typing](../assets/16.png)
+![static-typing](http://salsita.github.io/redux-elm/assets/17.png)
 
 Flow checks:
 
@@ -110,7 +110,7 @@ Flow checks:
 * correct model shape
 * not forgetting about `yield*` when composing Updaters
 * Matchers
-* `yielding` only side effecta
+* `yielding` only side effects
 * and many more...
 
 For further information [see documentation](http://salsita.github.io/redux-elm/static-typing/)
