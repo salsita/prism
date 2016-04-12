@@ -100,7 +100,7 @@ You will find original Elm Architecture examples written in JavaScript using `re
 2. [Dynamic List of Random GIF Viewers](./examples/gif-viewers-dynamic-list)
 
 ## Static Typing
-Definitely one of the most important features of Elm programming language is its type system. Elm is statically typed language and fully supports type inference, unfortunately this is not same for JavaScript, however you can still use [flowtype](http://flowtype.org/) because redux-elm provides type definitions for everything that's publicly exposed. We strongly encourage you to do so, because Flow is a great help for spotting subtle bugs before they actually appear. 
+Definitely one of the most important features of Elm programming language is its type system. Elm is statically typed language and fully supports type inference, unfortunately this is not same for JavaScript, however you can still use [flowtype](http://flowtype.org/) because `redux-elm` provides type definitions for everything that's publicly exposed. We strongly encourage you to do so, because Flow is a great help for spotting subtle bugs before they actually appear. Using Flow in your `redux-elm` [project is seemless and does not require any additional effort except installing flow as your project's dependency](https://github.com/salsita/redux-elm-skeleton/commit/cd6d370a4dcc999779ebd0eb3f67dff1ac1bfb1d).
 
 ![static-typing](http://salsita.github.io/redux-elm/assets/17.png)
 
