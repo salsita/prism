@@ -1,0 +1,1 @@
+## Static Typing - FlowType

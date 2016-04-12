@@ -21,3 +21,4 @@
       * [Updater with ParmeterizedMatcher](/composition/dynamic-list/updater-parameterized-matcher.md)
 * [Custom Matchers](/custom-matchers/README.md)
    * [Writing Custom Matcher](/custom-matchers/writing-custom-matcher.md)
+* [Static Typing - FlowType](/static-typing/README.md)
