@@ -1,11 +1,16 @@
-import wrap from './wrap';
-import unwrap from './unwrap';
-import patternMatch from './patternMatch';
+import { sideEffect } from 'redux-side-effects';
+
+import Updater from './Updater';
+import * as Generators from './generators';
+import * as Matchers from './matchers';
 import forwardTo from './forwardTo';
+import mapEffects from './mapEffects';
 
 export {
-  wrap,
-  unwrap,
-  patternMatch,
-  forwardTo
+  Updater,
+  Generators,
+  Matchers,
+  forwardTo,
+  mapEffects,
+  sideEffect
 };

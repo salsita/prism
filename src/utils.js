@@ -1,23 +1,72 @@
 /**
- * Sums number of characters in array of strings ['abc', 'def'] returns 6
+ * Simple invariant check.
  *
- * @param {Array} array of strings
- * @return {Number} Sum of characters
+ * @param {Boolean} A condition to be met
+ *
+ * @param {String} An exception message to be thrown
+ * @returns {void}
  */
-export const sumCharsInArrayOfStrings = arr => arr.reduce((memo, element) => memo + element.length, 0);
+export const invariant = (condition, message) => {
+  if (!condition) {
+    throw new Error(`Invariant violation: ${message}`);
+  }
+};
+
 
 /**
- * Returns last element of the provided array
+ * Checks whether provided argument is a function.
  *
- * @param {Array} input array
- * @return {any} last element of array
+ * @param {any} Anything
+ *
+ * @returns {Boolean} Result of function check
  */
-export const last = arr => arr.length ? arr[arr.length - 1] : null;
+export const isFunction = any => typeof any === 'function';
 
 /**
- * Checks whether provided input is type of String
+ * Checks whether provided argument is generator.
+ * The implementation is quite fragile. The current state
+ * however does not allow reliable implementation of `isGenerator`
+ * function.
  *
- * @param {any} checking input
- * @return {Bool}
+ * @param {any} Anything
+ *
+ * @returns {Boolean} Result of generator check
  */
-export const isString = any => typeof any === 'string';
+export const isGenerator = fn => {
+  // Generator should never throw an exception because
+  // it's not executed, only iterable is returned
+  try {
+    if (isFunction(fn)) {
+      const result = fn();
+      return !!result && isFunction(result._invoke);
+    } else {
+      return false;
+    }
+  } catch (ex) {
+    return false;
+  }
+};
+
+/**
+ * Iterates over iterable and returns list of all values.
+ *
+ * @param {Iterable} iterable
+ *
+ * @returns {Array} List of all values
+ */
+export const unwindIterable = iterable => {
+  const data = [];
+
+  const recur = it => {
+    const next = it.next();
+    data.push(next.value);
+
+    if (next.done) {
+      return data;
+    } else {
+      return recur(it);
+    }
+  };
+
+  return recur(iterable);
+};

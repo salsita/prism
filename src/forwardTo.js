@@ -1,5 +1,6 @@
-
 /**
+ * TODO: re-write docs
+ *
  * Returns modified version of dispatch function. The function automatically prepends
  * composed string reflecting composition of action types.
  *

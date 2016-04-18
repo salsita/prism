@@ -2,34 +2,42 @@ import { assert } from 'chai';
 
 import * as Utils from '../src/utils';
 
-describe('utils', () => {
-  it('should return last element of array', () => {
-    assert.equal(Utils.last([1, 2, 3]), 3);
-    assert.equal(Utils.last([1]), 1);
+describe('isFunction function', () => {
+  it('should pass check when function is provided', () => {
+    assert.isTrue(Utils.isFunction(() => {}));
   });
 
-  it('should return null when array is empty', () => {
-    assert.equal(Utils.last([]), null);
+  it('should not pass check when function is not provided', () => {
+    assert.isFalse(Utils.isFunction());
   });
 
-  it('should return true if provided argument is string', () => {
-    assert.isTrue(Utils.isString(''));
-    assert.isTrue(Utils.isString('foo'));
+  it('should not pass check when anything except function is provided', () => {
+    assert.isFalse(Utils.isFunction(0));
+    assert.isFalse(Utils.isFunction(null));
+    assert.isFalse(Utils.isFunction({}));
+    assert.isFalse(Utils.isFunction('function'));
+  });
+});
+
+describe('isGenerator function', () => {
+  it('should pass check when generator is provided', () => {
+    assert.isTrue(Utils.isGenerator(function*() {}));
   });
 
-  it('should not return true if provided argument is not string', () => {
-    assert.isFalse(Utils.isString());
-    assert.isFalse(Utils.isString(null));
-    assert.isFalse(Utils.isString(0));
-    assert.isFalse(Utils.isString(() => {}));
-    assert.isFalse(Utils.isString(new Date()));
+  it('should not pass check when plain function is provided', () => {
+    assert.isFalse(Utils.isGenerator(function() {}));
   });
 
-  it('should sum all the characters in array of strings', () => {
-    assert.equal(Utils.sumCharsInArrayOfStrings(['abc', 'def']), 6);
-    assert.equal(Utils.sumCharsInArrayOfStrings(['abc', '']), 3);
-    assert.equal(Utils.sumCharsInArrayOfStrings(['abc']), 3);
-    assert.equal(Utils.sumCharsInArrayOfStrings(['abc', ' ']), 4);
-    assert.equal(Utils.sumCharsInArrayOfStrings([]), 0);
+  it('should not throw an exception when checking function throws exception', () => {
+    assert.isFalse(Utils.isGenerator(() => {
+      throw new Error;
+    }));
+  });
+
+  it('should not pass check when anything except generator is provided', () => {
+    assert.isFalse(Utils.isGenerator(null));
+    assert.isFalse(Utils.isGenerator(0));
+    assert.isFalse(Utils.isGenerator({}));
+    assert.isFalse(Utils.isGenerator('generator'));
   });
 });
