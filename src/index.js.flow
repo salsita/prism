@@ -1,4 +1,4 @@
-* @flow */
+/* @flow */
 
 type Action = Object;
 type Dispatch = (action : Action) => void;
