@@ -1,6 +1,6 @@
 ## Writing Custom Matcher
 
-Implementation of Custom Matcher is fairly straighforward, let's have a look at `exactMatcher` implementation:
+Let's have a look at the `exactMatcher` implementation:
 
 ```javascript
 export default pattern => {
@@ -14,9 +14,9 @@ export default pattern => {
 };
 ```
 
-As you can see Matcher is a Function which takes `pattern` as argument and returns a Function which matches Action (action is provided as argument). Matching actions means that the function returns either `false` when action does not match or `Array` is returned with at least one element which must be action type. For `exactMatcher` we return just original `action.type` because action is not being unwrapped. All the remaining elements of the array will be passed to `Updater` handler as additional arguments.
+As you can see, a Matcher is a function that takes `pattern` as an argument and returns a function that takes an Action as its argument. The function returns either `false` when the Action does not match or, when it does, an `Array` with at least one element (which must be the Action type). For `exactMatcher`, we return just the original `action.type` because the Action is not being unwrapped. Any additional elements in the array will be passed to the handler as further arguments.
 
-Let's implement some Matcher:
+Let's implement our own matcher Matcher:
 
 ```javascript
 const endsWithMatcher = pattern => {
@@ -30,7 +30,7 @@ const endsWithMatcher = pattern => {
 };
 ```
 
-So what we've just implemented? `endsWithMatcher` matches action which ends with specified pattern and we could seize the fact for implementing our Application:
+What have we just implemented? `endsWithMatcher` matches an Action that ends with a specific pattern. By pure coincidence, this is exactly what we need in our application:
 
 ```javascript
 import { Updater, Matchers, mapEffects } from 'redux-elm';
@@ -84,6 +84,6 @@ export default new Updater(init)
   .toReducer();
 ```
 
-After compiling and running the application global counter should get updated as you click on the individual counters.
+After compiling and running the application, the global counter should be updated whenever you click on the individual counters.
 
-For better `Matchers` understanding we strongly encourage you to have a look at [shipped-in implementations](https://github.com/salsita/redux-elm/tree/master/src/matchers) of all the Matchers.
+For better understanding of Matchers, we strongly encourage you to have a look at the [built-in Matcher implementations](https://github.com/salsita/redux-elm/tree/master/src/matchers) shipped as part of `redux-elm`.

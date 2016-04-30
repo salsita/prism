@@ -1,6 +1,6 @@
 ## Action Composition in Practice
 
-You might have spotted one problem with our current implementation, both init functions yields a Side effect which resolves in newly dispatched action `NewGif`, how could our application know which `NewGif` action belongs to which instance of the `GifViewer` Component (Top or Bottom)? We'll utilize Action composition here! So we need to turn:
+You might have spotted one problem with our current implementation: both `init` functions yield a Side Effect which resolves into a newly dispatched `NewGif` Action. How can our application know which `NewGif` Action belongs to which instance of the `GifViewer` Component (Top or Bottom)? This is where Action composition comes in! We need to turn:
 
 ```javascript
 {
@@ -18,7 +18,7 @@ into:
 }
 ```
 
-With `redux-elm` it's very easy because library exposes `mapEffects` function which is doing exactly what we need, you can wrap the Updater (or Init function) with `mapEffects` function and all the dispatched actions within yielded Side effects will be automatically wrapped by a parent action, in our specific case all the `dispatched` actions in embed `GifViewer` Component will be "tagged" with `Top` or `Bottom` Action.
+This is easy with `redux-elm` because it exposes a `mapEffects` function that does exactly what we need. You can wrap the Updater (or `init` function) with the `mapEffects` function, and all the dispatched Actions within yielded Side Effects will be automatically wrapped by a parent Action. In this specific case all the `dispatched` Actions in the embeded `GifViewer` Component will be "tagged" with `Top` or `Bottom`.
 
 ```javascript
 import { Updater, mapEffects } from 'redux-elm';
@@ -39,6 +39,6 @@ export default new Updater(init).toReducer();
 
 ```
 
-After running the application, you should now be able to see in [`redux-devtools-extension`](https://github.com/zalmoxisus/redux-devtools-extension) that Actions are actually composed!
+After running the application, you should now be able to see the composed Actions in [`redux-devtools-extension`](https://github.com/zalmoxisus/redux-devtools-extension).
 
 ![gif-viewer-pair-3](../../assets/9.png)

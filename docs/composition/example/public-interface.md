@@ -1,6 +1,6 @@
-## Using public interface
+## Using Public Interfaces
 
-One last thing that we are missing is implementation of Load Both! button. We'd like to start fetching of both GifViewers once user clicks the button. We've exposed `fetchGif` function as public interface of `GifViewer` so this should be relatively easy. Let's start by writing handler for `Load` Action.
+One last thing that we are missing is the implementation of the "Load Both!"" button. We'd like to start fetching both `GifViewer`s when the user clicks the button. We've exposed the `fetchGif` function as the public interface of `GifViewer`, so this should be relatively easy. Let's start by writing the handler for the `Load` Action.
 
 ```javascript
 import { Updater, mapEffects, Matchers } from 'redux-elm';
@@ -32,13 +32,13 @@ export default new Updater(init)
   })
   .case('Load', function*(model, action) {
     return model;
-  }, Matchers.exactMatcher) // exactMatcher is mandatory here otherwise Matcher would be used and the action wouldn't be ever matched because it does not contain any Sub Action
+  }, Matchers.exactMatcher) // `exactMatcher` is mandatory here otherwise `matcher` would be used and the action would never be matched since it does not contain any sub-Action
   .toReducer();
 ```
 
-The only tricky part is that you need to provide handler specific Matcher, this is the third argument of `case` method. Because we have not specified Updater specific default Matcher, `matcher` implementation is used by default and we need to override this because `Load` does not contain any Sub Action, it's leaf Action so exact match of Action type is the only possible option.
+The only tricky part is that you need to provide a handler-specific Matcher. This is the third argument of the `case` method. Because we have not overridden the default Matcher used by the Updater, `matcher` is used by default. We need to override this because `Load` is a leaf Action so the type must be matched exactly, without any unwrapping.
 
-Model mutation is fairly simple, we just need to use public interface exposed by `GifViewer` which is `fetchGif` function and the function must be called to mutate model for both GifViewers:
+Model mutation is fairly simple. We just need to use the public interface exposed by `GifViewer`, which is a single function (`fetchGif`). The function must be called to mutate the model of both GifViewers:
 
 ```javascript
 import { Updater, mapEffects, Matchers } from 'redux-elm';

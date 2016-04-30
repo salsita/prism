@@ -1,6 +1,10 @@
-## Utilizing Matchers
+## Using Matchers
 
-Time for plumbing, we need to proxy all the actions tagged with `Top` or `Bottom` to `GifViewer` Updater which does the mutation and potentially emits Side effects. Imagine our `GifViewerPair` Updater as a person who unwraps a package which may contain another package and hand it over to another person (`GifViewer` Updater) who's responsible for handling content of the package and keep in mind that the package can be wrapped many times for many people (Component Updaters). Therefore we'd need to strip `Top.` or `Bottom.` off the beggining of the Action type and provide rest to underlying Child Updater as unwrapped Action.
+Let's see how these different Matcher types are used in practice.
+
+We need to proxy all Actions tagged with `Top` or `Bottom` to the `GifViewer` Updater, which mutates the state and potentially emits Side Effects. Imagine our `GifViewerPair` Updater as a person who unwraps a package which may contain another package, and if so hands it over to another person (the `GifViewer` Updater) who is responsible for handling the contents of the package. Keep in mind that the package can be wrapped many times for many people (Component Updaters), with each one handing off to the person "below" them.
+
+We need to strip `Top.` or `Bottom.` off the beginning of the Action type and provide rest to the underlying Child Updater as unwrapped Action:
 
 ```javascript
 import { Updater, mapEffects } from 'redux-elm';
@@ -34,17 +38,19 @@ export default new Updater(init)
 
 ```
 
-We've basically implemented the behaviour with guys unwrapping packages and delegating them to someone else. `GifViewerPair` Updater just takes any Action starting with `Top` or `Bottom` unwraps its content and passes it down to `GifViewer` Updater along with corresponding Model slice. We can't of course forget on `mapEffects` because handling that Action in `GifViewer` Updater may potentially dispatch another Action and we would need to "wrap" it back so that when it gets back to the Updater loop everything will be wrapped again starting in the top of the Updater hierarchy.
+We've basically implemented the behavior of people unwrapping packages and handing them off to someone else. The `GifViewerPair` Updater just takes any Action starting with `Top` or `Bottom`, unwraps its contents and passes them to the `GifViewer` Updater along with the corresponding Model slice.
 
-And this is it, now try to compile and run the Application and see the result:
+We must not forget `mapEffects` because handling that Action in `GifViewer` Updater may potentially dispatch another Action. In this case we would need to "wrap" it back so that when it gets back to the Updater loop, the Action type contains all the necessary segments starting from the top of the Updater hierarchy. So if the `Top` Component dispatches a `Foo` Action, `mapEffects` makes sure the Action type is wrapped so that it is `Top.Foo` and not just `Foo`.
+
+Let's compile and run the Application and see the result:
 
 ![gif-viewer-pair-4](../../assets/10.png)
 
-However, after you click More Please! button on either Top or Bottom Viewer nothing happens and here's the reason why:
+When you click the "More Please!"" button on either Viewer, nothing happens. Here's why:
 
 ![gif-viewer-pair-5](../../assets/11.png)
 
-`RequestMore` action is not wrapped, therefore we need to do one small adjustment in our `GifViewerPair' View.
+The `RequestMore` Action is not wrapped. We need to make one small adjustment to `GifViewerPair`:
 
 ```javascript
 import React from 'react';
@@ -62,7 +68,9 @@ export default ({ model, dispatch }) => (
 
 ```
 
-Dispatch function passed to corresponding View instance should automatically tag all the Actions with `Top` or `Bottom` prefix (wrap the action), we did exactly the same within our Updater using `mapEffects` function. `redux-elm` provides a function which does this automatically for you, the function is called `forwardTo` which takes `dispatch` function as first argument and infinite number of Strings which defines action wrapping.
+The `dispatch` function passed to the child View instance should automatically tag all the Actions with the `Top` or `Bottom` prefix (i.e. wrap the action). This is exactly the same thing we did in our Updater using the `mapEffects` function.
+
+`redux-elm` provides a function to do this automatically for you. `forwardTo` takes the `dispatch` function as its first argument and an arbitrary number of additional string arguments that define how Actions dispatched by that function should be wrapped:
 
 ```javascript
 import React from 'react';
@@ -80,4 +88,4 @@ export default ({ model, dispatch }) => (
 );
 ```
 
-Save & hit refresh button and voila! Now your application also reacts to clicking on More Please! button.
+Save and hit the Refresh button. Voilà! Now the "More Please!" button works as expected.

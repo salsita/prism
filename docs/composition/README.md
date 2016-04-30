@@ -1,8 +1,8 @@
 ## Composition
 
-If Redux is really missing something out of the box, it's some kind of Encapsulation and **Composition is a new Encapsulation in functional programming lingo**. Redux gives programmer a huge power by having single instance of application state in one place. However, with great power comes great responsibility and that's why sometimes it tends people to abuse that power, which can gradually lead to very coupled Components and hardly maintanable code base. `redux-elm` is strict, it defines hard boundaries between components and does not allow to break them. Decoupling is one of the benefits of `redux-elm`.
+If Redux is missing something out of the box, it's some kind of Encapsulation. And **Composition is the new Encapsulation in functional programming lingo**. Redux gives programmers huge power by maintaining the entire application state in one place. However, not everyone accepts the great responsibility that comes with this great power, which can gradually lead to tightly coupled Components and a hard-to-maintain code base. `redux-elm` defines strict boundaries between components and does not allow us to break them. Decoupling is one of the principal benefits of `redux-elm`.
 
-**Composition is an essential concept in the Elm Architecture** and it's what makes `redux-elm` different than plain old `react` with `redux`. Traditionally you can compose views in `react` by simply nesting them, this top-down approach means that parent component is aware of public interface of its direct children and children does not know anything about its parent, it only exposes public interface using callbacks in `props`:
+**Composition is an essential concept of the Elm Architecture**, and it's what makes `redux-elm` different from plain old Redux. Traditionally you can compose views in React simply by nesting them. This top-down approach means that the parent Component is aware of the public interface of its direct children, whereas children do not know anything about their parent besides the public interface defined using callbacks in `props`:
 
 ```javascript
 class ParentView extends Component {
@@ -25,7 +25,7 @@ const ChildView = ({ onTextFieldChanged, textFieldValue }) => ({
 });
 ```
 
-`ParentView` takes role of managing all the state and communicates with `ChildView` using `onTextFieldChanged` callback passed via `props`. This approach however has one significiant drawback, `ParentView` must be aware of internal details of `ChildView` because it must know that there's some `textFieldValue`. The Elm Architecture therefore presents concept of Model and Model is some Object which encapsulates state of the Component, so instead of passing all the values via `props` we'll pass just model which hides everything in its structure.
+`ParentView` takes the role of managing all the state and communicates with `ChildView` using the `onTextFieldChanged` callback passed via `props`. This approach has one significiant drawback, however: `ParentView` must be aware of the internal details of `ChildView`, because it must know that it has a property called `textFieldValue`. The Elm Architecture therefore has the concept of a Model, where Model is an object that encapsulates the state of the Component. So instead of passing all the values via `props` (and thereby breaking encapsulation), we pass just the Model (which hides everything in its structure).
 
 ```javascript
 const RootView = ({ model }) => ({
@@ -41,7 +41,7 @@ const ChildView = ({ model, onTextFieldChanged }) => ({
 });
 ```
 
-Now parent only knows that it has Child and the Child has its own Model but Parent does not need to know anything about implementation details of Child. The Model Composition is pretty obvious:
+Now the parent only knows that it has a child and that the child has its own Model. The Parent does not need to know anything about the implementation details of the child. The Model Composition is straightforward:
 
 ```javascript
 {
@@ -53,4 +53,4 @@ Now parent only knows that it has Child and the Child has its own Model but Pare
 }
 ```
 
-It's pretty common to compose Application State (Model) and Views in `react` with `redux`, so what's actually the main (and probably only) distinction between `redux` and The Elm Architecture?
+It is common to compose Application State (Model) and Views in Redux, so what is actually the main (and probably only) difference between Redux and The Elm Architecture?
