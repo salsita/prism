@@ -1,6 +1,6 @@
 ## Action Composition
 
-The part which makes the Elm Architecture unique is Action Composition, the idea is pretty simple. Just imagine how it works in Redux, in really deeply nested View you can `dipsatch` an action and the action can be handled basically by any Reducer, that's **key principle of Redux: any Reducer can handle any Action** because action hierarchy is flat, there's no Action composition.
+The part that makes the Elm Architecture unique is Action Composition. The idea is pretty simple. Remember that in Redux, a really deeply nested View you can dispatch an Action, and the Action can be handled by any Reducer. This is a key principle of Redux: **any Reducer can handle any Action** because the action hierarchy is flat and there is no Action composition.
 
 ```javascript
 // Traditional Redux Action
@@ -22,7 +22,7 @@ The part which makes the Elm Architecture unique is Action Composition, the idea
 }
 ```
 
-What we mean by Action nesting is simply having sub-action as `payload` of parent action. However, you might protest that working with nested actions may be a bit clumsy therefore `redux-elm` simplifies that by defining Action composition in Action `type` by simply using `.` delimited nested types, therefore above example actually looks like this:
+What we mean by Action nesting is that a sub-action can be used as the `payload` of a parent action. You might be concerned that working with nested actions could be a bit clumsy. `redux-elm` simplifies this by defining Action composition in the Action `type` string using `.` to delimited nested types. The above example therefore looks like this:
 
 ```javascript
 {
@@ -31,4 +31,4 @@ What we mean by Action nesting is simply having sub-action as `payload` of paren
 }
 ```
 
-From `redux` perspective there's no difference between traditional plain old `redux` Action and nested `redux-elm` Action except there's some convention in Action type.
+From the Redux perspective there is no difference between a plain old Redux Action and a nested `redux-elm` Action; both just use a string to represent the type. `redux-elm` understands the mini-syntax used to delimit the nested types, so it can extract additional semantics from the type string.

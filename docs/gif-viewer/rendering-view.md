@@ -1,6 +1,6 @@
-## Rendering View
+## Rendering the View
 
-The model is ready, now it's right time to build View which projects the model onto HTML markup.
+The Model is ready, so now is the right time to build a View to project the Model onto HTML markup.
 
 ```javascript
 import React from 'react';
@@ -14,9 +14,9 @@ const renderGif = url => {
 };
 ```
 
-Just import `React` and get to implementing the `renderGif` function which takes `url` as argument and renders either Loading spinner or the actual GIF. Keep in mind that `url` can be `null` and if that happens it means that we are waiting for new GIF.
+Just import `React` and implement the `renderGif` function that takes the `url` and renders either a loading spinner or the actual GIF. Keep in mind that `url` can be `null`, in which case we are waiting for a new GIF.
 
-Every View must export default React component and here it is:
+Every View must export a default React component:
 
 ```javascript
 import React from 'react';
@@ -38,8 +38,8 @@ export default ({ model, dispatch }) => (
 );
 ```
 
-The essential part is using the `renderGif` function and passing it `gifUrl` from Model. We also need User interaction therefore button "More Please!" dispatches new action `RequestMore` which we will handle in the Updater.
+The key is to use the `renderGif` function by passing it `gifUrl` from the Model. We also need user interaction, so the "More Please!" button dispatches a `RequestMore` Action which we will handle in the Updater.
 
-Now you should be able to see something like this:
+At this point you should see something like this:
 
 ![gif-viewer-1](../assets/5.png)

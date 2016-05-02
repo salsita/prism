@@ -1,6 +1,6 @@
 ## Introducing Matchers
 
-Every Updater must be provided with Matcher implementation. Matcher is responsible for matching action and passing it to corresponding Handler and it's the second argument when creating instance of `Updater`:
+Every Updater must be provided with a Matcher implementation. The Matcher is responsible for matching an Action and passing it to the corresponding Handler. It is the second argument when creating an `Updater` instance:
 
 ```javascript
 import { Updater, Matchers } from 'redux-elm';
@@ -20,26 +20,26 @@ export default new Updater(initialModel, Matchers.exactMatcher)
   .toReducer();
 ```
 
-So far we've been always providing `exactMatcher`, you can write your own implementation of Matcher and we will cover this. `redux-elm` is shipped with three basic implementations:
+So far we've been always providing `exactMatcher`. `redux-elm` ships with three basic implementations:
 
-1. `exactMatcher`
-2. `matcher`
+1. `matcher` (the default)
+2. `exactMatcher`
 3. `parameterizedMatcher`
 
-If you don't provide any Matcher to Updater, `matcher` is taken as default.
+You can even write your own Matcher implementation as explained later.
 
 #### exactMatcher
-This is simplest matcher which is looking for exact match in Action type. Provided action for the handler is exactly the same as dispatched action. This is basically `redux` `switch` in Reducer alternative. This is specifically not very useful for Action composition but is mandatory for "leaf" Actions, these are Actions which does not have any child Action. Therefore we used this Matcher for our examples so far because there was no Action Composition needed.
+This is the simplest Matcher that looks for an exact match with the Action type. The Action provided to the handler is exactly the same as the dispatched Action. This is basically like using `switch` on the Action type in a Redux Reducer. This is not very useful for Action composition but is mandatory for "leaf" Actions; i.e. Actions that do not have any children. We've been using this Matcher in our examples so far because there was no Action Composition needed.
 
 #### matcher
-Default Matcher implementation, which you will probably need for most Actions. This Matcher unwraps action, what does it mean? Assuming that `Top` is provided as Matching pattern to `case` function and action starting with `Top.` is dispatched this Matcher will match the Action and strips off the `Top.` prefix passing the rest of action type to corresponding updater, see example:
+This is the default Matcher implementation that should be used for most Actions. It *unwraps* the Action. What does that mean? Suppose that `Top` is provided as the pattern to the `case` function and the Action starts with `Top.`. This Matcher will match the Action and strips off the `Top.` prefix, passing the rest of the Action type to corresponding Updater. For example:
 
 ```javascript
 // Assuming { type: 'Top.NewGif', payload: 'some magic url' } has been dispatched:
 
 export default new Updater(initialModel, Matchers.matcher)
   .case('Top', function*(model, action) {
-    // Action is matched and therefore handler is called however `action` argument is not `Top.NewGif` but it's
+    // Action is matched and handler is called, however `action` is not `Top.NewGif` but rather:
     //
     // {
     //   type: 'NewGif',
@@ -55,7 +55,7 @@ export default new Updater(initialModel, Matchers.matcher)
 Cool, isn't it?
 
 #### parameterizedMatcher
-Very similiar to `matcher` but it allows to parameterize the Action with single parameter, this is especially very useful for dynamic structures like some dynamic lists of Components, we will cover its usage later.
+Very similiar to `matcher`, but it allows the Action to be parameterized with a single parameter. This is very useful for dynamic structures like lists of Components. We will cover its usage in more detail later.
 
 ```javascript
 // Assuming { type: 'GifViewers.42.NewGif', payload: 'some magic url' } has been dispatched:
@@ -65,7 +65,7 @@ export default new Updater(initialModel, Matchers.parameterizedMatcher)
 
     // gifViewerId plays a role of the parameter here
     //
-    // Action is matched and therefore handler is called however `action` argument is not `GifViewers.42.NewGif` but it's
+    // Action is matched and handler is called, however `action` is not `GifViewers.42.NewGif` but rather:
     //
     // {
     //   type: 'NewGif',

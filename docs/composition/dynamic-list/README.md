@@ -1,10 +1,10 @@
 ## Dynamic List of Components
 
-We know how Composition works and why it's essential for `redux-elm` so we can try to build an example which is a bit more realistic. This tutorial guides you through process of implementing dynamic list of `GifViewer`s. User will be allowed to dynamically add infinite number of `GifViewer`s with specified topics.
+We now know how Composition works and why it's essential for `redux-elm`, so we can try to build an example that is a bit less contrived. In this secton we guide you through the process of implementing a dynamic list of `GifViewer`s. User will be allowed to dynamically add an unlimited number of `GifViewer`s with specified topics.
 
 ![gif-viewer-list-1](../../assets/12.png)
 
-After we create a new folder `gif-viewer-list` inside `src` with `updater.js` and view.js` files, we shouldn't forget about updating the Root component in `main.js`:
+We create a new folder `gif-viewer-list` inside `src` with `updater.js` and `view.js` files. We mustn't forget to update the Root component in `main.js`:
 
 ```javascript
 import run from './boilerplate';
@@ -13,9 +13,9 @@ import view from './gif-viewer-list/view';
 import updater from './gif-viewer-list/updater';
 
 run('app', view, updater);
-``` 
+```
 
-Let's shape out initial model, we know that there will be list of child `GifViewer` components and we also need to keep `topic` because it will correspond with value provided by Input element.
+Let's shape out initial model. We know that there will be a list of child `GifViewer` Components. We also need to keep the `topic` property which corresponds to the value provided by the `input` element.
 
 ```javascript
 import { Updater } from 'redux-elm';
@@ -30,7 +30,7 @@ export default new Updater(initialModel)
 
 ```
 
-We should prepare the View now:
+We can now prepare the View:
 
 ```javascript
 import React from 'react';
@@ -49,7 +49,7 @@ const inputStyle = {
 export default ({ model, dispatch }) => (
   <div>
     <input
-      placeholder="What kind of gifs do you want?"
+      placeholder="What kind of GIFs do you want?"
       value={model.topic}
       onKeyDown={ev => ev.keyCode === 13 ? dispatch({ type: 'Create' }) : null}
       onChange={ev => dispatch({ type: 'ChangeTopic', value: ev.target.value })}
@@ -62,12 +62,12 @@ export default ({ model, dispatch }) => (
 );
 ```
 
-Input element just renders value `topic` provided by model. User can change its value by dispatching `ChangeTopic` action, after hitting Return (Enter) key `Create` is dispatched because that's what we want to happen. It should create a new `GifViewer` Component in the Model given the `topic`.
+The `input` element just renders the `topic` provided by model. The user can change its value by dispatching a `ChangeTopic` Action. Hitting Enter causes a `Create` Action to be dispatched. This creates a new `GifViewer` Component in the Model with the given `topic`.
 
-`gifViewers` is array holding all the models for dynamic list of `GifViewers` it just needs to be mapped to `GifViewer` component passing the Model slice. We want to wrap all the actions by `GifViewer.Index` and we used `forwardTo` function:
+`gifViewers` is an array holding all the Models for the dynamic list of `GifViewer`s. It just needs to be mapped into `GifViewer` components with the appropriate Model slice passed to each one. We wrap all Actions with the `GifViewer.Index` (zero-based indexes) using the `forwardTo` function:
 
 ```javascript
 dispatch={forwardTo(dispatch, 'GifViewer', index)}
 ```
 
-For example when `NewGif` is dispatched in second `GifViewer` the action will be wrapped to `GifViewer.1.NewGif`.
+For example, when `NewGif` is dispatched by the second `GifViewer`, the Action will be wrapped as `GifViewer.1.NewGif`.

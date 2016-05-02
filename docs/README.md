@@ -1,14 +1,24 @@
-## Why the Elm Architecture matters?
+## Why does the Elm Architecture matter to Redux developers?
 
-You've probably spotted all the buzz around [Redux](https://github.com/reactjs/redux) and [React](http://facebook.github.io/react/) lately, there's no doubt these two pieces of technology have inevitably changed JavaScript Front-End world. Redux albeit it's a great framework is still very low level, which is great for newcomers because there's no need to understand complex abstractions so it's pretty easy to grasp all the basic concepts and get up to speed fairly quickly. On the other hand, it lacks those neccessary abstractions for real world, maintainable, scalable applications. It requires really experienced engineers which by trial & error defines those abstractions.
+You've probably noticed all the buzz around [Redux](https://github.com/reactjs/redux) and [React](http://facebook.github.io/react/) lately. There's no question that these technologies have had a seismic effect on the JavaScript frontend world.
 
-There's an opposite approach, which are full scoped frameworks like for example Angular / Ember and many others which contains a lot of abstractions. Obvious drawback of these frameworks is their complexity. It's very easy to understand Redux, because if something doesn't work, you can still look into Redux codebase and understand what happens under the hood (which will give you the big picture), this is very difficult with fully scoped frameworks.
+Redux is great for newcomers because there's no need to understand complex abstractions. It's pretty easy to grasp all the basic concepts and start writing code. It has [great tooling](https://github.com/zalmoxisus/redux-devtools-extension), a very active development community and a fast-growing ecosystem.
 
-Ideally, we should find a balance, something that's still very easy to understand and does not involve reading thousands lines of code. That's why patterns are more important than over-engineered frameworks. [The Elm Architecture](https://github.com/evancz/elm-architecture-tutorial) which is an application architecture for [Elm programming language](http://elm-lang.org/) is good example. It's great set of patterns and ideas which helps solving hard problems:
+On the other hand, **Redux lacks built-in abstractions for real-world, maintainable, scalable applications**. In particular, it is difficult to create and distributed encapsulated, reusable components. Of course, many developers have already built large-scale apps using Redux but, because it is so new, people are only now starting to appreciate the potential benefits of baking higher level constructs into the Redux stack.
 
-* **Side Effects** - API calls, Logging, anything that's not directly related to your domain logic
-* **[Fractability](http://staltz.com/unidirectional-user-interface-architectures.html)** - Are your Components isolated? Can you at any time publish the deeply nested Component as independent npm package?
-* **[Encapsulation](http://blog.javascripting.com/2016/02/02/encapsulation-in-redux/)** - People do not often talk about Encapsulation in Front-End world, but without it, it's nearly impossible to decouple Components and decoupling is secret sauce for any scalable architecture
-* **Local Component State** - Imagine you want to instantiate a Component, multiple instances of Calendar widget in the UI
+The alternative is full-scope frameworks like Angular and Ember that offer abstractions for every piece of the application puzzle. But these frameworks lack the simplicity, elegance and modularity of React and Redux.
 
-This repository aims to utilize the full power of The Elm Architecture in JavaScript. Some Elm folks would protest that it does not make sense to use The Elm Architecture in JavaScript because JavaScript does not have any guarantees unlike Elm. However, I do not share that view as Redux obviously suffers some issues which The Elm Architecture effectively solves and by The Elm Architecture I really mean the architecture not language itself. Goal of `redux-elm` is not to precisly follow the principles of The Elm Architecture, what it tries instead is taking advantage of the architecture where it makes sense and use JavaScript capabilities to squeeze everything out of the architecture where strict Elm cloning would be just awkward.
+Ideally we would find a balance: something that can serve as the basis for a large production app without the need to master a large monolithic framework. That's why patterns are more important than over-engineered frameworks.
+
+[The Elm Architecture](https://github.com/evancz/elm-architecture-tutorial), an application architecture for the [Elm programming language](http://elm-lang.org/), is a great example. It's a wonderful set of patterns and ideas for solving the hard problems faced in real-world software development:
+
+* **Side Effects** - API calls, logging and anything else that's not directly related to your domain logic
+* **[Fractability](http://staltz.com/unidirectional-user-interface-architectures.html)** - Are your components isolated? Could you publish your deeply nested components as independent npm packages?
+* **[Encapsulation](http://blog.javascripting.com/2016/02/02/encapsulation-in-redux/)** - People do not often talk about encapsulation in the front-end world. But without it, it's nearly impossible to decouple components... and decoupling is the secret sauce for any scalable architecture
+* **Local Component State** - Imagine you want to instantiate a Component (e.g. multiple instances of a Calendar widget in single screen)
+
+This repository aims to bring the full power of The Elm Architecture to JavaScript. Some Elm folks will no doubt protest that it does not make sense to use The Elm Architecture in JavaScript, because JavaScript doesn't enforce the same invariants as Elm.
+
+We don't share that view. **The Elm Architecture clearly addresses some important areas where Redux alone is lacking** (and by The Elm Architecture we really mean the architecture, not the language itself).
+
+The goal of `redux-elm` is not to turn JavaScript into an awkward and inadequate Elm clone. What it tries to do instead is to take advantage of The Elm Architecture where it makes sense, using JavaScript capabilities to make best possible use of the architecture.

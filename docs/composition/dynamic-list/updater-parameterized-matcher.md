@@ -1,6 +1,6 @@
-## Updater with ParmeterizedMatcher
+## Updater with `parameterizedMatcher`
 
-It's obvious that all the actions related to specific instance of `GifViewer` will be prepended with `GifViewer` type following by index of the Component in List. That's exactly where Parameterized Matcher comes useful:
+All Actions relating to a specific instance of `GifViewer` must be prepended with `GifViewer` following by the index of the Component in the list. That is where `parameterizedMatcher` comes in handy:
 
 ```javascript
 import { Updater, Matchers } from 'redux-elm';
@@ -18,8 +18,8 @@ export default new Updater(initialModel)
     // gifViewerIndex = 3
     // action = { type: 'NewGif', url: 'some url' }
 
-    // We need to parse `gifViewerIndex` because all the matching is String based
-    // therefore all the arguments will be passed as Strings
+    // We need to parse `gifViewerIndex` because the matching is string-based
+    // and all arguments are passed in as strings
     const numericGifViewerIndex = parseInt(gifViewerIndex, 10);
 
     return model;
@@ -27,7 +27,7 @@ export default new Updater(initialModel)
   .toReducer();
 ```
 
-The implementation should be pretty straightforward we just want to find corresponding Model of the Component and call `gifViewerUpdater` with unwrapped action to do the mutation, here's simplified version:
+The implementation should be pretty straightforward. We just want to find the Model corresponding to the Component and call `gifViewerUpdater` with the unwrapped Action to perform the mutation. Here is a simplified version:
 
 ```javascript
 import { Updater, Matchers } from 'redux-elm';
@@ -57,9 +57,9 @@ export default new Updater(initialModel)
   .toReducer();
 ```
 
-We want to map over all the GifViewer models and find the one with corresponding index. If the index matches then we call the child Updater (gifViewerUpdater) and we'll provide the Model slice and unwrapped action (`NewGif` or `RequestMore`). If the index does not match, we do nothing, just pass the original reference.
+We want to map over all the GifViewer models and find the one with the appropriate index. If the index matches then we call the child Updater (`gifViewerUpdater`) providing the Model slice and unwrapped action (`NewGif` or `RequestMore`). If the index does not match, we just return the original reference.
 
-If you tried to compile this now, it would result in syntax error because we are using `yield*` inside `map` callback and the callback is just plain old Javascript function, it's not Generator function. `yield*` can be used only inside function which is annotated as Generator, think of `function*` not `function`. So easy fix would be just turn the anonymous function into anonymous generator function:
+If you try to compile this now, you will get a syntax error since we are using `yield*` inside the `map` callback. This is because the callback is just a plain old JavaScript function, not a Generator function, and `yield*` can only be used inside Generators (think `function*` not `function`). So an easy fix would be to turn the anonymous function into an anonymous Generator function:
 
 ```javascript
 import { Updater, Matchers } from 'redux-elm';
@@ -89,13 +89,13 @@ export default new Updater(initialModel)
   .toReducer();
 ```
 
-Now, you'll be able to compile the code but it will not work either because traditional [`Array.map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) does not work with Generators. `redux-elm` provides Generator friendly version of `map` functiona and is exposed in `Generators` namespace.
+Now you'll be able to compile the code, but it still won't work because [`Array.map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) does not work with Generators. `redux-elm` provides a Generator-friendly version of `map` that is exported in the `Generators` namespace.
 
 ```javascript
 import { Generators } from 'redux-elm';
 
 function*() {
-  // Everything will be yielded and returned correctly as expected
+  // Everything will be yielded and returned as expected
   const mapped = yield* Generators.map([1, 2, 3], function*(value, index) {
     yield index + 1;
     return value + 1;
@@ -106,7 +106,7 @@ function*() {
 
 ```
 
-We can utilize this function instead of plain old `Array.Map`
+We can use this function instead of plain old `Array.map`:
 
 ```javascript
 import { Updater, Generators, Matchers } from 'redux-elm';
@@ -136,7 +136,7 @@ export default new Updater(initialModel)
   .toReducer();
 ```
 
-There's one more issue with the code above, it does not explicitly `mapEffects` for Sub Updater (`gifViewerUpdater`). We must not forget that Sub Updater may potentially `yield` some side effects which can `dispatch` new actions and those actions need to be wrapped correctly:
+There's one more issue with the above code: it does not explicitly call `mapEffects` for the sub-Updater (`gifViewerUpdater`). Don't forget that a sub-Updater may potentially `yield` some Side Effects that can dispatch new Actions. Those Actions need to be wrapped correctly:
 
 ```javascript
 import { Updater, Generators, Matchers, mapEffects } from 'redux-elm';
@@ -167,7 +167,7 @@ export default new Updater(initialModel)
   .toReducer();
 ```
 
-Good news, it was the hard part, now comes the easy part. We just need to handle two more actions: `ChangeTopic` and `Create` where `ChangeTopic` simply changes `topic` in model and we use `exactMatcher` for both of the actions because they are leaf Actions:
+Good news: that was the hard part. Now comes the easy part. We just need to handle two more actions: `ChangeTopic` and `Create`, where `ChangeTopic` changes the `topic` property of the Model. We use `exactMatcher` for both of these actions since they are leaf Actions:
 
 ```javascript
 import { Updater, Matchers, mapEffects, Generators } from 'redux-elm';
@@ -206,7 +206,7 @@ export default new Updater(initialModel)
   .toReducer();
 ```
 
-So what should happen when `Create` actions kicks in? Name of the action sounds quite descriptive, the handler should be responsible for creating model for newly added `GifViewer` so let's get index of newly created model (this is equal to length of `gifViewers`) and call topic specified init function:
+So what should happen when the `Create` Action is dispatched? As its name suggests, the handler is responsible for creating a Model for a newly added `GifViewer`. So let's get the index of the new Model (this is equal to the length of `gifViewers`) and call the `init` function, which we create with the appropriate topic using `gifViewerInit`:
 
 ```javascript
 import { Updater, Matchers, mapEffects, Generators } from 'redux-elm';
@@ -255,6 +255,6 @@ export default new Updater(initialModel)
   .toReducer();
 ```
 
-Voila! We've got fully functional List of `GifViewers` implemented:
+Hurray! We've implemented a fully functional list of `GifViewer`s:
 
 ![gif-viewer-list-2](../../assets/13.png)

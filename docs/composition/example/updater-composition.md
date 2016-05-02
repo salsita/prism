@@ -1,6 +1,6 @@
 ## Updater Composition
 
-The reason why nothing really works now is that we haven't plumbed `GifViewer` Updater in yet. And we also need to initialize Child models properly therefore we need to turn initial Model into function:
+The reason why nothing really works yet is that we haven't plugged in the `GifViewer` Updater yet. We also need to initialize the child Models properly by turning our initial Model into a function:
 
 ```javascript
 import { Updater } from 'redux-elm';
@@ -21,15 +21,17 @@ export default new Updater(init).toReducer();
 
 ```
 
-First things first, we know that `init` function exposed by `GifViewer` is thunk (function which returns a function) therefore we need to call it "twice" to actually call it, first call takes one argument which is a topic for the `GifViewer` and returns initialize function which can be later used for initializing the Model, we'll use Cats for top `GifViewer` and Dogs for bottom. So hypothetically the app should now correctly show Topic above the `GifViewer` and also trigger initial API call.
+We know that the  `init` function exposed by `GifViewer` is a thunk (function that returns a function). We therefore need to call it *twice* to invoke it. The first call takes one argument, which is the topic for the `GifViewer`, and returns the function which can be later used (without parameters) to initialize the Model. We'll use cats for the top `GifViewer` and dogs for bottom. Hypothetically the app should now correctly show the topic above the `GifViewer` and trigger the initial API call.
 
-Also you might have spotted `yield*` keyword, this is essential because Generators does not automatically propagate upper the call hierarchy and you need to explicitly say that you want to propagate `yield`s. Therefore anytime you call a generator function in your Updater, don't forget to prepend `yield*` keyword.
+You might have spotted the `yield*` keyword. This is essential because Generators do not automatically propagate up the call hierarchy, so you need to explicitly say that you want to propagate `yield`s. Therefore, anytime you call a generator function in your Updater, don't forget to prepend the `yield*` keyword.
 
-**Keep in mind, use `yield*` whenever you want to call Sub Updater and use `yield` whenever you want to `yield` a side effect**
+**Remember: use `yield*` whenever you want to call a sub-Updater and use `yield` whenever you want to return a side effect**
 
 ![gif-viewer-pair-2](../../assets/8.png)
 
-It's apparent from the screenshot that we can now see `GifViewer` topics and two API calls have been called.
+You can see from the screenshot that we have two `GifViewer` topics and two corresponding API calls.
 
-### Redux DevTools extension
-Are you wondering what's the nice browser extension on the right side in the screenshot above? It's [`redux-devtools-extension`](https://github.com/zalmoxisus/redux-devtools-extension) which allows you very nicely debug your Redux applications, it comes really handy and you should check it out. `redux-elm-skeleton` already integrates it, so you just need to install the [extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) in your browser and restart it, you should see Redux tab in your Chrome Dev Tools.
+### Redux DevTools Extension
+Are you wondering what is the intriguing browser extension on the right side of the above the screenshot? It's [`redux-devtools-extension`](https://github.com/zalmoxisus/redux-devtools-extension), which allows you to debug your Redux applications. You should check it out.
+
+Note that `redux-elm-skeleton` already integrates Redux DevTools, so you just need to [install the extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) in your browser and restart it, and you'll should see the Redux tab in your Chrome Dev Tools view.
