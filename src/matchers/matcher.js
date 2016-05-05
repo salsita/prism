@@ -4,12 +4,16 @@ export default pattern => {
   const regexp = new RegExp(`^${escapeStringRegexp(pattern)}\\.(.+)`);
 
   return action => {
-    const match = action.type.match(regexp);
-
-    if (match) {
-      return [ match[1] ];
+    if (action.type === pattern) {
+      return [ pattern ];
     } else {
-      return false;
+      const match = action.type.match(regexp);
+
+      if (match) {
+        return [ match[1] ];
+      } else {
+        return false;
+      }
     }
   };
 };

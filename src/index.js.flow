@@ -14,7 +14,6 @@ export interface Generators {
 
 export interface Matchers {
   static matcher : Matcher;
-  static exactMatcher : Matcher;
   static parameterizedMatcher : Matcher;
 }
 

@@ -1,7 +1,6 @@
 import { assert } from 'chai';
 
 import Updater from '../src/Updater';
-import exactMatcher  from '../src/matchers/exactMatcher';
 import parameterizedMatcher from '../src/matchers/parameterizedMatcher';
 
 describe('Updater interface', () => {
@@ -72,10 +71,13 @@ describe('Updater interface', () => {
     const reducer = updater.toReducer();
 
     let state = undefined;
-    state = reducer(state, { type: 'Foo' }).next().value;
-    assert.equal(state, 42);
+    let reduction = undefined;
+    reduction = reducer(state, { type: 'Foo' });
+    reduction.next();
+    state = reduction.next().value;
+    assert.equal(state, 43);
 
-    const reduction = reducer(state, { type: 'Foo.Bar' });
+    reduction = reducer(undefined, { type: 'Foo.Bar' });
     assert.deepEqual(reduction.next(), {
       done: false,
       value: 'Bar'
@@ -85,23 +87,6 @@ describe('Updater interface', () => {
       done: true,
       value: 43
     });
-  });
-
-  it('should allow shipped-in exact matching', () => {
-    const updater = new Updater(42);
-    updater.case('Foo', function*(model) {
-      return model + 1;
-    }, exactMatcher);
-
-    const reducer = updater.toReducer();
-
-    let state = undefined;
-
-    state = reducer(state, { type: 'Foo.Bar' }).next().value;
-    assert.equal(state, 42);
-
-    state = reducer(state, { type: 'Foo' }).next().value;
-    assert.equal(state, 43);
   });
 
   it('should allow shipped-in parametrized unwrapping matching', () => {

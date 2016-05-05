@@ -12,7 +12,12 @@ describe('matcher', () => {
     assert.isFalse(matcher('Foo')({ type: 'Bar.Foo' }));
   });
 
-  it('should not match when there\'s no sub-action', () => {
-    assert.isFalse(matcher('Foo')({ type: 'Foo' }));
+  it('should return pattern for exact match', () => {
+    const pattern = 'Foo';
+    assert.deepEqual(matcher(pattern)({ type: pattern }), [ pattern ]);
+  });
+
+  it('should not match the action there\'s no exact match nor unwrapping', () => {
+    assert.isFalse(matcher('Foo')({ type: 'FooBar' }));
   });
 });
