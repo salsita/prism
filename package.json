@@ -56,7 +56,6 @@
     "gitbook-cli": "^2.1.2",
     "isparta": "^4.0.0",
     "mocha": "^2.4.5",
-    "redux-side-effects": "^1.1.1",
     "rimraf": "^2.5.2",
     "sinon": "^1.17.3"
   },
@@ -64,6 +63,6 @@
     "escape-string-regexp": "^1.0.5"
   },
   "peerDependencies": {
-    "redux-side-effects": "^1.0.0"
+    "redux-saga": "^0.10.2"
   }
 }

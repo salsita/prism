@@ -5,12 +5,20 @@ export default pattern => {
 
   return action => {
     if (action.type === pattern) {
-      return [ pattern ];
+      return {
+        wrap: '',
+        unwrap: action.type,
+        args: {}
+      };
     } else {
       const match = action.type.match(regexp);
 
       if (match) {
-        return [ match[1] ];
+        return {
+          wrap: action.type.replace(match[1], ''),
+          unwrap: match[1],
+          args: {}
+        };
       } else {
         return false;
       }
