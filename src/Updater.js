@@ -1,4 +1,5 @@
 import defaultMacher from './matchers/matcher';
+import { Mount } from './actions';
 
 import { runSaga } from 'redux-saga';
 
@@ -69,11 +70,27 @@ export default class Updater {
    * @returns {Function} Reducer
    */
   toReducer() {
-    const sagaInstanceRepository = {};
     const stateRepository = {};
     const subscribersRepository = {};
 
     return (model = this.initialModel, action, effectExecutor) => {
+      // Saga instantiation
+      if (action.type === Mount && this.saga) {
+        const actionPrefix = action.wrap || '';
+
+        effectExecutor(dispatch => {
+          stateRepository[actionPrefix] = model;
+
+          instantiateSaga(
+            this.saga,
+            stateRepository,
+            subscribersRepository,
+            actionPrefix,
+            dispatch
+          );
+        });
+      }
+
       if (action) {
         // Matching logic is fairly simple
         // it just maps over all the provided matchers and tries matching the action
@@ -84,36 +101,20 @@ export default class Updater {
           .reduce((partialReduction, { match: { wrap, args, unwrap }, updater }) => {
             const actionPrefix = action.wrap || '';
 
-            // Saga instantiation is wrapped into effectExecutor
-            // so that it can be skiped in hot-reload, and
-            // it should also be possible to skip passing incoming actions to Saga
-            effectExecutor(dispatch => {
-              if (this.saga) {
-                if (!sagaInstanceRepository[actionPrefix]) {
-                  sagaInstanceRepository[actionPrefix] = instantiateSaga(
-                    this.saga,
-                    stateRepository,
-                    subscribersRepository,
-                    actionPrefix,
-                    dispatch
-                  );
-                }
-
-                // Notifies all the Saga subscribers about incoming unwrapped action
-                subscribersRepository[actionPrefix].forEach(subscriber => subscriber(action));
-              }
-            });
-
             // Calling the appropriate updater
             //
             // Effect executor is passed to the Updater so that it can be used
             // for composition
             const reduction = updater(partialReduction, { ...action, type: unwrap, args, wrap }, effectExecutor);
 
-            // Store mutated state snapshot so that Saga
-            // instance can later retrieve it
+            // If there is an existing Saga instance for the updater
+            // Store reduction into State Repository and notify
+            // all subscribers for the specific Saga instance
             if (this.saga) {
-              stateRepository[actionPrefix] = reduction;
+              effectExecutor(() => {
+                stateRepository[actionPrefix] = reduction;
+                subscribersRepository[actionPrefix].forEach(subscriber => subscriber(action));
+              });
             }
 
             return reduction;
