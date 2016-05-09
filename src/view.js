@@ -10,6 +10,10 @@ export default View => class ReduxElmView extends Component {
     dispatch: PropTypes.func.isRequired
   }
 
+  dispatch(...args) {
+    this.props.dispatch(...args);
+  }
+
   shouldComponentUpdate(nextProps) {
     return Object
       .keys(this.props)
@@ -18,13 +22,11 @@ export default View => class ReduxElmView extends Component {
   }
 
   componentWillMount() {
-    const { dispatch } = this.props;
-    dispatch({ type: Mount });
+    this.dispatch({ type: Mount });
   }
 
   componentWillUnmount() {
-    const { dispatch } = this.props;
-    dispatch({ type: Unmount });
+    this.dispatch({ type: Unmount });
   }
 
   render() {
