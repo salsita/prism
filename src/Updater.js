@@ -12,10 +12,16 @@ import { runSaga } from 'redux-saga';
  * @param {String} Action prefix for the Saga instance
  * @param {Function} plain old dispatch function
  */
-const instantiateSaga = (saga, stateRepository, subscribersRepository, actionPrefix, dispatch) => runSaga(saga(), {
+const instantiateSaga = (
+  saga,
+  stateRepository,
+  subscribersRepository,
+  actionPrefix,
+  dispatch
+) => runSaga(saga(), {
   subscribe: cb => {
     if (!subscribersRepository[actionPrefix]) {
-      subscribersRepository[actionPrefix] = [];
+      subscribersRepository[actionPrefix] = []; // eslint-disable-line no-param-reassign
     }
 
     subscribersRepository[actionPrefix].push(cb);
@@ -105,7 +111,11 @@ export default class Updater {
             //
             // Effect executor is passed to the Updater so that it can be used
             // for composition
-            const reduction = updater(partialReduction, { ...action, type: unwrap, args, wrap }, effectExecutor);
+            const reduction = updater(
+              partialReduction,
+              { ...action, type: unwrap, args, wrap },
+              effectExecutor
+            );
 
             // If there is an existing Saga instance for the updater
             // Store reduction into State Repository and notify

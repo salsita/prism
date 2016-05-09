@@ -6,6 +6,10 @@ export default (dispatch, ...types) => {
       throw new Error('Action type can\'t contain a dot');
     }
 
-    return action => dispatch({...action, type: `${types.reduce((memo, type) => `${memo}${type}.`, '')}${action.type}`});
+    return action =>
+      dispatch({
+        ...action,
+        type: `${types.reduce((memo, type) => `${memo}${type}.`, '')}${action.type}`
+      });
   }
 };
