@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "babel-runtime": "^6.5.0",
+    "isomorphic-fetch": "^2.2.1",
     "react": "^15.0.2",
     "react-dom": "^15.0.2",
     "react-redux": "^4.0.0",
@@ -27,7 +28,7 @@
     "react-router-redux": "^4.0.0",
     "recompose": "^0.17.0",
     "redux": "^3.3.1",
-    "redux-elm": "^2.0.2",
+    "redux-elm": "^2.0.3",
     "redux-saga": "^0.10.2"
   },
   "author": "Tomas Weiss <tomasw@salsitasoft.com>",

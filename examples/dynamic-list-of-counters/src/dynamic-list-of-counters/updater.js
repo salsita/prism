@@ -1,7 +1,6 @@
 import { Updater, Matchers } from 'redux-elm';
 import counterUpdater, { initialModel as counterInitialModel } from '../counter/updater';
 
-
 export default new Updater([])
   .case('Insert', model => [...model, counterInitialModel])
   .case('Remove', model => {
