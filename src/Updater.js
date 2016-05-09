@@ -101,34 +101,33 @@ export default class Updater {
         // Matching logic is fairly simple
         // it just maps over all the provided matchers and tries matching the action
         // then only trutrhy matches pass
-        return this.matchers
+        const reduction = this.matchers
           .map(({ matcher, updater }) => ({ match: matcher(action), updater }))
           .filter(({ match }) => !!match)
-          .reduce((partialReduction, { match: { wrap, args, unwrap }, updater }) => {
+          // Calling the appropriate updater
+          // Effect executor is passed to the Updater so that it can be used
+          // for composition
+          .reduce((partialReduction, { match: { wrap, args, unwrap }, updater }) => updater(
+            partialReduction,
+            { ...action, type: unwrap, args, wrap },
+            effectExecutor
+          ), model);
+
+        // If there is an existing Saga instance for the updater
+        // Store reduction into State Repository and notify
+        // all subscribers for the specific Saga instance
+        if (this.saga) {
+          effectExecutor(() => {
             const actionPrefix = action.wrap || '';
 
-            // Calling the appropriate updater
-            //
-            // Effect executor is passed to the Updater so that it can be used
-            // for composition
-            const reduction = updater(
-              partialReduction,
-              { ...action, type: unwrap, args, wrap },
-              effectExecutor
-            );
-
-            // If there is an existing Saga instance for the updater
-            // Store reduction into State Repository and notify
-            // all subscribers for the specific Saga instance
-            if (this.saga) {
-              effectExecutor(() => {
-                stateRepository[actionPrefix] = reduction;
-                subscribersRepository[actionPrefix].forEach(subscriber => subscriber(action));
-              });
+            if (subscribersRepository[actionPrefix]) {
+              stateRepository[actionPrefix] = reduction;
+              subscribersRepository[actionPrefix].forEach(subscriber => subscriber(action));
             }
+          });
+        }
 
-            return reduction;
-          }, model);
+        return reduction;
       } else {
         return model;
       }
