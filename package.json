@@ -71,7 +71,7 @@
     "recompose": "^0.17.0"
   },
   "peerDependencies": {
-    "react": "^15.0.2",
+    "react": "^15.0.2 || ^0.14.8",
     "recompose": "^0.17.0",
     "redux-saga": "^0.10.2"
   }
