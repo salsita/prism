@@ -1,47 +1,28 @@
-import { Updater, Matchers, mapEffects, Generators } from 'redux-elm';
-import counterUpdater, { init as counterInit } from '../counter/updater';
+import { Updater, Matchers } from 'redux-elm';
+import counterUpdater, { initialModel as counterInitialModel } from '../counter/updater';
 
-function* init() {
-  return {
-    counters: []
-  };
-};
 
-export default new Updater(init)
-  .case('Insert', function*(model) {
-    return {
-      ...model,
-      counters: [
-        ...model.counters,
-        yield* mapEffects(counterInit(), 'Counter', model.counters.length)
-      ]
-    };
-  }, Matchers.exactMatcher)
-  .case('Remove', function*(model) {
-    if (model.counters.length > 0) {
-      const counters = [...model.counters];
+export default new Updater([])
+  .case('Insert', model => [...model, counterInitialModel])
+  .case('Remove', model => {
+    if (model.length > 0) {
+      const counters = [...model];
       counters.pop();
 
-      return {
-        ...model,
-        counters
-      };
+      return counters;
     } else {
       return model;
     }
-  }, Matchers.exactMatcher)
-  .case('Counter', function*(model, action, counterIndex) {
-    const numericCounterIndex = parseInt(counterIndex, 10);
+  })
+  .case('Counter', (model, action, ...rest) => {
+    const numericCounterIndex = parseInt(action.args.param, 10);
 
-    return {
-      ...model,
-      counters: yield* Generators.map(model.counters, function*(counterModel, index) {
-        if (index === numericCounterIndex) {
-          return yield* mapEffects(counterUpdater(counterModel, action), 'Counter', index);
-        } else {
-          return counterModel;
-        }
-      })
-    }
+    return model.map((counterModel, index) => {
+      if (index === numericCounterIndex) {
+        return counterUpdater(counterModel, action, ...rest);
+      } else {
+        return counterModel;
+      }
+    });
   }, Matchers.parameterizedMatcher)
   .toReducer();
