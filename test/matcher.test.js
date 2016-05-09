@@ -4,7 +4,11 @@ import matcher from '../src/matchers/matcher';
 
 describe('matcher', () => {
   it('should return unwrapped action', () => {
-    assert.deepEqual(matcher('Foo')({ type: 'Foo.Bar' }), ['Bar']);
+    assert.deepEqual(matcher('Foo')({ type: 'Foo.Bar' }), {
+      wrap: 'Foo.',
+      unwrap: 'Bar',
+      args: {}
+    });
   });
 
   it('should not match when action does not start with pattern', () => {
@@ -14,7 +18,11 @@ describe('matcher', () => {
 
   it('should return pattern for exact match', () => {
     const pattern = 'Foo';
-    assert.deepEqual(matcher(pattern)({ type: pattern }), [ pattern ]);
+    assert.deepEqual(matcher(pattern)({ type: pattern }), {
+      unwrap: 'Foo',
+      wrap: '',
+      args: {}
+    });
   });
 
   it('should not match the action there\'s no exact match nor unwrapping', () => {

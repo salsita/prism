@@ -1,13 +1,12 @@
 import { assert } from 'chai';
-import { sideEffect } from 'redux-side-effects';
 
 import * as Interface from '../src/index';
 
 import Updater from '../src/Updater';
 import * as Matchers from '../src/matchers';
 import forwardTo from '../src/forwardTo';
-import mapEffects from '../src/mapEffects';
-import * as Generators from '../src/generators';
+import view from '../src/view';
+import storeEnhancer from '../src/storeEnhancer';
 
 describe('Library interface', () => {
   it('should match exact interface', () => {
@@ -15,9 +14,8 @@ describe('Library interface', () => {
       Updater,
       Matchers,
       forwardTo,
-      mapEffects,
-      Generators,
-      sideEffect
+      view,
+      default: storeEnhancer
     });
   });
 });
