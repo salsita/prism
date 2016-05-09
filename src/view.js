@@ -10,6 +10,11 @@ export default View => class ReduxElmView extends Component {
     dispatch: PropTypes.func.isRequired
   }
 
+  constructor(props) {
+    super(props);
+    this.dispatch = ::this.dispatch;
+  }
+
   dispatch(...args) {
     this.props.dispatch(...args);
   }
