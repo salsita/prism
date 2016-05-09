@@ -17,4 +17,4 @@ export default View => class ReduxElmView extends Component {
   render() {
     return <View {...this.props} />;
   }
-}
+};
