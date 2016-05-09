@@ -29,17 +29,13 @@ See [why the Elm Architecture matters](http://salsita.github.io/redux-elm/).
 ### Counter Updater
 
 ```javascript
-import { Updater, Matchers } from 'redux-elm';
+import { Updater } from 'redux-elm';
 
 const initialModel = 0;
 
-export default new Updater(initialModel, Matchers.exactMatcher)
-  .case('Increment', function*(model) {
-    return model + 1;
-  })
-  .case('Decrement', function*(model) {
-    return model - 1;
-  })
+export default new Updater(initialModel)
+  .case('Increment', model => model + 1)
+  .case('Decrement', model => model - 1)
   .toReducer();
 ```
 
@@ -47,23 +43,23 @@ export default new Updater(initialModel, Matchers.exactMatcher)
 
 ```javascript
 import React from 'react';
+import { view } from 'redux-elm';
 
-export default ({ model, dispatch }) => (
+export default view(({ model, dispatch }) => (
   <div>
     <button onClick={() => dispatch({ type: 'Decrement' })}>-</button>
     <div>{model}</div>
     <button onClick={() => dispatch({ type: 'Increment' })}>+</button>
   </div>
-);
+));
 
 ```
 
 ### Installation & Usage
-You can install `redux-elm` via npm. You also need to install `redux-side-effects` as it's a peer dependency.
+You can install `redux-elm` via npm.
 
 ```
 npm install redux-elm --save
-npm install redux-side-effects --save
 ```
 
 **We didn't want to keep all the boilerplate in `redux-elm` repo therefore we've prepared simple [`redux-elm-skeleton`](http://github.com/salsita/redux-elm-skeleton) repositiory which will serve as easiest way to start using `redux-elm`**.
@@ -106,11 +102,8 @@ Definitely one of the most important features of Elm programming language is its
 
 Flow checks:
 
-* proper using of generators
 * correct model shape
-* not forgetting about `yield*` when composing Updaters
 * Matchers
-* `yielding` only side effects
 * and many more...
 
 All the examples implemented throughout tutorials in documentation have been ported to Flow version too and you can find them in [examples-flow branch of redux-elm-skeleton repo](https://github.com/salsita/redux-elm-skeleton/tree/examples-flow).
