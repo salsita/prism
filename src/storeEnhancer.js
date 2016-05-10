@@ -1,10 +1,39 @@
 export default createStore => (reducer, initialAppState) => {
   let store = null;
-  const effectExecutor = callback =>
-    setTimeout(() => callback(store ? store.dispatch : () => {}));
+  let executeEffects = false;
+  let wrappedDispatch = null;
 
-  store = createStore((appState, action) =>
+  const callWithEffects = fn => {
+    executeEffects = true;
+    const result = fn();
+    executeEffects = false;
+    return result;
+  };
+
+  const effectExecutor = callback => {
+    if (executeEffects) {
+      setTimeout(() => {
+        if (wrappedDispatch) {
+          callback(wrappedDispatch);
+        } else {
+          console.warn(
+            'There\'s been attempt to execute effects ' +
+            'yet proper creating of store has not been finished yet'
+          );
+        }
+      });
+    }
+  };
+
+  callWithEffects(() => {
+    store = createStore((appState, action) =>
       reducer(appState, action, effectExecutor), initialAppState);
+  });
 
-  return store;
+  wrappedDispatch = (...args) => callWithEffects(() => store.dispatch(...args));
+
+  return {
+    ...store,
+    dispatch: wrappedDispatch
+  };
 };

@@ -81,7 +81,7 @@ export default class Updater {
 
     return (model = this.initialModel, action, effectExecutor) => {
       // Saga instantiation
-      if (action.type === Mount && this.saga) {
+      if (action.type === Mount && this.saga && effectExecutor) {
         const actionPrefix = action.wrap || '';
 
         effectExecutor(dispatch => {
@@ -116,7 +116,7 @@ export default class Updater {
         // If there is an existing Saga instance for the updater
         // Store reduction into State Repository and notify
         // all subscribers for the specific Saga instance
-        if (this.saga) {
+        if (this.saga && effectExecutor) {
           effectExecutor(() => {
             const actionPrefix = action.wrap || '';
 
