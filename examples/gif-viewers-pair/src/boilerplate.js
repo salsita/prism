@@ -11,7 +11,6 @@ export default (containerDomId, View, updater) => {
   )(createStore);
 
   const store = storeFactory(updater);
-  setTimeout(() => store.dispatch({ type: 'Init' }));
 
   const ConnectedView = connect(appState => ({
     model: appState

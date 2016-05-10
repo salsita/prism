@@ -1,3 +1,5 @@
+import { Init } from './actions';
+
 export default createStore => (reducer, initialAppState) => {
   let store = null;
   let executeEffects = false;
@@ -28,6 +30,8 @@ export default createStore => (reducer, initialAppState) => {
   callWithEffects(() => {
     store = createStore((appState, action) =>
       reducer(appState, action, effectExecutor), initialAppState);
+
+    effectExecutor(dispatch => dispatch({ type: Init }));
   });
 
   wrappedDispatch = (...args) => callWithEffects(() => store.dispatch(...args));

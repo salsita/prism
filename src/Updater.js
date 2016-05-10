@@ -97,7 +97,7 @@ export default class Updater {
         });
       }
 
-      if (action) {
+      if (action && action.type !== Mount) {
         // Matching logic is fairly simple
         // it just maps over all the provided matchers and tries matching the action
         // then only trutrhy matches pass
