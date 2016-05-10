@@ -13,7 +13,6 @@ function* fetchGif() {
 }
 
 function* saga() {
-  yield* fetchGif();
   yield* takeEvery('RequestMore', fetchGif);
 }
 

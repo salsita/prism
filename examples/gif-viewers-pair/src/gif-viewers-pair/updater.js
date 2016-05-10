@@ -9,11 +9,14 @@ const initialModel = {
   bottom: gifViewerInit('funny dogs')
 };
 
+function* fetchAll() {
+  yield put({ type: 'Top.RequestMore' });
+  yield put({ type: 'Bottom.RequestMore' });
+}
+
 function* saga() {
-  yield* takeEvery('Load', function*() {
-    yield put({ type: 'Top.RequestMore' });
-    yield put({ type: 'Bottom.RequestMore' });
-  });
+  yield* takeEvery('Init', fetchAll);
+  yield* takeEvery('Load', fetchAll);
 }
 
 export default new Updater(initialModel, saga)

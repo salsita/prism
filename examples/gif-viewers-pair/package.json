@@ -28,7 +28,7 @@
     "react-router-redux": "^4.0.0",
     "recompose": "^0.17.0",
     "redux": "^3.3.1",
-    "redux-elm": "^2.0.3",
+    "redux-elm": "^2.0.4",
     "redux-saga": "^0.10.2"
   },
   "author": "Tomas Weiss <tomasw@salsitasoft.com>",
