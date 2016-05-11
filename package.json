@@ -1,6 +1,6 @@
 {
   "name": "redux-elm",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "The Elm Architecture in Redux",
   "main": "lib/index.js",
   "files": [
