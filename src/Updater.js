@@ -81,7 +81,7 @@ export default class Updater {
 
     return (model = this.initialModel, action, effectExecutor) => {
       // Saga instantiation
-      if (action.type === Mount && this.saga && effectExecutor) {
+      if (action && action.type === Mount && this.saga && effectExecutor) {
         const actionPrefix = action.wrap || '';
 
         effectExecutor(dispatch => {
