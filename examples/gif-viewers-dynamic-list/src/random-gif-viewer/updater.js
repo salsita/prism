@@ -1,4 +1,4 @@
-import { Updater, Init } from 'redux-elm';
+import { Updater } from 'redux-elm';
 import { takeEvery } from 'redux-saga';
 import { call, put, select } from 'redux-saga/effects';
 
@@ -13,7 +13,8 @@ function* fetchGif() {
 }
 
 function* saga() {
-  yield* takeEvery([Init, 'RequestMore'], fetchGif);
+  yield* fetchGif();
+  yield* takeEvery('RequestMore', fetchGif);
 }
 
 export const init = topic => ({

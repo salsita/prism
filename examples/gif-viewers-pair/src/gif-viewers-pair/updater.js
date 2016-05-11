@@ -1,4 +1,4 @@
-import { Updater, Init } from 'redux-elm';
+import { Updater } from 'redux-elm';
 import { takeEvery } from 'redux-saga';
 import { put } from 'redux-saga/effects';
 
@@ -15,7 +15,7 @@ function* fetchAll() {
 }
 
 function* saga() {
-  yield* takeEvery([Init, 'Load'], fetchAll);
+  yield* takeEvery('Load', fetchAll);
 }
 
 export default new Updater(initialModel, saga)
