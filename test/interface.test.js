@@ -5,8 +5,9 @@ import * as Interface from '../src/index';
 import Updater from '../src/Updater';
 import * as Matchers from '../src/matchers';
 import forwardTo from '../src/forwardTo';
-import view from '../src/view';
 import storeEnhancer from '../src/storeEnhancer';
+import view from '../src/view';
+import wrapAction from '../src/wrapAction';
 
 describe('Library interface', () => {
   it('should match exact interface', () => {
@@ -15,6 +16,7 @@ describe('Library interface', () => {
       Matchers,
       forwardTo,
       view,
+      wrapAction,
       default: storeEnhancer
     });
   });
