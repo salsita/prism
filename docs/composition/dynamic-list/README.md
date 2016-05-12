@@ -34,7 +34,7 @@ We can now prepare the View:
 
 ```javascript
 import React from 'react';
-import { forwardTo } from 'redux-elm';
+import { view, forwardTo } from 'redux-elm';
 
 import GifViewer from '../gif-viewer/view';
 
@@ -46,7 +46,7 @@ const inputStyle = {
   textAlign: 'center'
 };
 
-export default ({ model, dispatch }) => (
+export default view(({ model, dispatch }) => (
   <div>
     <input
       placeholder="What kind of GIFs do you want?"
@@ -59,7 +59,7 @@ export default ({ model, dispatch }) => (
         <GifViewer key={index} model={gifViewerModel} dispatch={forwardTo(dispatch, 'GifViewer', index)} />)}
     </div>
   </div>
-);
+));
 ```
 
 The `input` element just renders the `topic` provided by model. The user can change its value by dispatching a `ChangeTopic` Action. Hitting Enter causes a `Create` Action to be dispatched. This creates a new `GifViewer` Component in the Model with the given `topic`.

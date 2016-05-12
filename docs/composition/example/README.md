@@ -1,4 +1,4 @@
-## Composition in Practice
+## Real Composition Example
 
 We said that the Elm Architecture is about Composition and Encapsulation. Now let's have a closer look at how this works in practice.
 
