@@ -27,7 +27,7 @@ export default createStore => (reducer, initialAppState) => {
 
   callWithEffects(() => {
     store = createStore((appState, action) =>
-      reducer(appState, action, effectExecutor), initialAppState);
+      reducer(appState, { ...action, effectExecutor }), initialAppState);
   });
 
   wrappedDispatch = (...args) => callWithEffects(() => store.dispatch(...args));

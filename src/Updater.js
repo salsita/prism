@@ -79,12 +79,12 @@ export default class Updater {
     const stateRepository = {};
     const subscribersRepository = {};
 
-    return (model = this.initialModel, action, effectExecutor) => {
+    return (model = this.initialModel, action) => {
       // Saga instantiation
-      if (action && action.type === Mount && this.saga && effectExecutor) {
+      if (action && action.type === Mount && this.saga && action.effectExecutor) {
         const actionPrefix = action.wrap || '';
 
-        effectExecutor(dispatch => {
+        action.effectExecutor(dispatch => {
           stateRepository[actionPrefix] = model;
 
           instantiateSaga(
@@ -109,15 +109,14 @@ export default class Updater {
           // for composition
           .reduce((partialReduction, { match: { wrap, args, unwrap }, updater }) => updater(
             partialReduction,
-            { ...action, type: unwrap, args, wrap },
-            effectExecutor
+            { ...action, type: unwrap, args, wrap }
           ), model);
 
         // If there is an existing Saga instance for the updater
         // Store reduction into State Repository and notify
         // all subscribers for the specific Saga instance
-        if (this.saga && effectExecutor) {
-          effectExecutor(() => {
+        if (this.saga && action.effectExecutor) {
+          action.effectExecutor(() => {
             const actionPrefix = action.wrap || '';
 
             if (subscribersRepository[actionPrefix]) {
