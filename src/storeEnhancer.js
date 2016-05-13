@@ -1,3 +1,10 @@
+/**
+ * Main redux-elm store enhancer, allowing dispatching in reducers while
+ * maintaing their purity.
+ *
+ * @param {Function} createStore
+ * @return {Function} enhanced store factory
+ */
 export default createStore => (reducer, initialAppState) => {
   let store = null;
   let executeEffects = false;
