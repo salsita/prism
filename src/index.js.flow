@@ -16,7 +16,7 @@ export interface Matchers {
 
 declare export class Updater<M> {
   constructor(initialModel : M, saga? : Generator, matcher? : Matcher) : Updater<M>;
-  case(pattern : string, handler : (model : M, action : Action, ...rest : Array<any>) => M, matcher? : Matcher) : Updater<M>;
+  case(pattern : string, handler : (model : M, action : Action) => M, matcher? : Matcher) : Updater<M>;
   toReducer() : (model : M, action : Action) => M
 };
 
