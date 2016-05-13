@@ -7,7 +7,7 @@ export type MatcherResult = {
   args: Object;
 };
 
-type Matcher = (pattern : string) => ((action : Action) => MatcherResult | boolean);
+export type Matcher = (pattern : string) => ((action : Action) => MatcherResult | boolean);
 
 export interface Matchers {
   static matcher : Matcher;
@@ -15,9 +15,11 @@ export interface Matchers {
 };
 
 declare export class Updater<M> {
-  constructor(initialModel : M, saga? : Generator, matcher? : Matcher) : Updater<M>;
+  constructor(initialModel : M, saga? : () => Generator, matcher? : Matcher) : Updater<M>;
   case(pattern : string, handler : (model : M, action : Action) => M, matcher? : Matcher) : Updater<M>;
   toReducer() : (model : M, action : Action) => M
 };
 
 declare export function forwardTo(dispatch : function, ...rest : Array<any>) : function;
+
+declare export function wrapAction(action : Object, ...rest : Array<any>) : Object;

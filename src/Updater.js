@@ -2,11 +2,6 @@ import { runSaga } from 'redux-saga';
 
 import defaultMacher from './matchers/matcher';
 import { Mount } from './actions';
-import warn from './warn';
-
-const IGNORING_WARN_ACTIONS = [
-  '@@INIT'
-];
 
 /**
  * Instantiates and runs Saga
@@ -109,15 +104,6 @@ export default class Updater {
         const matchedMatchers = this.matchers
           .map(({ matcher, updater }) => ({ match: matcher(action), updater }))
           .filter(({ match }) => !!match);
-
-        if (matchedMatchers.length === 0 &&
-            IGNORING_WARN_ACTIONS.every(ignoring => action.type !== ignoring)) {
-          warn(
-            `Action with type of ${action.type} has not been handled, ` +
-            'this typically means that you forgot adding corresponding case ' +
-            'handler in the Updater'
-          );
-        }
 
           // Calling the appropriate updater
           // Effect executor is passed to the Updater so that it can be used
