@@ -1,22 +1,19 @@
-/**
- * TODO: re-write docs
+import wrapAction from './wrapAction';
+
+/** Modified dispatch by wrapping all the outgoing actions by composition chain
  *
- * Returns modified version of dispatch function. The function automatically prepends
- * composed string reflecting composition of action types.
- *
- * @param {Function} dispatch function
- * @param {...String} Action types which defines action composition
- *
- * @returns {Function} Modified dispatch
+ * @param {Function} dispatch
+ * @param {...String} action composition chain
+ * @return {Function} modified dispatch
  */
 export default (dispatch, ...types) => {
   if (types.length === 0) {
     return dispatch;
   } else {
     if (types.some(type => ~type.toString().indexOf('.'))) {
-      throw new Error('Action type can\'t contain dot');
+      throw new Error('Action type can\'t contain a dot');
     }
 
-    return action => dispatch({...action, type: `${types.reduce((memo, type) => `${memo}${type}.`, '')}${action.type}`});
+    return action => dispatch(wrapAction(action, ...types));
   }
 };

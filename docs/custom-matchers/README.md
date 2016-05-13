@@ -1,10 +1,6 @@
 ## Custom Matchers
 
-You are already familiar with the built-in Matchers that `redux-elm` provides:
-
-* `matcher`
-* `exactMatcher`
-* `parameterizedMatcher`
+You are already familiar with the built-in Matcher that `redux-elm` provides, which is `parameterizedMatcher`
 
 In most cases these will be all you need, but sometimes you might have a very specific use case that would be difficult to implement with them. Imagine you have a `Counter` Component that counts how many times a button was clicked and displays it on the screen:
 
@@ -15,12 +11,12 @@ The implementation is fairly straightforward:
 ### `Counter` Updater
 
 ```javascript
-import { Updater, Matchers } from 'redux-elm';
+import { Updater } from 'redux-elm';
 
-export default new Updater(0, Matchers.exactMatcher)
-  .case('Increment', function*(model) {
-    return model + 1;
-  })
+export const initialModel = 0;
+
+export default new Updater(initialModel)
+  .case('Increment', model => model + 1)
   .toReducer();
 ```
 
@@ -28,10 +24,11 @@ export default new Updater(0, Matchers.exactMatcher)
 
 ```javascript
 import React from 'react';
+import { view } from 'redux-elm';
 
-export default ({ model, dispatch }) => (
+export default view(({ model, dispatch }) => (
   <button onClick={() => dispatch({ type: 'Increment' })}>Clicked {model} times</button>
-);
+));
 ```
 
 Now let's imagine we want to implement a Pair of `Counters`. We'll use what we know about [Composition](../composition/README.md) and build a `CountersPair`:
@@ -39,30 +36,18 @@ Now let's imagine we want to implement a Pair of `Counters`. We'll use what we k
 ### `CountersPair` Updater
 
 ```javascript
-import { Updater, Matchers, mapEffects } from 'redux-elm';
+import { Updater } from 'redux-elm';
 
-import counterUpdater from '../counter/updater';
+import counterUpdater, { initialModel as counterInitialModel } from '../counter/updater';
 
-function* init() {
-  return {
-    top: yield* mapEffects(counterUpdater(), 'Top'),
-    bottom: yield* mapEffects(counterUpdater(), 'Bottom')
-  };
-}
+export const initialModel = {
+  top: counterInitialModel,
+  bottom: counterInitialModel
+};
 
-export default new Updater(init)
-  .case('Top', function*(model, action) {
-    return {
-      ...model,
-      top: yield* mapEffects(counterUpdater(model.top, action), 'Top')
-    };
-  })
-  .case('Bottom', function*(model, action) {
-    return {
-      ...model,
-      bottom: yield* mapEffects(counterUpdater(model.bottom, action), 'Bottom')
-    };
-  })
+export default new Updater(initialModel)
+  .case('Top', (model, action) => ({ ...model, top: counterUpdater(model.top, action) }))
+  .case('Bottom', (model, action) => ({ ...model, bottom: counterUpdater(model.bottom, action) }))
   .toReducer();
 ```
 
@@ -70,17 +55,17 @@ export default new Updater(init)
 
 ```javascript
 import React from 'react';
-import { forwardTo } from 'redux-elm';
+import { view, forwardTo } from 'redux-elm';
 
 import Counter from '../counter/view';
 
-export default ({ model, dispatch }) => (
+export default view(({ model, dispatch }) => (
   <div>
     Top: <Counter model={model.top} dispatch={forwardTo(dispatch, 'Top')} />
     <br />
     Bottom: <Counter model={model.bottom} dispatch={forwardTo(dispatch, 'Bottom')} />
   </div>
-);
+));
 ```
 
 ![custom-matchers-2](../assets/15.png)
@@ -94,32 +79,20 @@ So now we have `Counter` and `CountersPair` implemented as independent Component
 #### The Updater
 
 ```javascript
-import { Updater, Matchers, mapEffects } from 'redux-elm';
+import { Updater } from 'redux-elm';
 
-import counterUpdater from '../counter/updater';
-import countersPairUpdater from '../counters-pair/updater';
+import counterUpdater, { initialModel as counterInitialModel } from '../counter/updater';
+import countersPairUpdater, { initialModel as countersPairInitialModel } from '../counters-pair/updater';
 
-function* init() {
-  return {
-    counter: yield* mapEffects(counterUpdater(), 'Counter'),
-    countersPair: yield* mapEffects(countersPairUpdater(), 'CountersPair'),
-    globalCounter: 0
-  };
-}
+const initialModel = {
+  counter: counterInitialModel,
+  countersPair: countersPairInitialModel,
+  globalCounter: 0
+};
 
-export default new Updater(init)
-  .case('Counter', function*(model, action) {
-    return {
-      ...model,
-      counter: yield* mapEffects(counterUpdater(model.counter, action), 'Counter')
-    };
-  })
-  .case('CountersPair', function*(model, action) {
-    return {
-      ...model,
-      countersPair: yield* mapEffects(countersPairUpdater(model.countersPair, action), 'CountersPair')
-    };
-  })
+export default new Updater(initialModel)
+  .case('Counter', (model, action) => ({ ...model, counter: counterUpdater(model.counter, action) }))
+  .case('CountersPair', (model, action) => ({ ...model, countersPair: countersPairUpdater(model.countersPair, action) }))
   .toReducer();
 ```
 
@@ -127,19 +100,19 @@ export default new Updater(init)
 
 ```javascript
 import React from 'react';
-import { forwardTo } from 'redux-elm';
+import { view, forwardTo } from 'redux-elm';
 
 import Counter from '../counter/view';
 import CountersPair from '../counters-pair/view';
 
-export default ({ model, dispatch }) => (
+export default view(({ model, dispatch }) => (
   <div>
     <Counter model={model.counter} dispatch={forwardTo(dispatch, 'Counter')} />
     <CountersPair model={model.countersPair} dispatch={forwardTo(dispatch, 'CountersPair')} />
     <br />
     Global Counter: {model.globalCounter}
   </div>
-);
+));
 ```
 
 Clicking on any `Counter` increments its value, but the global counter remains unchanged. That's because we didn't define the `globalCounter` mutation. Now is the right time to introduce a Custom Matcher implementation because we would like our Root Component to handle all `Increment` Actions regardless of how they are nested, as long as the type ends with an `Increment` segment.

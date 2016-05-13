@@ -1,28 +1,24 @@
 ## Writing Custom Matcher
 
-Let's have a look at the `exactMatcher` implementation:
+Matcher is a function that takes `pattern` as an argument and returns a function that takes an Action as its argument. The function returns either `false` when the Action does not match or, when it does, an `Object` consisting from three fields `unwrap`, `wrap`, and `args`.
 
-```javascript
-export default pattern => {
-  return action => {
-    if (action.type === pattern) {
-      return [ action.type ];
-    } else {
-      return false;
-    }
-  };
-};
-```
-
-As you can see, a Matcher is a function that takes `pattern` as an argument and returns a function that takes an Action as its argument. The function returns either `false` when the Action does not match or, when it does, an `Array` with at least one element (which must be the Action type). For `exactMatcher`, we return just the original `action.type` because the Action is not being unwrapped. Any additional elements in the array will be passed to the handler as further arguments.
+* `unwrap` is unwrapped action type
+* `wrap` is stripped part of the action which can be used for wrapping the action
+* `args` is optional object which may hold any arguments passing to action
 
 Let's implement our own matcher Matcher:
 
 ```javascript
 const endsWithMatcher = pattern => {
   return action => {
-    if (action.type.endsWith(pattern)) {
-      return [ pattern ];
+    if (action.type.endsWith(`.${pattern}`)) {
+      const wrapRegExp = new RegExp(`(.*)\.${pattern}$`); // In production application pattern should definitely be escaped!
+
+      return {
+        unwrap: pattern,
+        wrap: action.type.match(wrapRegExp)[1],
+        args: {}
+      }
     } else {
       return false;
     }
@@ -33,55 +29,46 @@ const endsWithMatcher = pattern => {
 What have we just implemented? `endsWithMatcher` matches an Action that ends with a specific pattern. By pure coincidence, this is exactly what we need in our application:
 
 ```javascript
-import { Updater, Matchers, mapEffects } from 'redux-elm';
+import { Updater } from 'redux-elm';
 
-import counterUpdater from '../counter/updater';
-import countersPairUpdater from '../counters-pair/updater';
-
-function* init() {
-  return {
-    counter: yield* mapEffects(counterUpdater(), 'Counter'),
-    countersPair: yield* mapEffects(countersPairUpdater(), 'CountersPair'),
-    globalCounter: 0
-  };
-}
+import counterUpdater, { initialModel as counterInitialModel } from '../counter/updater';
+import countersPairUpdater, { initialModel as countersPairInitialModel } from '../counters-pair/updater';
 
 const endsWithMatcher = pattern => {
   return action => {
-    if (action.type.endsWith(pattern)) {
-      return [ pattern, 'Hello World', 'Hello World2' ];
+    if (action.type.endsWith(`.${pattern}`)) {
+      const wrapRegExp = new RegExp(`(.*)\.${pattern}$`);
+
+      return {
+        unwrap: pattern,
+        wrap: action.type.match(wrapRegExp)[1],
+        args: {}
+      }
     } else {
       return false;
     }
   };
 };
 
-export default new Updater(init)
-  .case('Counter', function*(model, action) {
-    return {
-      ...model,
-      counter: yield* mapEffects(counterUpdater(model.counter, action), 'Counter')
-    };
-  })
-  .case('CountersPair', function*(model, action) {
-    return {
-      ...model,
-      countersPair: yield* mapEffects(countersPairUpdater(model.countersPair, action), 'CountersPair')
-    };
-  })
-  .case('Increment', function*(model, action, helloWorldArg, helloWorldArg2) {
+const initialModel = {
+  counter: counterInitialModel,
+  countersPair: countersPairInitialModel,
+  globalCounter: 0
+};
+
+export default new Updater(initialModel)
+  .case('Counter', (model, ...rest) => ({ ...model, counter: counterUpdater(model.counter, ...rest) }))
+  .case('CountersPair', (model, ...rest) => ({ ...model, countersPair: countersPairUpdater(model.countersPair, ...rest) }))
+  .case('Increment', model => {
     // Any action which ends with Increment is handled here
-    //
-    // action argument would be just { type: 'Increment' } because we've unwrapped it in the Matcher
-    // helloWorldArg would just contain String 'Hello World' because we've provided it in the Matcher
-    // helloWorldArg2 would just contain String 'Hello World2' because we've provided it in the Matcher
 
     return {
       ...model,
-      globalCounter: model.globalCounter + 1 // Any Increment action increments global counter
+      globalCounter: model.globalCounter + 1
     };
-  }, endsWithMatcher)
+  }), endsWithMatcher)
   .toReducer();
+
 ```
 
 After compiling and running the application, the global counter should be updated whenever you click on the individual counters.

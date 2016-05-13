@@ -1,25 +1,13 @@
-import { Updater, Matchers } from 'redux-elm';
-import counterUpdater, { init as counterInit } from '../counter/updater';
+import { Updater } from 'redux-elm';
+import counterUpdater, { initialModel as counterInitialModel } from '../counter/updater';
 
-function* init() {
-  return {
-    topCounter: yield* counterInit(),
-    bottomCounter: yield* counterInit()
-  };
+const initialModel = {
+  topCounter: counterInitialModel,
+  bottomCounter: counterInitialModel
 };
 
-export default new Updater(init)
-  .case('Reset', init, Matchers.exactMatcher)
-  .case('TopCounter', function*(model, action) {
-    return {
-      ...model,
-      topCounter: yield* counterUpdater(model.topCounter, action)
-    };
-  })
-  .case('BottomCounter', function*(model, action) {
-    return {
-      ...model,
-      bottomCounter: yield* counterUpdater(model.bottomCounter, action)
-    };
-  })
+export default new Updater(initialModel)
+  .case('Reset', () => initialModel)
+  .case('TopCounter', (model, ...rest) => ({ ...model, topCounter: counterUpdater(model.topCounter, ...rest) }))
+  .case('BottomCounter', (model, ...rest) => ({ ...model, bottomCounter: counterUpdater(model.bottomCounter, ...rest) }))
   .toReducer();

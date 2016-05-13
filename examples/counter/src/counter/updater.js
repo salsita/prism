@@ -1,12 +1,8 @@
-import { Updater, Matchers } from 'redux-elm';
+import { Updater } from 'redux-elm';
 
 const initialModel = 0;
 
-export default new Updater(initialModel, Matchers.exactMatcher)
-  .case('Increment', function*(model) {
-    return model + 1;
-  })
-  .case('Decrement', function*(model) {
-    return model - 1;
-  })
+export default new Updater(initialModel)
+  .case('Increment', model => model + 1)
+  .case('Decrement', model => model - 1)
   .toReducer();

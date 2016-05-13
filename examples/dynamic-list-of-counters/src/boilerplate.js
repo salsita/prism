@@ -2,11 +2,11 @@ import React from 'react';
 import { render } from 'react-dom';
 import { createStore, compose } from 'redux';
 import { Provider, connect } from 'react-redux';
-import { createEffectCapableStore } from 'redux-side-effects';
+import reduxElm from 'redux-elm';
 
 export default (containerDomId, View, updater) => {
   const storeFactory = compose(
-    createEffectCapableStore,
+    reduxElm,
     window.devToolsExtension ? window.devToolsExtension() : f => f
   )(createStore);
 
@@ -21,4 +21,4 @@ export default (containerDomId, View, updater) => {
       <ConnectedView />
     </Provider>
   ), document.getElementById(containerDomId));
-}
+};

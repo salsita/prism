@@ -1,3 +1,5 @@
+require('isomorphic-fetch');
+
 import run from './boilerplate';
 
 import view from './random-gif-viewer/view';

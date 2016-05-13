@@ -1,15 +1,32 @@
 import escapeStringRegexp from 'escape-string-regexp';
 
+/**
+ * Default matcher implementation,
+ * The Matcher primarly looks for exact match in action type, if there
+ * is no exact match, implementation fall backs to unwrapping.
+ */
 export default pattern => {
   const regexp = new RegExp(`^${escapeStringRegexp(pattern)}\\.(.+)`);
 
   return action => {
-    const match = action.type.match(regexp);
-
-    if (match) {
-      return [ match[1] ];
+    if (action.type === pattern) {
+      return {
+        wrap: '',
+        unwrap: action.type,
+        args: {}
+      };
     } else {
-      return false;
+      const match = action.type.match(regexp);
+
+      if (match) {
+        return {
+          wrap: action.type.replace(match[1], ''),
+          unwrap: match[1],
+          args: {}
+        };
+      } else {
+        return false;
+      }
     }
   };
 };

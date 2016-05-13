@@ -1,6 +1,24 @@
 ## Updater with `parameterizedMatcher`
 
-All Actions relating to a specific instance of `GifViewer` must be prepended with `GifViewer` following by the index of the Component in the list. That is where `parameterizedMatcher` comes in handy:
+All Actions relating to a specific instance of `GifViewer` must be prepended with `GifViewer` following by the index of the Component in the list. Unfortunately this is a specific action unwrapping logic which can't be automatically handled by `redux-elm`, however `redux-elm` allows user to override default unwrapping behaviour by providing something called Matcher.
+
+Default Matcher implementation is looking either for:
+
+* exact match in action type with provided pattern: `Foo` unwraps to `Foo` or
+* action type starting with provided pattern and rest is being unwrapped: `Foo.Bar` unwraps to `Bar`
+
+However, `redux-elm` is shipped with `parameterizedMatcher` which serves exactly the purpose that we need. It unwraps the action by pattern and assumes parameter (index of GifViewer) in the Action composition chain. `GifViewer.3.NewGif` is unwrapped into action:
+
+```javascript
+{
+  type: 'NewGif',
+  args: {
+    param: 3
+  }
+}
+```
+
+You can override default Matcher implementation by passing third argument to `case` function:
 
 ```javascript
 import { Updater, Matchers } from 'redux-elm';
@@ -11,16 +29,12 @@ const initialModel = {
 };
 
 export default new Updater(initialModel)
-  .case('GifViewer', function*(model, action, gifViewerIndex) {
+  .case('GifViewer', (model, action) => {
     // We assume that the action starts with `GifViewer` and is followed by `gifViewerIndex`
-    // `GifViewer.3.NewGif` will resolve in:
     //
-    // gifViewerIndex = 3
-    // action = { type: 'NewGif', url: 'some url' }
-
-    // We need to parse `gifViewerIndex` because the matching is string-based
+    // We need to parse action `param` because the matching is string-based
     // and all arguments are passed in as strings
-    const numericGifViewerIndex = parseInt(gifViewerIndex, 10);
+    const numericGifViewerIndex = parseInt(action.args.param, 10);
 
     return model;
   }, Matchers.parameterizedMatcher)
@@ -40,14 +54,14 @@ const initialModel = {
 };
 
 export default new Updater(initialModel)
-  .case('GifViewer', function*(model, action, gifViewerIndex) {
-    const numericGifViewerIndex = parseInt(gifViewerIndex, 10);
+  .case('GifViewer', (model, action) => {
+    const numericGifViewerIndex = parseInt(action.args.param, 10);
 
     return {
       ...model,
-      gifViewers: yield* model.gifViewers.map((gifViewerModel, index) => {
+      gifViewers: model.gifViewers.map((gifViewerModel, index) => {
         if (index === numericGifViewerIndex) {
-          return yield* gifViewerUpdater(gifViewerModel, action);
+          return gifViewerUpdater(gifViewerModel, action);
         } else {
           return gifViewerModel;
         }
@@ -59,119 +73,13 @@ export default new Updater(initialModel)
 
 We want to map over all the GifViewer models and find the one with the appropriate index. If the index matches then we call the child Updater (`gifViewerUpdater`) providing the Model slice and unwrapped action (`NewGif` or `RequestMore`). If the index does not match, we just return the original reference.
 
-If you try to compile this now, you will get a syntax error since we are using `yield*` inside the `map` callback. This is because the callback is just a plain old JavaScript function, not a Generator function, and `yield*` can only be used inside Generators (think `function*` not `function`). So an easy fix would be to turn the anonymous function into an anonymous Generator function:
+### Finishing dynamic list of Components implementation
+
+Good news: that was the hard part. Now comes the easy part. We just need to handle two more actions: `ChangeTopic` and `Create`, where `ChangeTopic` changes the `topic` property of the Model. So what should happen when the `Create` Action is dispatched? As its name suggests, the handler is responsible for creating a Model for a newly added `GifViewer`. So let's just append new model to list of `gifViewers`
 
 ```javascript
 import { Updater, Matchers } from 'redux-elm';
 
-import gifViewerUpdater from '../gif-viewer/updater';
-
-const initialModel = {
-  topic: '',
-  gifViewers: []
-};
-
-export default new Updater(initialModel)
-  .case('GifViewer', function*(model, action, gifViewerIndex) {
-    const numericGifViewerIndex = parseInt(gifViewerIndex, 10);
-
-    return {
-      ...model,
-      gifViewers: yield* model.gifViewers.map(function* (gifViewerModel, index) {
-        if (index === numericGifViewerIndex) {
-          return yield* gifViewerUpdater(gifViewerModel, action);
-        } else {
-          return gifViewerModel;
-        }
-      })
-    };
-  }, Matchers.parameterizedMatcher)
-  .toReducer();
-```
-
-Now you'll be able to compile the code, but it still won't work because [`Array.map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) does not work with Generators. `redux-elm` provides a Generator-friendly version of `map` that is exported in the `Generators` namespace.
-
-```javascript
-import { Generators } from 'redux-elm';
-
-function*() {
-  // Everything will be yielded and returned as expected
-  const mapped = yield* Generators.map([1, 2, 3], function*(value, index) {
-    yield index + 1;
-    return value + 1;
-  });
-
-  console.log(mapped); // [2, 3, 4]
-}
-
-```
-
-We can use this function instead of plain old `Array.map`:
-
-```javascript
-import { Updater, Generators, Matchers } from 'redux-elm';
-
-import gifViewerUpdater from '../gif-viewer/updater';
-
-const initialModel = {
-  topic: '',
-  gifViewers: []
-};
-
-export default new Updater(initialModel)
-  .case('GifViewer', function*(model, action, gifViewerIndex) {
-    const numericGifViewerIndex = parseInt(gifViewerIndex, 10);
-
-    return {
-      ...model,
-      gifViewers: yield* Generators.map(model.gifViewers, function* (gifViewerModel, index) {
-        if (index === numericGifViewerIndex) {
-          return yield* gifViewerUpdater(gifViewerModel, action);
-        } else {
-          return gifViewerModel;
-        }
-      })
-    };
-  }, Matchers.parameterizedMatcher)
-  .toReducer();
-```
-
-There's one more issue with the above code: it does not explicitly call `mapEffects` for the sub-Updater (`gifViewerUpdater`). Don't forget that a sub-Updater may potentially `yield` some Side Effects that can dispatch new Actions. Those Actions need to be wrapped correctly:
-
-```javascript
-import { Updater, Generators, Matchers, mapEffects } from 'redux-elm';
-
-import gifViewerUpdater from '../gif-viewer/updater';
-
-const initialModel = {
-  topic: '',
-  gifViewers: []
-};
-
-export default new Updater(initialModel)
-  .case('GifViewer', function*(model, action, gifViewerIndex) {
-    const numericGifViewerIndex = parseInt(gifViewerIndex, 10);
-
-    return {
-      ...model,
-      gifViewers: yield* Generators.map(model.gifViewers, function* (gifViewerModel, index) {
-        if (index === numericGifViewerIndex) {
-          // We want to prepend all the dispacthed actions with `GifViewer.gifViewerIndex`
-          return yield* mapEffects(gifViewerUpdater(gifViewerModel, action), 'GifViewer', gifViewerIndex);
-        } else {
-          return gifViewerModel;
-        }
-      })
-    };
-  }, Matchers.parameterizedMatcher)
-  .toReducer();
-```
-
-Good news: that was the hard part. Now comes the easy part. We just need to handle two more actions: `ChangeTopic` and `Create`, where `ChangeTopic` changes the `topic` property of the Model. We use `exactMatcher` for both of these actions since they are leaf Actions:
-
-```javascript
-import { Updater, Matchers, mapEffects, Generators } from 'redux-elm';
-
 import gifViewerUpdater, { init as gifViewerInit } from '../gif-viewer/updater';
 
 const initialModel = {
@@ -179,73 +87,21 @@ const initialModel = {
   gifViewers: []
 };
 
-export default new Updater(initialModel)
-  .case('ChangeTopic', function*(model, action) {
-    return {
-      ...model,
-      topic: action.value
-    };
-  }, Matchers.exactMatcher)
-  .case('Create', function*(model) {
-    return model;
-  }, Matchers.exactMatcher)
-  .case('GifViewer', function*(model, action, gifViewerIndex) {
-    const numericGifViewerIndex = parseInt(gifViewerIndex, 10);
+export default new Updater(initialModel, saga)
+  .case('ChangeTopic', (model, { value }) => ({ ...model, topic: value }))
+  .case('Create', model => ({
+    ...model,
+    topic: '',
+    gifViewers: [...model.gifViewers, gifViewerInit(model.topic)]
+  }))
+  .case('GifViewer', (model, action) => {
+    const numericGifViewerIndex = parseInt(action.args.param, 10);
 
     return {
       ...model,
-      gifViewers: yield* Generators.map(model.gifViewers, function* (gifViewerModel, index) {
+      gifViewers: model.gifViewers.map((gifViewerModel, index) => {
         if (index === numericGifViewerIndex) {
-          return yield* mapEffects(gifViewerUpdater(gifViewerModel, action), 'GifViewer', gifViewerIndex);
-        } else {
-          return gifViewerModel;
-        }
-      })
-    };
-  }, Matchers.parameterizedMatcher)
-  .toReducer();
-```
-
-So what should happen when the `Create` Action is dispatched? As its name suggests, the handler is responsible for creating a Model for a newly added `GifViewer`. So let's get the index of the new Model (this is equal to the length of `gifViewers`) and call the `init` function, which we create with the appropriate topic using `gifViewerInit`:
-
-```javascript
-import { Updater, Matchers, mapEffects, Generators } from 'redux-elm';
-
-import gifViewerUpdater, { init as gifViewerInit } from '../gif-viewer/updater';
-
-const initialModel = {
-  topic: '',
-  gifViewers: []
-};
-
-export default new Updater(initialModel)
-  .case('ChangeTopic', function*(model, action) {
-    return {
-      ...model,
-      topic: action.value
-    };
-  }, Matchers.exactMatcher)
-  .case('Create', function*(model) {
-    const newModelIndex = model.gifViewers.length;
-    const topicSpecificInitGifViewer = gifViewerInit(model.topic); // Provide topic which is currently in the model
-
-    return {
-      ...model,
-      topic: '',
-      gifViewers: [
-        ...model.gifViewers,
-        yield* mapEffects(topicSpecificInitGifViewer(), 'GifViewer', newModelIndex)
-      ]
-    };
-  }, Matchers.exactMatcher)
-  .case('GifViewer', function*(model, action, gifViewerIndex) {
-    const numericGifViewerIndex = parseInt(gifViewerIndex, 10);
-
-    return {
-      ...model,
-      gifViewers: yield* Generators.map(model.gifViewers, function* (gifViewerModel, index) {
-        if (index === numericGifViewerIndex) {
-          return yield* mapEffects(gifViewerUpdater(gifViewerModel, action), 'GifViewer', gifViewerIndex);
+          return gifViewerUpdater(gifViewerModel, action);
         } else {
           return gifViewerModel;
         }

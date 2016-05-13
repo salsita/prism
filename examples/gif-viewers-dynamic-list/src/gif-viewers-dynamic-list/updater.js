@@ -1,45 +1,41 @@
-import { Updater, Matchers, mapEffects, Generators } from 'redux-elm';
+import { Updater, Matchers } from 'redux-elm';
+import { takeEvery } from 'redux-saga';
+import { put, select } from 'redux-saga/effects';
 
-import gifViewerUpdater, { init as gifViewerInit } from '../random-gif-viewer/updater';
+import gifViewerUpdater,
+  { init as gifViewerInit } from '../random-gif-viewer/updater';
 
 const initialModel = {
   topic: '',
   gifViewers: []
 };
 
-export default new Updater(initialModel)
-  .case('ChangeTopic', function*(model, action) {
-    return {
-      ...model,
-      topic: action.value
-    };
-  }, Matchers.exactMatcher)
-  .case('Create', function*(model) {
-    const topicSpecificInitGifViewer = gifViewerInit(model.topic);
+function* saga() {
+  yield* takeEvery('Create', function*() {
+    const addedGifViewerIndex = yield select(model => model.gifViewers.length - 1);
+    yield put({ type: `GifViewer.${addedGifViewerIndex}.RequestMore` });
+  });
+}
+
+export default new Updater(initialModel, saga)
+  .case('ChangeTopic', (model, { value }) => ({ ...model, topic: value }))
+  .case('Create', model => ({
+    ...model,
+    topic: '',
+    gifViewers: [...model.gifViewers, gifViewerInit(model.topic)]
+  }))
+  .case('GifViewer', (model, action, ...rest) => {
+    const numericGifViewerIndex = parseInt(action.args.param, 10);
 
     return {
       ...model,
-      topic: '',
-      gifViewers: [
-        ...model.gifViewers,
-        yield* mapEffects(topicSpecificInitGifViewer(), 'GifViewer', model.gifViewers.length)
-      ]
-    };
-  }, Matchers.exactMatcher)
-  .case('GifViewer', function*(model, action, gifViewerIndex) {
-    const numericGifViewerIndex = parseInt(gifViewerIndex, 10);
-
-    const gifViewers = yield* Generators.map(model.gifViewers, function*(gifViewerModel, index) {
-      if (index === numericGifViewerIndex) {
-        return yield* mapEffects(gifViewerUpdater(gifViewerModel, action), 'GifViewer', index);
-      } else {
-        return gifViewerModel;
-      }
-    });
-
-    return {
-      ...model,
-      gifViewers
+      gifViewers: model.gifViewers.map((gifViewerModel, index) => {
+        if (index === numericGifViewerIndex) {
+          return gifViewerUpdater(gifViewerModel, action, ...rest);
+        } else {
+          return gifViewerModel;
+        }
+      })
     };
   }, Matchers.parameterizedMatcher)
   .toReducer();
