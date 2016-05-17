@@ -1,6 +1,4 @@
 import { Updater, Matchers } from 'redux-elm';
-import { takeEvery } from 'redux-saga';
-import { put, select } from 'redux-saga/effects';
 
 import gifViewerUpdater,
   { init as gifViewerInit } from '../random-gif-viewer/updater';
@@ -10,14 +8,7 @@ const initialModel = {
   gifViewers: []
 };
 
-function* saga() {
-  yield* takeEvery('Create', function*() {
-    const addedGifViewerIndex = yield select(model => model.gifViewers.length - 1);
-    yield put({ type: `GifViewer.${addedGifViewerIndex}.RequestMore` });
-  });
-}
-
-export default new Updater(initialModel, saga)
+export default new Updater(initialModel)
   .case('ChangeTopic', (model, { value }) => ({ ...model, topic: value }))
   .case('Create', model => ({
     ...model,
