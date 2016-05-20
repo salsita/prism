@@ -111,7 +111,7 @@ export default class Updater {
         const reduction = matchedMatchers
           .reduce((partialReduction, { match: { wrap, args, unwrap }, updater }) => updater(
             partialReduction,
-            { ...action, type: unwrap, args, wrap }
+            { ...action, type: unwrap, args, wrap: `${(action.wrap || '')}${wrap}` }
           ), model);
 
         // If there is an existing Saga instance for the updater
