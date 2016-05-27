@@ -28,17 +28,17 @@ const ChildView = ({ onTextFieldChanged, textFieldValue }) => ({
 `ParentView` takes the role of managing all the state and communicates with `ChildView` using the `onTextFieldChanged` callback passed via `props`. This approach has one significiant drawback, however: `ParentView` must be aware of the internal details of `ChildView`, because it must know that it has a property called `textFieldValue`. The Elm Architecture therefore has the concept of a Model, where Model is an object that encapsulates the state of the Component. So instead of passing all the values via `props` (and thereby breaking encapsulation), we pass just the Model (which hides everything in its structure).
 
 ```javascript
-const RootView = ({ model }) => ({
+const RootView = ({ model }) => (
   <ParentView model={model.parentViewModel}
-})
+)
 
-const ParentView = ({ model }) => ({
-  <ChildView model={model.childViewModel} />
-});
+const ParentView = ({ model, dispatch }) => (
+  <ChildView model={model.childViewModel} onTextFieldChanged={() => dispatch({ type: 'ParentSpecificAction' })} />
+);
 
-const ChildView = ({ model, onTextFieldChanged }) => ({
+const ChildView = ({ model, onTextFieldChanged }) => (
   <input type="text" onChange={onTextFieldChanged} value={model.value} />
-});
+);
 ```
 
 Now the parent only knows that it has a child and that the child has its own Model. The Parent does not need to know anything about the implementation details of the child. The Model Composition is straightforward:
