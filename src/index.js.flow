@@ -5,6 +5,8 @@ export type Action = Object;
 export type StatelessReactComponent = (props : Object) => ReactElement;
 export type Component = ReactComponent | StatelessReactComponent;
 
+export type Dispatch = (action : Action) => void;
+
 export type MatcherResult = {
   wrap: string;
   unwrap: string;
