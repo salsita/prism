@@ -1,5 +1,9 @@
 /* @flow */
-type Action = Object;
+import type { Component as ReactComponent } from 'react';
+
+export type Action = Object;
+export type StatelessReactComponent = (props : Object) => ReactElement;
+export type Component = ReactComponent | StatelessReactComponent;
 
 export type MatcherResult = {
   wrap: string;
@@ -23,3 +27,5 @@ declare export class Updater<M> {
 declare export function forwardTo(dispatch : function, ...rest : Array<any>) : function;
 
 declare export function wrapAction(action : Object, ...rest : Array<any>) : Object;
+
+declare export function view(component : Component) : Component;
