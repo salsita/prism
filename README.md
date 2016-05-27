@@ -2,6 +2,7 @@
 
 [![NPM version][npm-image]][npm-url]
 [![Dependencies][dependencies]][npm-url]
+[![devDependency Status][dev-dependencies]][dev-dependencies-url]
 [![Build status][travis-image]][travis-url]
 [![Downloads][downloads-image]][downloads-url]
 [![Join the chat at https://gitter.im/salsita/redux-elm](https://badges.gitter.im/salsita/redux-elm.svg)](https://gitter.im/salsita/redux-elm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -120,3 +121,5 @@ Join the [discussion on gitter](https://gitter.im/salsita/redux-elm)
 [downloads-image]: http://img.shields.io/npm/dm/redux-elm.svg?style=flat-square
 [downloads-url]: https://npmjs.org/package/redux-elm
 [dependencies]: https://david-dm.org/salsita/redux-elm.svg
+[dev-dependencies]: https://david-dm.org/salsita/redux-elm/dev-status.svg
+[dev-dependencies-url]: https://david-dm.org/salsita/redux-elm#info=devDependencies
