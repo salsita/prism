@@ -70,6 +70,10 @@ export default class Updater {
     return this;
   }
 
+  getActionPrefix(action) {
+    return action && action.wrap ? action.wrap : '';
+  }
+
   /**
    * Converts Updater to Redux comaptible plain old function
    *
@@ -81,10 +85,10 @@ export default class Updater {
     const sagaRepository = {};
 
     return (model = this.initialModel, action) => {
-      const actionPrefix = action.wrap || '';
-
       // Saga instantiation
       if (action && action.type === Mount && this.saga && action.effectExecutor) {
+        const actionPrefix = this.getActionPrefix(action);
+
         action.effectExecutor(dispatch => {
           stateRepository[actionPrefix] = model;
 
@@ -97,7 +101,9 @@ export default class Updater {
           );
         });
       } else if (action && action.type === Unmount &&
-          action.effectExecutor && sagaRepository[actionPrefix]) {
+          action.effectExecutor && sagaRepository[this.getActionPrefix(action)]) {
+        const actionPrefix = this.getActionPrefix(action);
+
         if (!sagaRepository[actionPrefix].isCancelled()) {
           sagaRepository[actionPrefix].cancel();
         }
@@ -125,6 +131,8 @@ export default class Updater {
         // Store reduction into State Repository and notify
         // all subscribers for the specific Saga instance
         if (this.saga && action.effectExecutor) {
+          const actionPrefix = this.getActionPrefix(action);
+
           action.effectExecutor(() => {
             if (subscribersRepository[actionPrefix]) {
               stateRepository[actionPrefix] = reduction;
