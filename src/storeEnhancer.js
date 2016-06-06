@@ -41,6 +41,9 @@ export default createStore => (reducer, initialAppState) => {
 
   return {
     ...store,
-    dispatch: wrappedDispatch
+    dispatch: wrappedDispatch,
+    replaceReducer: nextReducer => store
+      .replaceReducer((appState, action) =>
+        nextReducer(appState, { ...action, effectExecutor }))
   };
 };

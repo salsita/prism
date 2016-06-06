@@ -3,6 +3,12 @@ import { runSaga } from 'redux-saga';
 import defaultMacher from './matchers/matcher';
 import { Mount, Unmount } from './actions';
 
+const stateRepository = {};
+const subscribersRepository = {};
+const sagaRepository = {};
+
+let sagaId = 0;
+
 /**
  * Instantiates and runs Saga
  *
@@ -14,19 +20,22 @@ import { Mount, Unmount } from './actions';
  */
 const instantiateSaga = (
   saga,
-  stateRepository,
-  subscribersRepository,
   actionPrefix,
   dispatch
 ) => runSaga(saga(), {
   subscribe: cb => {
+    const id = sagaId++;
+
     if (!subscribersRepository[actionPrefix]) {
       subscribersRepository[actionPrefix] = []; // eslint-disable-line no-param-reassign
     }
 
-    subscribersRepository[actionPrefix].push(cb);
-    return unsubscribing => subscribersRepository[actionPrefix]
-      .filter(subscriber => subscriber !== unsubscribing);
+    subscribersRepository[actionPrefix].push({ cb, id });
+
+    return () => {
+      subscribersRepository[actionPrefix] = subscribersRepository[actionPrefix]
+        .filter(subscriber => subscriber.id !== id);
+    };
   },
   dispatch: action => {
     dispatch({
@@ -80,10 +89,6 @@ export default class Updater {
    * @returns {Function} Reducer
    */
   toReducer() {
-    const stateRepository = {};
-    const subscribersRepository = {};
-    const sagaRepository = {};
-
     return (model = this.initialModel, action) => {
       // Saga instantiation
       if (action && action.type === Mount && this.saga && action.effectExecutor) {
@@ -94,8 +99,6 @@ export default class Updater {
 
           sagaRepository[actionPrefix] = instantiateSaga(
             this.saga,
-            stateRepository,
-            subscribersRepository,
             actionPrefix,
             dispatch
           );
@@ -136,7 +139,7 @@ export default class Updater {
           action.effectExecutor(() => {
             if (subscribersRepository[actionPrefix]) {
               stateRepository[actionPrefix] = reduction;
-              subscribersRepository[actionPrefix].forEach(subscriber => subscriber(action));
+              subscribersRepository[actionPrefix].forEach(({ cb }) => cb(action));
             }
           });
         }
