@@ -73,7 +73,7 @@ npm start
 open http://localhost:3000
 ```
 
-You will see Hello World so that you can immediately open your favorite Text Editor and start writing your own application. Skeleton repo integrates [`redux-devtools` Chrome extension](https://github.com/zalmoxisus/redux-devtools-extension), so we strongly reccomend installing the extension.
+You will see Hello World so that you can immediately open your favorite Text Editor and start writing your own application. Skeleton repo integrates [`redux-devtools` Chrome extension](https://github.com/zalmoxisus/redux-devtools-extension), so we strongly recommend installing the extension.
 
 ## Documentation
 
