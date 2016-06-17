@@ -20,7 +20,7 @@ export default pattern => {
 
       if (match) {
         return {
-          wrap: action.type.replace(match[1], ''),
+          wrap: `${pattern}.`,
           unwrap: match[1],
           args: {}
         };
