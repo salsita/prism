@@ -66,7 +66,7 @@ export default new Updater(initialModel)
       ...model,
       globalCounter: model.globalCounter + 1
     };
-  }), endsWithMatcher)
+  }, endsWithMatcher)
   .toReducer();
 
 ```

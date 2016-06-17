@@ -34,7 +34,7 @@ Here comes the Composition part again. Defining the initial Model for the Update
 
 ```javascript
 import { Updater } from 'redux-elm';
-import { init } from './gif-viewer/updater';
+import { init } from '../gif-viewer/updater';
 
 const initialModel = {
   top: init('funny cats'),
