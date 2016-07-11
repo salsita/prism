@@ -1,6 +1,6 @@
 import { Component, PropTypes } from 'react';
 import shallowEqual from 'recompose/shallowEqual';
-import createElement from 'recompose/createElement';
+import createEagerElement from 'recompose/createEagerElement';
 
 import { Mount, Unmount } from './actions';
 
@@ -61,6 +61,6 @@ export default View => class ReduxElmView extends Component {
   }
 
   render() {
-    return createElement(View, { ...this.props, dispatch: this.dispatch });
+    return createEagerElement(View, { ...this.props, dispatch: this.dispatch });
   }
 };
