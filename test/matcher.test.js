@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import matcher from '../src/matchers/matcher';
+import matcher from '../src/matching/matchers/matcher';
 
 describe('matcher', () => {
   it('should return unwrapped action', () => {

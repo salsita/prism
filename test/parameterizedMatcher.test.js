@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import parameterizedMatcher from '../src/matchers/parameterizedMatcher';
+import parameterizedMatcher from '../src/matching/matchers/parameterizedMatcher';
 
 describe('parameterized matcher', () => {
   it('should provide unwrapped action and parameter', () => {

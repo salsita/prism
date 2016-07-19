@@ -1,3 +1,5 @@
+import SagaRepository from './SagaRepository';
+
 /**
  * Main redux-elm store enhancer, allowing dispatching in reducers while
  * maintaing their purity.
@@ -32,9 +34,15 @@ export default createStore => (reducer, initialAppState) => {
     }
   };
 
+  const sagaRepository = new SagaRepository();
+
   callWithEffects(() => {
     store = createStore((appState, action) =>
-      reducer(appState, { ...action, effectExecutor }), initialAppState);
+      reducer(appState, {
+        ...action,
+        sagaRepository,
+        effectExecutor
+      }), initialAppState);
   });
 
   wrappedDispatch = (...args) => callWithEffects(() => store.dispatch(...args));
