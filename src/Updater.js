@@ -47,7 +47,7 @@ export default class Updater {
                 dispatch
               );
             } else if (action.type === Unmount && sagaRepository) {
-              sagaRepository.unmount(sagaId, saga);
+              sagaRepository.unmount(sagaId);
             } else {
               sagaRepository.dispatch(
                 sagaId,
