@@ -33,7 +33,7 @@ export default class Updater {
           effectExecutor
         } = action;
 
-        const sagaId = action.matching && action.matching.wrap ? action.matching.wrap : '';
+        const sagaId = action.matching ? action.matching.path : '';
         const mutatedModel = reducer(model, action);
 
         if (effectExecutor) {
@@ -43,6 +43,7 @@ export default class Updater {
                 SagaAbstraction,
                 sagaId,
                 saga,
+                action.matching ? action.matching.wrap : value => value,
                 mutatedModel,
                 dispatch
               );

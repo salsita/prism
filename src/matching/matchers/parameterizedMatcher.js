@@ -12,8 +12,8 @@ export default pattern => {
 
     if (match) {
       return {
-        unwrap: match[2],
-        wrap: action.type.replace(match[2], ''),
+        unwrappedType: match[2],
+        wrap: type => `${pattern}.${match[1]}.${type}`,
         args: {
           param: match[1]
         }

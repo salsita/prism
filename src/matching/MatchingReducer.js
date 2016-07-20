@@ -1,6 +1,8 @@
 import { matcher as defaultMatcher } from './matchers';
 import { warn } from '../utils/logger';
 
+const identity = value => value;
+
 export default class MatchingReducer {
 
   constructor(initialAppState, defaultMatcherImpl = defaultMatcher) {
@@ -15,6 +17,7 @@ export default class MatchingReducer {
       this.defaultMatcherImpl(pattern);
 
     this.matchersWithHandlers.push({
+      pattern,
       matcher,
       actionHandler
     });
@@ -39,22 +42,32 @@ export default class MatchingReducer {
           return appState;
         }
 
+        const parentWrap = action.matching ? action.matching.wrap : identity;
+        const parentPath = action.matching ? action.matching.path : '';
+        const parentArgs = action.args ? action.args : {};
+
         return this
           .matchersWithHandlers
-          .map(({ matcher, actionHandler }) => ({
-            match: matcher(action),
-            actionHandler
+          .map(({ pattern, matcher, actionHandler }) => ({
+            matching: matcher(action),
+            actionHandler,
+            pattern
           }))
-          .filter(({ match }) => !!match)
-          .reduce((partialReduction, { match: { wrap, args, unwrap }, actionHandler }) =>
+          .filter(({ matching }) => !!matching)
+          .reduce((partialReduction, { matching: {
+            wrap,
+            unwrappedType,
+            args
+          }, actionHandler, pattern }) =>
             actionHandler(
               partialReduction,
               {
                 ...action,
-                type: unwrap,
+                type: unwrappedType,
                 matching: {
-                  args,
-                  wrap: `${(action.wrap || '')}${wrap}`
+                  path: `${parentPath}${pattern}`,
+                  wrap: type => parentWrap(wrap(type)),
+                  args: Object.assign(parentArgs, args)
                 }
               }
             ), appState);

@@ -8,13 +8,14 @@ export default class SagaRepository {
     SagaAbstraction,
     sagaId,
     saga,
+    wrap,
     model,
     dispatch
   ) {
     const sagaInstance = new SagaAbstraction(saga, model);
 
     sagaInstance.subscribe(action =>
-      dispatch({ ...action, type: `${sagaId}${action.type}` }));
+      dispatch({ ...action, type: wrap(action.type) }));
 
     this.sagas[sagaId] = sagaInstance;
   }
