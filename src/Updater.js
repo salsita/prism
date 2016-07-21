@@ -1,4 +1,4 @@
-import MatchingReducer from './matching/MatchingReducer';
+import MatchingReducerFactory from './matching/MatchingReducerFactory';
 import ReduxSaga from './sagas/ReduxSaga';
 import { Mount, Unmount } from './actions';
 
@@ -6,20 +6,20 @@ export default class Updater {
 
   constructor(initialModel, saga = null, defaultMatcherImpl, SagaAbstraction = ReduxSaga) {
     this.saga = saga;
-    this.matchingReducer = new MatchingReducer(initialModel, defaultMatcherImpl);
+    this.matchingReducerFactory = new MatchingReducerFactory(initialModel, defaultMatcherImpl);
     this.SagaAbstraction = SagaAbstraction;
   }
 
   case(pattern, actionHandler, matcherImpl) {
     this
-      .matchingReducer
+      .matchingReducerFactory
       .case(pattern, actionHandler, matcherImpl);
 
     return this;
   }
 
   toReducer() {
-    const reducer = this.matchingReducer.toReducer();
+    const reducer = this.matchingReducerFactory.toReducer();
 
     const {
       saga,

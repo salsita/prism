@@ -3,7 +3,7 @@ import { warn } from '../utils/logger';
 
 const identity = value => value;
 
-export default class MatchingReducer {
+export default class MatchingReducerFactory {
 
   constructor(initialAppState, defaultMatcherImpl = defaultMatcher) {
     this.defaultMatcherImpl = defaultMatcherImpl;
