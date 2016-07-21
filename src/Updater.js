@@ -47,9 +47,9 @@ export default class Updater {
                 mutatedModel,
                 dispatch
               );
-            } else if (action.type === Unmount && sagaRepository) {
+            } else if (action.type === Unmount && sagaRepository && saga) {
               sagaRepository.unmount(sagaId);
-            } else {
+            } else if (sagaRepository && saga) {
               sagaRepository.dispatch(
                 sagaId,
                 mutatedModel,

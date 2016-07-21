@@ -1,3 +1,5 @@
+import { warn } from './utils/logger';
+
 export default class SagaRepository {
 
   constructor() {
@@ -12,12 +14,21 @@ export default class SagaRepository {
     model,
     dispatch
   ) {
-    const sagaInstance = new SagaAbstraction(saga, model);
+    if (!this.sagas[sagaId]) {
+      const sagaInstance = new SagaAbstraction(saga, model);
 
-    sagaInstance.subscribe(action =>
-      dispatch({ ...action, type: wrap(action.type) }));
+      sagaInstance.subscribe(action =>
+        dispatch({ ...action, type: wrap(action.type) }));
 
-    this.sagas[sagaId] = sagaInstance;
+      this.sagas[sagaId] = sagaInstance;
+    } else {
+      warn(
+        'The Saga instance has already been mounted, this basically mean ' +
+        'that your Updaters do not form a tree hierarchy, please be sure that ' +
+        'any used Updater is wrapped by any other Updater (except root updater). ' +
+        'It does not make sense to use combineReducers for Updaters.'
+      );
+    }
   }
 
   unmount(sagaId) {
