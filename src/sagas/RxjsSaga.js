@@ -24,6 +24,7 @@ export default class RxjsSaga {
   }
 
   dispose() {
-    // TODO
+    this.saga$.dispose();
+    this.subject.dispose();
   }
 }
