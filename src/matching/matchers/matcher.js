@@ -11,6 +11,7 @@ export default pattern => {
   return action => {
     if (action.type === pattern) {
       return {
+        id: pattern,
         wrap: type => type,
         unwrappedType: action.type,
         args: {}
@@ -22,6 +23,7 @@ export default pattern => {
         const unwrappedType = match[1];
 
         return {
+          id: `${pattern}.`,
           wrap: type => `${pattern}.${type}`,
           unwrappedType,
           args: {}

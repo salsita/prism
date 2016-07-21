@@ -17,7 +17,6 @@ export default class MatchingReducer {
       this.defaultMatcherImpl(pattern);
 
     this.matchersWithHandlers.push({
-      pattern,
       matcher,
       actionHandler
     });
@@ -42,30 +41,30 @@ export default class MatchingReducer {
           return appState;
         }
 
+        const parentId = action.matching ? action.matching.id : '';
         const parentWrap = action.matching ? action.matching.wrap : identity;
-        const parentPath = action.matching ? action.matching.path : '';
         const parentArgs = action.args ? action.args : {};
 
         return this
           .matchersWithHandlers
-          .map(({ pattern, matcher, actionHandler }) => ({
+          .map(({ matcher, actionHandler }) => ({
             matching: matcher(action),
-            actionHandler,
-            pattern
+            actionHandler
           }))
           .filter(({ matching }) => !!matching)
           .reduce((partialReduction, { matching: {
+            id,
             wrap,
             unwrappedType,
             args
-          }, actionHandler, pattern }) =>
+          }, actionHandler }) =>
             actionHandler(
               partialReduction,
               {
                 ...action,
                 type: unwrappedType,
                 matching: {
-                  path: `${parentPath}${pattern}`,
+                  id: `${parentId}${id}`,
                   wrap: type => parentWrap(wrap(type)),
                   args: Object.assign(parentArgs, args)
                 }

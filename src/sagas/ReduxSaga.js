@@ -10,7 +10,10 @@ export default class ReduxSaga {
     this.subscribeSubject = new Subject();
 
     this.saga = runSaga(saga(), {
-      subscribe: cb => this.dispatchSubject.subscribe(cb),
+      subscribe: cb => {
+        const disposable = this.dispatchSubject.subscribe(cb);
+        return () => disposable.dispose();
+      },
       dispatch: action => this.subscribeSubject.next(action),
       getState: () => this.model
     });
@@ -31,6 +34,11 @@ export default class ReduxSaga {
   }
 
   dispose() {
-    // TODO
+    if (!this.saga.isCancelled()) {
+      this.saga.cancel();
+    }
+
+    this.dispatchSubject.dispose();
+    this.subscribeSubject.dispose();
   }
 }

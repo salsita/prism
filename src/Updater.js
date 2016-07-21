@@ -33,7 +33,7 @@ export default class Updater {
           effectExecutor
         } = action;
 
-        const sagaId = action.matching ? action.matching.path : '';
+        const sagaId = action.matching ? action.matching.id : '';
         const mutatedModel = reducer(model, action);
 
         if (effectExecutor) {
