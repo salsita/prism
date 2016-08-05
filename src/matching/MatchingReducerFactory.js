@@ -1,3 +1,5 @@
+/* @flow */
+
 import { matcher as defaultMatcher } from './matchers';
 import { warn } from '../utils/logger';
 
@@ -11,7 +13,7 @@ export default class MatchingReducerFactory {
     this.matchersWithHandlers = [];
   }
 
-  case(pattern, actionHandler, matcherImpl = undefined) {
+  case(pattern, actionHandler, matcherImpl) {
     const matcher = matcherImpl ?
       matcherImpl(pattern) :
       this.defaultMatcherImpl(pattern);

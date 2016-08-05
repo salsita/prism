@@ -6,6 +6,7 @@ import wrapAction from './wrapAction';
 
 import * as Sagas from './sagas';
 import * as Matchers from './matching/matchers';
+import * as Actions from './actions';
 
 export {
   Updater,
@@ -13,7 +14,8 @@ export {
   view,
   wrapAction,
   Matchers,
-  Sagas
+  Sagas,
+  Actions
 };
 
 export default storeEnhancer;

@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import MatchingReducer from '../../src/matching/MatchingReducer';
+import MatchingReducerFactory from '../../src/matching/MatchingReducerFactory';
 
 const Increment = 'Increment';
 const Decrement = 'Decrement';
@@ -9,12 +9,12 @@ const DECREMENT_ACTION = { type: Decrement };
 
 const INITIAL_APP_STATE = 42;
 
-const counterReducer = new MatchingReducer(INITIAL_APP_STATE)
+const counterReducer = new MatchingReducerFactory(INITIAL_APP_STATE)
   .case(Increment, appState => appState + 1)
   .case(Decrement, appState => appState - 1)
   .toReducer();
 
-describe('MatchingReducer', () => {
+describe('MatchingReducerFactory', () => {
   it('should match the appropriate action handlers', () => {
     let state = counterReducer();
     state = counterReducer(state, INCREMENT_ACTION);
@@ -36,7 +36,7 @@ describe('MatchingReducer', () => {
   });
 
   it('should allow providing more than one action handler for the same pattern', () => {
-    const reducer = new MatchingReducer(0)
+    const reducer = new MatchingReducerFactory(0)
       .case(Increment, appState => appState + 1)
       .case(Increment, appState => appState + 1)
       .toReducer();

@@ -1,14 +1,12 @@
 import { assert } from 'chai';
 
-import matcher from '../src/matching/matchers/matcher';
+import matcher from '../../src/matching/matchers/matcher';
 
 describe('matcher', () => {
   it('should return unwrapped action', () => {
-    assert.deepEqual(matcher('Foo')({ type: 'Foo.Bar' }), {
-      wrap: 'Foo.',
-      unwrap: 'Bar',
-      args: {}
-    });
+    const result = matcher('Foo')({ type: 'Foo.Bar' });
+    assert.equal(result.wrap('Qux'), 'Foo.Qux');
+    assert.equal(result.unwrappedType, 'Bar');
   });
 
   it('should not match when action does not start with pattern', () => {
@@ -18,11 +16,10 @@ describe('matcher', () => {
 
   it('should return pattern for exact match', () => {
     const pattern = 'Foo';
-    assert.deepEqual(matcher(pattern)({ type: pattern }), {
-      unwrap: 'Foo',
-      wrap: '',
-      args: {}
-    });
+    const result = matcher(pattern)({ type: pattern });
+
+    assert.equal(result.unwrappedType, 'Foo');
+    assert.equal(result.wrap(pattern), pattern);
   });
 
   it('should not match the action there\'s no exact match nor unwrapping', () => {
