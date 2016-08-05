@@ -1,5 +1,3 @@
-/* @flow */
-
 import { matcher as defaultMatcher } from './matchers';
 import { warn } from '../utils/logger';
 
