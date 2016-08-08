@@ -8,6 +8,8 @@ export default class RxjsSaga {
     this.updateModel(model);
     this.subject = new Subject();
     this.saga$ = saga(this.subject);
+
+    this.subscribtion = null;
   }
 
   updateModel(model) {
@@ -15,10 +17,12 @@ export default class RxjsSaga {
   }
 
   subscribe(subscriber) {
-    return this
+    this.subscribtion = this
       .saga$
       .filter(action => isAction(action))
       .subscribe(subscriber);
+
+    return this.subscribtion;
   }
 
   dispatch(action) {
@@ -26,7 +30,8 @@ export default class RxjsSaga {
   }
 
   dispose() {
-    this.saga$.dispose();
-    this.subject.dispose();
+    if (this.subscribtion) {
+      this.subscribtion.unsubscribe();
+    }
   }
 }

@@ -74,4 +74,11 @@ describe('RxjsSaga', () => {
       done();
     });
   });
+
+  it('should dispose saga properly', done => {
+    const saga = new RxjsSaga(action$ => action$.take(1), 0);
+    saga.dispatch({ type: 'Foo' });
+    saga.dispose();
+    setTimeout(done);
+  });
 });
