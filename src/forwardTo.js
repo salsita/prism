@@ -1,6 +1,7 @@
 import wrapAction from './wrapAction';
 
-/** Modified dispatch by wrapping all the outgoing actions by composition chain
+/**
+ * Modify dispatch by wrapping all the outgoing actions by composition chain
  *
  * @param {Function} dispatch
  * @param {...String} action composition chain
