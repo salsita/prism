@@ -42,7 +42,7 @@ export default class RxjsSaga {
   subscribe(subscriber) {
     this.subscribtion = this
       .saga$
-      .filter(action => isAction(action))
+      .filter(isAction)
       .subscribe(subscriber);
 
     return this.subscribtion;

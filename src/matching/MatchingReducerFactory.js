@@ -3,14 +3,31 @@ import { warn } from '../utils/logger';
 
 const identity = value => value;
 
+/**
+ * @class MatchingReducerFactory
+ *
+ * A simple pattern matching abstraction
+ * for redux reducers.
+ */
 export default class MatchingReducerFactory {
 
+  /**
+   * @param {any} Initial app state
+   * @param {Matcher} Default Matcher implementation
+   */
   constructor(initialAppState, defaultMatcherImpl = defaultMatcher) {
     this.defaultMatcherImpl = defaultMatcherImpl;
     this.initialAppState = initialAppState;
     this.matchersWithHandlers = [];
   }
 
+  /**
+   * Registers action handler
+   *
+   * @param {String} String pattenr
+   * @param {Function} Action Handler (reducer)
+   * @param {Matcher} [Optional] Specific Matcher implementation
+   */
   case(pattern, actionHandler, matcherImpl) {
     const matcher = matcherImpl ?
       matcherImpl(pattern) :
@@ -24,6 +41,11 @@ export default class MatchingReducerFactory {
     return this;
   }
 
+  /**
+   * Creates the Reducer
+   *
+   * @return {Function} plain old redux Reducer
+   */
   toReducer() {
     return (appState = this.initialAppState, action) => {
       if (action) {
