@@ -1,4 +1,5 @@
 import SagaRepository from './SagaRepository';
+import { warn } from './utils/logger';
 
 /**
  * Main redux-elm store enhancer, allowing dispatching in reducers while
@@ -12,20 +13,29 @@ export default createStore => (reducer, initialAppState) => {
   let executeEffects = false;
   let wrappedDispatch = null;
 
-  const callWithEffects = fn => {
+  // Sets global flag to
+  // enable execution of all the effects
+  const callFnWithEffects = fn => {
     executeEffects = true;
     const result = fn();
     executeEffects = false;
     return result;
   };
 
-  const effectExecutor = callback => {
+  const effectExecutor = effect => {
+    // Effect executor executes
+    // the effect only when it's allowed
+    // (executeEffects is true)
     if (executeEffects) {
+      // Effect execution must be asynchronous
+      // so that it's called out of order in the
+      // reducer and therefore the reducer remains
+      // "almost" pure
       setTimeout(() => {
         if (wrappedDispatch) {
-          callback(wrappedDispatch);
+          effect(wrappedDispatch);
         } else {
-          console.warn(
+          warn(
             'There\'s been attempt to execute effects ' +
             'yet proper creating of store has not been finished yet'
           );
@@ -36,7 +46,11 @@ export default createStore => (reducer, initialAppState) => {
 
   const sagaRepository = new SagaRepository();
 
-  callWithEffects(() => {
+  // When creating store
+  // we wrap the reducer with function
+  // which provides sagaRepository & effectExecutor
+  // to root reducer
+  callFnWithEffects(() => {
     store = createStore((appState, action) =>
       reducer(appState, {
         ...action,
@@ -45,13 +59,16 @@ export default createStore => (reducer, initialAppState) => {
       }), initialAppState);
   });
 
-  wrappedDispatch = (...args) => callWithEffects(() => store.dispatch(...args));
+  // Wrapped dispatch executes all the effects
+  wrappedDispatch = (...args) => callFnWithEffects(() => store.dispatch(...args));
 
   return {
     ...store,
     dispatch: wrappedDispatch,
+    // We must no forgot about mandatory sagaRepository & effectExecutor
+    // even when reducer is replaced
     replaceReducer: nextReducer => store
       .replaceReducer((appState, action) =>
-        nextReducer(appState, { ...action, effectExecutor }))
+        nextReducer(appState, { ...action, sagaRepository, effectExecutor }))
   };
 };

@@ -1,11 +1,11 @@
 import wrapAction from './wrapAction';
 
 /**
- * Modify dispatch by wrapping all the outgoing actions by composition chain
+ * Returns new dispatch which automatically wraps all the actions by types chain
  *
- * @param {Function} dispatch
- * @param {...String} action composition chain
- * @return {Function} modified dispatch
+ * @param {Function} Original dispatch
+ * @param {...String} action types composition chain
+ * @return {Function} Dispatch which automatically wraps all the actions
  */
 export default (dispatch, ...types) => {
   if (types.length === 0) {

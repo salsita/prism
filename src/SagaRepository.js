@@ -1,24 +1,36 @@
 import { warn } from './utils/logger';
 
+/**
+ * @class SagaRepository
+ *
+ * A repository which holds references to all the
+ * living Saga instances.
+ */
 export default class SagaRepository {
 
   constructor() {
     this.sagas = {};
   }
 
+  /**
+   * Mounts Saga instance
+   *
+   * @param {SagaAbstraction} Saga abstraction type (rxjs/redux-saga)
+   * @param {Srting} ID of the Saga
+   * @param {any} Saga implementation
+   * @param {any} Current Model
+   * @param {Function} dispatch function to be used for dispatching new actions
+   */
   mount(
     SagaAbstraction,
     sagaId,
     saga,
-    wrap,
     model,
     dispatch
   ) {
     if (!this.sagas[sagaId]) {
       const sagaInstance = new SagaAbstraction(saga, model);
-
-      sagaInstance.subscribe(action =>
-        dispatch({ ...action, type: wrap(action.type) }));
+      sagaInstance.subscribe(dispatch);
 
       this.sagas[sagaId] = sagaInstance;
     } else {
@@ -31,6 +43,11 @@ export default class SagaRepository {
     }
   }
 
+  /**
+   * Unmounts Saga instance
+   *
+   * @param {String} ID of the Saga
+   */
   unmount(sagaId) {
     const saga = this.sagas[sagaId];
 
@@ -40,6 +57,14 @@ export default class SagaRepository {
     }
   }
 
+  /**
+   * Passes (dispatches) provided action
+   * to all corresponding saga instances
+   *
+   * @param {String} ID of the Saga
+   * @param {any} Updated model
+   * @param {object} Action
+   */
   dispatch(sagaId, model, action) {
     const saga = this.sagas[sagaId];
 

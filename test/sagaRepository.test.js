@@ -16,7 +16,7 @@ describe('sagaRepository', () => {
   it('should allow mounting simple Saga in the repository', done => {
     const dispatch = spy();
     const sagaRepository = new SagaRepository();
-    sagaRepository.mount(RxjsSaga, TESTING_SAGA_ID, pingPongSaga, identity, 42, dispatch);
+    sagaRepository.mount(RxjsSaga, TESTING_SAGA_ID, pingPongSaga, 42, dispatch);
     sagaRepository.dispatch(TESTING_SAGA_ID, 42, { type: 'Ping' });
 
     setTimeout(() => {
@@ -32,8 +32,12 @@ describe('sagaRepository', () => {
     const dispatch = spy();
 
     const sagaRepository = new SagaRepository();
-    sagaRepository.mount(RxjsSaga, 'Foo', pingPongSaga, type => `Foo.${type}`, 42, dispatch);
-    sagaRepository.mount(RxjsSaga, 'Bar', pingPongSaga, type => `Bar.${type}`, 42, dispatch);
+    sagaRepository
+      .mount(RxjsSaga, 'Foo', pingPongSaga, 42,
+        dispatchable => dispatch({ ...dispatchable, type: `Foo.${dispatchable.type}` }));
+    sagaRepository
+      .mount(RxjsSaga, 'Bar', pingPongSaga, 42,
+        dispatchable => dispatch({ ...dispatchable, type: `Bar.${dispatchable.type}` }));
     sagaRepository.dispatch('Foo', 42, { type: 'Ping' });
     sagaRepository.dispatch('Bar', 42, { type: 'Ping' });
     sagaRepository.dispatch('Baz', 42, { type: 'Ping' });
@@ -56,7 +60,7 @@ describe('sagaRepository', () => {
     const dispatch = spy();
 
     const sagaRepository = new SagaRepository();
-    sagaRepository.mount(RxjsSaga, TESTING_SAGA_ID, pingPongSaga, identity, 42, dispatch);
+    sagaRepository.mount(RxjsSaga, TESTING_SAGA_ID, pingPongSaga, 42, dispatch);
     sagaRepository.dispatch(TESTING_SAGA_ID, 42, { type: 'Ping' });
     sagaRepository.unmount(TESTING_SAGA_ID);
     sagaRepository.dispatch(TESTING_SAGA_ID, 42, { type: 'Ping' });
@@ -77,7 +81,7 @@ describe('sagaRepository', () => {
 
     const sagaRepository = new SagaRepository();
     sagaRepository
-      .mount(RxjsSaga, TESTING_SAGA_ID, action$ => action$.do(actionSpy), identity, 42, identity);
+      .mount(RxjsSaga, TESTING_SAGA_ID, action$ => action$.do(actionSpy), 42, identity);
     sagaRepository.dispatch(TESTING_SAGA_ID, 43, { type: 'Whatever' });
 
     setTimeout(() => {
