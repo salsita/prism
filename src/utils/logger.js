@@ -4,4 +4,5 @@ const log = (message, level) => {
   }
 };
 
-export const warn = message => log(message, 'error');
+export const warn = message => // eslint-disable-line import/prefer-default-export
+  log(message, 'error');
