@@ -19,7 +19,7 @@ export default class ReduxSaga {
 
     this.dispatchSubject = new Subject();
     this.subscribeSubject = new Subject();
-    this.subscribtion = null;
+    this.subscription = null;
 
     this.saga = runSaga(saga(), {
       subscribe: cb => {
@@ -57,11 +57,11 @@ export default class ReduxSaga {
    * @return {Disposable} RXJS Disposable
    */
   subscribe(subscriber) {
-    this.subscribtion = this
+    this.subscription = this
       .subscribeSubject
       .subscribe(subscriber);
 
-    return this.subscribtion;
+    return this.subscription;
   }
 
   /**
@@ -81,8 +81,8 @@ export default class ReduxSaga {
     if (!this.saga.isCancelled()) {
       this.saga.cancel();
 
-      if (this.subscribtion) {
-        this.subscribtion.unsubscribe();
+      if (this.subscription) {
+        this.subscription.unsubscribe();
       }
     }
   }

@@ -20,7 +20,7 @@ export default class RxjsSaga {
     this.subject = new Subject();
     this.saga$ = saga(this.subject);
 
-    this.subscribtion = null;
+    this.subscription = null;
   }
 
   /**
@@ -40,12 +40,12 @@ export default class RxjsSaga {
    * @return {Disposable} RXJS Disposable
    */
   subscribe(subscriber) {
-    this.subscribtion = this
+    this.subscription = this
       .saga$
       .filter(isAction)
       .subscribe(subscriber);
 
-    return this.subscribtion;
+    return this.subscription;
   }
 
   /**
@@ -62,8 +62,8 @@ export default class RxjsSaga {
    * Releases all the resources
    */
   dispose() {
-    if (this.subscribtion) {
-      this.subscribtion.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
   }
 }

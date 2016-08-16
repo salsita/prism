@@ -35,10 +35,7 @@ export default createStore => (reducer, initialAppState) => {
         if (wrappedDispatch) {
           effect(wrappedDispatch);
         } else {
-          warn(
-            'There\'s been attempt to execute effects ' +
-            'yet proper creating of store has not been finished yet'
-          );
+          warn('Attempt to execute effects before store creation has completed');
         }
       });
     }
@@ -65,7 +62,7 @@ export default createStore => (reducer, initialAppState) => {
   return {
     ...store,
     dispatch: wrappedDispatch,
-    // We must no forgot about mandatory sagaRepository & effectExecutor
+    // We must not forgot about mandatory sagaRepository & effectExecutor
     // even when reducer is replaced
     replaceReducer: nextReducer => store
       .replaceReducer((appState, action) =>

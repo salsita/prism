@@ -16,7 +16,7 @@ export default class SagaRepository {
    * Mounts Saga instance
    *
    * @param {SagaAbstraction} Saga abstraction type (rxjs/redux-saga)
-   * @param {Srting} ID of the Saga
+   * @param {String} ID of the Saga
    * @param {any} Saga implementation
    * @param {any} Current Model
    * @param {Function} dispatch function to be used for dispatching new actions
@@ -36,8 +36,8 @@ export default class SagaRepository {
     } else {
       warn(
         'The Saga instance has already been mounted, this basically mean ' +
-        'that your Updaters do not form a tree hierarchy, please be sure that ' +
-        'any used Updater is wrapped by any other Updater (except root updater). ' +
+        'that your Updaters do not form a tree, please be sure that ' +
+        'every Updater is wrapped by another Updater (except root updater). ' +
         'It does not make sense to use combineReducers for Updaters.'
       );
     }
