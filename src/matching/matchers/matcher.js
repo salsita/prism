@@ -11,17 +11,21 @@ export default pattern => {
   return action => {
     if (action.type === pattern) {
       return {
-        wrap: '',
-        unwrap: action.type,
+        id: pattern,
+        wrap: type => type,
+        unwrappedType: action.type,
         args: {}
       };
     } else {
       const match = action.type.match(regexp);
 
       if (match) {
+        const unwrappedType = match[1];
+
         return {
-          wrap: `${pattern}.`,
-          unwrap: match[1],
+          id: `${pattern}.`,
+          wrap: type => `${pattern}.${type}`,
+          unwrappedType,
           args: {}
         };
       } else {

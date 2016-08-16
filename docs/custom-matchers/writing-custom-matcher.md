@@ -1,9 +1,10 @@
 ## Writing Custom Matcher
 
-Matcher is a function that takes `pattern` as an argument and returns a function that takes an Action as its argument. The function returns either `false` when the Action does not match or, when it does, an `Object` consisting from three fields `unwrap`, `wrap`, and `args`.
+Matcher is a function that takes `pattern` as an argument and returns a function that takes an Action as its argument. The function returns either `false` when the Action does not match or, when it does, an `Object` consisting from four fields `id`, `unwrappedType`, `wrap`, and `args`.
 
-* `unwrap` is unwrapped action type
-* `wrap` is stripped part of the action which can be used for wrapping the action
+* `id` is unique string identifying matched action, this is in 99% same as provided pattern
+* `unwrappedType` is unwrapped action type
+* `wrap` is a function which can be used for wrapping the action back
 * `args` is optional object which may hold any arguments passing to action
 
 Let's implement our own matcher Matcher:
@@ -15,8 +16,9 @@ const endsWithMatcher = pattern => {
       const wrapRegExp = new RegExp(`(.*)\.${pattern}$`); // In production application pattern should definitely be escaped!
 
       return {
-        unwrap: pattern,
-        wrap: action.type.match(wrapRegExp)[1],
+        id: `ends-with${pattern}`,
+        unwrappedType: pattern,
+        wrap: type => `${action.type.match(wrapRegExp)[1]}.${type}`,
         args: {}
       }
     } else {
@@ -40,8 +42,9 @@ const endsWithMatcher = pattern => {
       const wrapRegExp = new RegExp(`(.*)\.${pattern}$`);
 
       return {
-        unwrap: pattern,
-        wrap: action.type.match(wrapRegExp)[1],
+        id: `ends-with${pattern}`,
+        unwrappedType: pattern,
+        wrap: type => `${action.type.match(wrapRegExp)[1]}.${type}`,
         args: {}
       }
     } else {
@@ -73,4 +76,4 @@ export default new Updater(initialModel)
 
 After compiling and running the application, the global counter should be updated whenever you click on the individual counters.
 
-For better understanding of Matchers, we strongly encourage you to have a look at the [built-in Matcher implementations](https://github.com/salsita/redux-elm/tree/master/src/matchers) shipped as part of `redux-elm`.
+For better understanding of Matchers, we strongly encourage you to have a look at the [built-in Matcher implementations](https://github.com/salsita/redux-elm/tree/next/src/matching/matchers) shipped as part of `redux-elm`.

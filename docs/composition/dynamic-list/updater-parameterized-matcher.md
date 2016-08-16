@@ -12,8 +12,10 @@ However, `redux-elm` is shipped with `parameterizedMatcher` which serves exactly
 ```javascript
 {
   type: 'NewGif',
-  args: {
-    param: 3
+  matching: {
+    args: {
+      param: 3
+    }
   }
 }
 ```
@@ -34,7 +36,7 @@ export default new Updater(initialModel)
     //
     // We need to parse action `param` because the matching is string-based
     // and all arguments are passed in as strings
-    const numericGifViewerIndex = parseInt(action.args.param, 10);
+    const numericGifViewerIndex = parseInt(action.matching.args.param, 10);
 
     return model;
   }, Matchers.parameterizedMatcher)
@@ -55,7 +57,7 @@ const initialModel = {
 
 export default new Updater(initialModel)
   .case('GifViewer', (model, action) => {
-    const numericGifViewerIndex = parseInt(action.args.param, 10);
+    const numericGifViewerIndex = parseInt(action.matching.args.param, 10);
 
     return {
       ...model,
@@ -95,7 +97,7 @@ export default new Updater(initialModel, saga)
     gifViewers: [...model.gifViewers, gifViewerInit(model.topic)]
   }))
   .case('GifViewer', (model, action) => {
-    const numericGifViewerIndex = parseInt(action.args.param, 10);
+    const numericGifViewerIndex = parseInt(action.matching.args.param, 10);
 
     return {
       ...model,

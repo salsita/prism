@@ -1,10 +1,6 @@
 /* @flow */
-import type { Component as ReactComponent } from 'react';
 
 export type Action = Object;
-export type StatelessReactComponent = (props : Object) => ReactElement;
-export type Component = ReactComponent | StatelessReactComponent;
-
 export type Dispatch = (action : Action) => void;
 
 export type MatcherResult = {
@@ -21,13 +17,14 @@ export interface Matchers {
 };
 
 declare export class Updater<M> {
-  constructor(initialModel : M, saga? : () => Generator, matcher? : Matcher) : Updater<M>;
+  constructor(initialModel : M, saga? : () => Generator<any, any, any>, matcher? : Matcher) : Updater<M>;
   case(pattern : string, handler : (model : M, action : Action) => M, matcher? : Matcher) : Updater<M>;
   toReducer() : (model : M, action : Action) => M
 };
 
-declare export function forwardTo(dispatch : function, ...rest : Array<any>) : function;
+declare export function forwardTo(dispatch : Dispatch, ...types : Array<string>) : Dispatch;
 
-declare export function wrapAction(action : Object, ...rest : Array<any>) : Object;
+declare export function wrapAction(action : Action, ...types : Array<string>) : Action;
 
-declare export function view(component : Component) : Component;
+declare export function view(component : ReactClass<*>) : ReactClass<*>;
+

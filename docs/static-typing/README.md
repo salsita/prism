@@ -1,3 +1,0 @@
-## Static Typing - FlowType
-
-TODO

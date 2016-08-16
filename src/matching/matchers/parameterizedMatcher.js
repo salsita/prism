@@ -11,11 +11,15 @@ export default pattern => {
     const match = action.type.match(regexp);
 
     if (match) {
+      const unwrappedType = match[2];
+      const param = match[1];
+
       return {
-        unwrap: match[2],
-        wrap: action.type.replace(match[2], ''),
+        id: `${pattern}.${param}`,
+        unwrappedType,
+        wrap: type => `${pattern}.${match[1]}.${type}`,
         args: {
-          param: match[1]
+          param
         }
       };
     } else {
