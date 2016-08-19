@@ -13,13 +13,14 @@ export default class ReduxSaga {
    *
    * @param {Generator} Saga implementation
    * @param {any} initial model
+   * @param {Function} dispatch function
    */
-  constructor(saga, model) {
+  constructor(saga, model, dispatch) {
     this.updateModel(model);
 
     this.dispatchSubject = new Subject();
     this.subscribeSubject = new Subject();
-    this.subscription = null;
+    this.subscription = this.subscribeSubject.subscribe(dispatch);
 
     this.saga = runSaga(saga(), {
       subscribe: cb => {
@@ -46,22 +47,6 @@ export default class ReduxSaga {
    */
   updateModel(model) {
     this.model = model;
-  }
-
-  /**
-   * Subscribes to all the actions
-   * newly created by Saga implementation. It's
-   * the output of the action pipe.
-   *
-   * @param {Function} Subscriber function
-   * @return {Disposable} RXJS Disposable
-   */
-  subscribe(subscriber) {
-    this.subscription = this
-      .subscribeSubject
-      .subscribe(subscriber);
-
-    return this.subscription;
   }
 
   /**
