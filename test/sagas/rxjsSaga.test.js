@@ -9,9 +9,8 @@ const pingPongSaga = actions$ => actions$
 
 describe('RxjsSaga', () => {
   it('should allow to subscribe to output action stream', done => {
-    const saga = new RxjsSaga(pingPongSaga, 0);
     const subscribeSpy = spy();
-    saga.subscribe(subscribeSpy);
+    const saga = new RxjsSaga(pingPongSaga, 0, subscribeSpy);
     saga.dispatch({ type: 'Ping' });
 
     setTimeout(() => {
@@ -21,9 +20,8 @@ describe('RxjsSaga', () => {
   });
 
   it('should ignore those actions in which saga is not subscribed', done => {
-    const saga = new RxjsSaga(pingPongSaga, 0);
     const subscribeSpy = spy();
-    saga.subscribe(subscribeSpy);
+    const saga = new RxjsSaga(pingPongSaga, 0, subscribeSpy);
     saga.dispatch({ type: 'UnknownAction' });
 
     setTimeout(() => {
@@ -33,9 +31,8 @@ describe('RxjsSaga', () => {
   });
 
   it('should work with identity sagas', done => {
-    const saga = new RxjsSaga(actions$ => actions$, 0);
     const subscribeSpy = spy();
-    saga.subscribe(subscribeSpy);
+    const saga = new RxjsSaga(actions$ => actions$, 0, subscribeSpy);
     saga.dispatch({ type: 'UnknownAction' });
 
     setTimeout(() => {
@@ -46,8 +43,7 @@ describe('RxjsSaga', () => {
 
   it('should pass current model as well as action', done => {
     const sagaSpy = spy();
-    const saga = new RxjsSaga(actions$ => actions$.do(sagaSpy), 42);
-    saga.subscribe(() => {});
+    const saga = new RxjsSaga(actions$ => actions$.do(sagaSpy), 42, () => {});
     saga.dispatch({ type: 'FooBar' });
 
     setTimeout(() => {
@@ -61,8 +57,7 @@ describe('RxjsSaga', () => {
 
   it('should allow updating model and passing it to the sagas', done => {
     const sagaSpy = spy();
-    const saga = new RxjsSaga(actions$ => actions$.do(sagaSpy), 42);
-    saga.subscribe(() => {});
+    const saga = new RxjsSaga(actions$ => actions$.do(sagaSpy), 42, () => {});
     saga.updateModel(24);
     saga.dispatch({ type: 'FooBar' });
 
