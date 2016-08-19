@@ -29,10 +29,7 @@ export default class SagaRepository {
     dispatch
   ) {
     if (!this.sagas[sagaId]) {
-      const sagaInstance = new SagaAbstraction(saga, model);
-      sagaInstance.subscribe(dispatch);
-
-      this.sagas[sagaId] = sagaInstance;
+      this.sagas[sagaId] = new SagaAbstraction(saga, model, dispatch);
     } else {
       warn(
         'The Saga instance has already been mounted, this basically mean ' +

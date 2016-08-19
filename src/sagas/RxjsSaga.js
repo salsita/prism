@@ -14,13 +14,16 @@ export default class RxjsSaga {
    *
    * @param {Function} Saga implementation
    * @param {any} initial model
+   * @param {Function} dispatch function
    */
-  constructor(saga, model) {
+  constructor(saga, model, dispatch) {
     this.updateModel(model);
     this.subject = new Subject();
     this.saga$ = saga(this.subject);
 
-    this.subscription = null;
+    this.subscription = this.saga$
+      .filter(isAction)
+      .subscribe(dispatch);
   }
 
   /**
@@ -29,23 +32,6 @@ export default class RxjsSaga {
    */
   updateModel(model) {
     this.model = model;
-  }
-
-  /**
-   * Subscribes to all the actions
-   * newly created by Saga implementation. It's
-   * the output of the action pipe.
-   *
-   * @param {Function} Subscriber function
-   * @return {Disposable} RXJS Disposable
-   */
-  subscribe(subscriber) {
-    this.subscription = this
-      .saga$
-      .filter(isAction)
-      .subscribe(subscriber);
-
-    return this.subscription;
   }
 
   /**

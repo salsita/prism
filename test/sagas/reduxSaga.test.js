@@ -14,9 +14,8 @@ function* pingPongSaga() {
 
 describe('ReduxSaga', () => {
   it('should allow to subscribe to output action stream', done => {
-    const saga = new ReduxSaga(pingPongSaga, 0);
     const subscribeSpy = spy();
-    saga.subscribe(subscribeSpy);
+    const saga = new ReduxSaga(pingPongSaga, 0, subscribeSpy);
     saga.dispatch({ type: 'Ping' });
 
     setTimeout(() => {
@@ -26,9 +25,8 @@ describe('ReduxSaga', () => {
   });
 
   it('should ignore those actions in which saga is not subscribed', done => {
-    const saga = new ReduxSaga(pingPongSaga, 0);
     const subscribeSpy = spy();
-    saga.subscribe(subscribeSpy);
+    const saga = new ReduxSaga(pingPongSaga, 0, subscribeSpy);
     saga.dispatch({ type: 'UnknownAction' });
 
     setTimeout(() => {
@@ -44,8 +42,7 @@ describe('ReduxSaga', () => {
       modelResult = yield select(model => model);
     }
 
-    const saga = new ReduxSaga(testingSaga, 42);
-    saga.subscribe(() => {});
+    const saga = new ReduxSaga(testingSaga, 42, () => {});
     saga.dispatch({ type: 'FooBar' });
 
     setTimeout(() => {
@@ -62,8 +59,7 @@ describe('ReduxSaga', () => {
       modelResult = yield select(model => model);
     }
 
-    const saga = new ReduxSaga(testingSaga, 42);
-    saga.subscribe(() => {});
+    const saga = new ReduxSaga(testingSaga, 42, () => {});
     saga.updateModel(24);
     saga.dispatch({ type: 'FooBar' });
 
