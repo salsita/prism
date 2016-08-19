@@ -1,7 +1,9 @@
 import { spy } from 'sinon';
 import { assert } from 'chai';
+import { put } from 'redux-saga/effects';
 
 import Updater from '../src/Updater';
+import SagaRepository from '../src/SagaRepository';
 import * as Actions from '../src/actions';
 
 const MockSagaAbstraction = 'Mock';
@@ -142,5 +144,23 @@ describe('Updater', () => {
 
     assert.equal(reduction, 42);
     assert.isFalse(effectExecutor.called);
+  });
+
+  it('should dispatch an action when put effect is yielded in ' +
+     'initialization phase of redux-saga', () => {
+    const realSagaRepository = new SagaRepository();
+
+    const reducer = new Updater(0, function* () {
+      yield put({ type: 'Foo' });
+    })
+    .toReducer();
+
+    reducer(undefined, {
+      type: Actions.Mount,
+      effectExecutor,
+      sagaRepository: realSagaRepository
+    });
+
+    assert.equal(spiedDispatch.firstCall.args[0].type, 'Foo');
   });
 });
