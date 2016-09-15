@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
 import { assert } from 'chai';
-import { put } from 'redux-saga/effects';
+import { put, take } from 'redux-saga/effects';
 
 import Updater from '../src/Updater';
 import SagaRepository from '../src/SagaRepository';
@@ -162,5 +162,36 @@ describe('Updater', () => {
     });
 
     assert.equal(spiedDispatch.firstCall.args[0].type, 'Foo');
+  });
+
+  it('should allow to take Mount/Unmount action in Saga to allow user ' +
+     'to perform any bootstrap/cleanup', () => {
+    const realSagaRepository = new SagaRepository();
+    const unmountSpy = spy();
+    const mountSpy = spy();
+
+    const reducer = new Updater(0, function* () {
+      yield take(Actions.Mount);
+      mountSpy();
+      yield take(Actions.Unmount);
+      unmountSpy();
+    }).toReducer();
+
+    assert.isFalse(unmountSpy.called);
+    assert.isFalse(mountSpy.called);
+    reducer(undefined, {
+      type: Actions.Mount,
+      effectExecutor,
+      sagaRepository: realSagaRepository
+    });
+    assert.isTrue(mountSpy.called);
+
+    assert.isFalse(unmountSpy.called);
+    reducer(undefined, {
+      type: Actions.Unmount,
+      effectExecutor,
+      sagaRepository: realSagaRepository
+    });
+    assert.isTrue(unmountSpy.called);
   });
 });

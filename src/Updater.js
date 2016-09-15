@@ -96,7 +96,17 @@ export default class Updater {
                 mutatedModel,
                 wrapDispatch(dispatch, action)
               );
+              sagaRepository.dispatch(
+                sagaId,
+                mutatedModel,
+                action
+              );
             } else if (action.type === Unmount && sagaRepository && saga) {
+              sagaRepository.dispatch(
+                sagaId,
+                mutatedModel,
+                action
+              );
               sagaRepository.unmount(sagaId);
             } else if (sagaRepository && saga) {
               sagaRepository.dispatch(
