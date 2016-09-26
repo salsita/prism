@@ -28,3 +28,4 @@ declare export function wrapAction(action : Action, ...types : Array<string>) : 
 
 declare export function view(component : ReactClass<*>) : ReactClass<*>;
 
+declare export default function storeEnhancer(createStore : function) : function;
