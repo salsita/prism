@@ -17,7 +17,9 @@ describe('Library interface', () => {
       Updater,
       Matchers,
       Sagas,
-      Actions,
+      Actions: {
+        Mount: Actions.Mount
+      },
       forwardTo,
       view,
       wrapAction,

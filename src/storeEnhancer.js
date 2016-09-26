@@ -1,5 +1,6 @@
 import SagaRepository from './SagaRepository';
 import { warn } from './utils/logger';
+import { Unmount } from './actions';
 
 /**
  * Main redux-elm store enhancer, allowing dispatching in reducers while
@@ -48,12 +49,19 @@ export default createStore => (reducer, initialAppState) => {
   // which provides sagaRepository & effectExecutor
   // to root reducer
   callFnWithEffects(() => {
-    store = createStore((appState, action) =>
-      reducer(appState, {
-        ...action,
-        sagaRepository,
-        effectExecutor
-      }), initialAppState);
+    store = createStore((appState, action) => {
+      if (action.type.endsWith(Unmount)) {
+        sagaRepository.unmount(action.type.replace(`.${Unmount}`, ''));
+
+        return appState;
+      } else {
+        return reducer(appState, {
+          ...action,
+          sagaRepository,
+          effectExecutor
+        });
+      }
+    }, initialAppState);
   });
 
   // Wrapped dispatch executes all the effects
