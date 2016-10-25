@@ -30,7 +30,7 @@ export default View => class ReduxElmView extends Component {
    * @param {...any} args
    */
   dispatch(...args) {
-    this.props.dispatch(...args);
+    return this.props.dispatch(...args);
   }
 
   /**
