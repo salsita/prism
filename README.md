@@ -75,6 +75,13 @@ open http://localhost:3000
 
 You will see Hello World so that you can immediately open your favorite Text Editor and start writing your own application. Skeleton repo integrates [`redux-devtools` Chrome extension](https://github.com/zalmoxisus/redux-devtools-extension), so we strongly recommend installing the extension.
 
+### Boilerplate
+
+Are you looking for more feature complete boilerplate? There are two boilerplates which works well with `redux-elm`:
+
+1. https://github.com/jmarceli/redux-elm-boilerplate based on `react-boilerplate` 
+2. https://github.com/salsita/redux-boilerplate from `redux-elm` authors but soon to be deprecated
+
 ## Documentation
 
 Goal of documentation is explaining basic principle of `redux-elm` and this is Composition, it's divided into few chapters to gradually increase amount of complexity. 
