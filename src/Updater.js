@@ -1,6 +1,6 @@
 import MatchingReducerFactory from './matching/MatchingReducerFactory';
 import ReduxSaga from './sagas/ReduxSaga';
-import { Mount, Unmount } from './actions';
+import { Mount } from './actions';
 
 /**
  * Returns dispatch which automatically
@@ -29,10 +29,10 @@ const wrapDispatch = (dispatch, action) => {
  *
  * It can wrap/unwrap action by using MatchingReducerFactory.
  *
- * It reacts to incoming Mount/Unmount actions which are dispatched
+ * It reacts to incoming Mount actions which is dispatched
  * in View.
  *
- * It is using Saga Repository to Mount/Unmount Sagas based
+ * It is using Saga Repository to Mount Sagas based
  * on Action wrapping.
  */
 export default class Updater {
@@ -101,13 +101,6 @@ export default class Updater {
                 mutatedModel,
                 action
               );
-            } else if (action.type === Unmount && sagaRepository && saga) {
-              sagaRepository.dispatch(
-                sagaId,
-                mutatedModel,
-                action
-              );
-              sagaRepository.unmount(sagaId);
             } else if (sagaRepository && saga) {
               sagaRepository.dispatch(
                 sagaId,

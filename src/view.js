@@ -49,7 +49,7 @@ export default View => class ReduxElmView extends Component {
   /**
    * Dispatches Mount action
    */
-  componentWillMount() {
+  componentDidMount() {
     this.dispatch({ type: Mount });
   }
 

@@ -6,7 +6,11 @@ import wrapAction from './wrapAction';
 
 import * as Sagas from './sagas';
 import * as Matchers from './matching/matchers';
-import * as Actions from './actions';
+import * as ReduxElmActions from './actions';
+
+const Actions = {
+  Mount: ReduxElmActions.Mount
+};
 
 export {
   Updater,
