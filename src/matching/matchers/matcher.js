@@ -16,22 +16,22 @@ export default pattern => {
         unwrappedType: action.type,
         args: {}
       };
-    } else {
-      const match = action.type.match(regexp);
-
-      if (match) {
-        const unwrappedType = match[1];
-
-        return {
-          id: `${pattern}.`,
-          wrap: type => `${pattern}.${type}`,
-          unwrappedType,
-          args: {}
-        };
-      } else {
-        return false;
-      }
     }
+
+    const match = action.type.match(regexp);
+
+    if (match) {
+      const unwrappedType = match[1];
+
+      return {
+        id: pattern,
+        wrap: type => `${pattern}.${type}`,
+        unwrappedType,
+        args: {}
+      };
+    }
+
+    return false;
   };
 };
 

@@ -61,7 +61,7 @@ export default class MatchingReducerFactory {
           return appState;
         }
 
-        const parentId = action.matching ? action.matching.id : '';
+        const parentId = action.matching ? `${action.matching.id}.` : '';
         const parentWrap = action.matching ? action.matching.wrap : identity;
         const parentArgs = action.args ? action.args : {};
 
