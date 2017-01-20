@@ -9,7 +9,8 @@
   ],
   "jsnext:main": "src/index.js",
   "scripts": {
-    "build:lib": "./node_modules/.bin/babel src --out-dir lib && cp src/index.js.flow ./lib",
+    "build:lib:watch": "npm run build:lib -- --watch",
+    "build:lib": "babel src --out-dir lib",
     "check": "npm run lint && npm run test",
     "lint": "./node_modules/.bin/eslint src/",
     "preversion": "npm run check",
