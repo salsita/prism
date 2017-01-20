@@ -21,5 +21,5 @@ render(
   <Provider store={store}>
     <GifViewerList />
   </Provider>,
-  document.getElementById('pp')
+  document.getElementById('app')
 );
