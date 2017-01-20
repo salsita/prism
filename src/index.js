@@ -1,25 +1,13 @@
-import Updater from './Updater';
-import forwardTo from './forwardTo';
-import view from './view';
-import storeEnhancer from './storeEnhancer';
-import wrapAction from './wrapAction';
-
-import * as Sagas from './sagas';
-import * as Matchers from './matching/matchers';
-import * as ReduxElmActions from './actions';
-
-const Actions = {
-  Mount: ReduxElmActions.Mount
-};
+import enhanceComponent from './react/enhanceComponent';
+import reducer from './redux/reducer';
+import unwrapper from './redux/wrapping/unwrapper';
+import parameterizedUnwrapper from './redux/wrapping/parameterizedUnwrapper';
+import spawn from './sagas/spawn';
 
 export {
-  Updater,
-  forwardTo,
-  view,
-  wrapAction,
-  Matchers,
-  Sagas,
-  Actions
+  enhanceComponent,
+  parameterizedUnwrapper,
+  reducer,
+  spawn,
+  unwrapper
 };
-
-export default storeEnhancer;
