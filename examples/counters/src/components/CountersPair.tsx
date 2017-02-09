@@ -10,8 +10,8 @@ import { CountersPairState } from '../reducers/countersPairReducer';
 const topCounterSelector = (state : CountersPairState) : CounterState => state.top;
 const bottomCounterSelector = (state : CountersPairState) : CounterState => state.bottom;
 
-const topCounterWrapper = type => `Top.${type}`;
-const bottomCounterWrapper = type => `Bottom.${type}`;
+const topCounterWrapper = (type : string) => `Top.${type}`;
+const bottomCounterWrapper = (type : string) => `Bottom.${type}`;
 
 interface CountersPairProps {
   onReset: EventHandler

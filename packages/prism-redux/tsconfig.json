@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "declaration": true
+    "declaration": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true
   },
   "include": [
     "src/**/*"

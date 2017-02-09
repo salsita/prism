@@ -3,7 +3,7 @@ export interface Action {
 }
 
 export interface Matcher {
-  (action : Action) : Action
+  (action : Action) : Action | null
 };
 
 export interface Handler<S> {
@@ -21,4 +21,4 @@ export default <S>(...handlers : Array<HandlerMatcherPair<S>>) =>
     handlers
     .map(({ matcher, handler }) => ({ match: matcher(action), handler }))
     .filter(({ match }) => !!match)
-    .reduce((currentState, { match, handler }) => handler(currentState, match), state);
+    .reduce((currentState, { match, handler }) => handler(currentState, match!), state);

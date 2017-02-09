@@ -7,7 +7,7 @@ const escapeStringRegexp = (value : string) => value
 export default (pattern : string) => {
   const regexp = new RegExp(`^${escapeStringRegexp(pattern)}\\.(.+)`);
 
-  return (action : Action) : Action => {
+  return (action : Action) : Action | null => {
     if (action.type === pattern) {
       return action;
     } else {
