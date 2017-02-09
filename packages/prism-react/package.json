@@ -1,0 +1,30 @@
+{
+  "name": "prism-react",
+  "version": "0.1.0",
+  "description": "Prism bindings for React-Redux",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "jsnext:main": "es/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "build:commonjs": "tsc -p ./ --module commonjs --outDir lib",
+    "build": "npm run build:commonjs"
+  },
+  "author": "Tomas Weiss <tomasw@salsitasoft.com>",
+  "bugs": {
+    "url": "https://github.com/salsita/prism/issues"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^15.0.7",
+    "@types/recompose": "^0.20.4",
+    "@types/redux": "^3.6.0",
+    "typescript": "^2.1.5"
+  },
+  "peerDependencies": {
+    "react": "^15.0.2 || ^0.14.8"
+  },
+  "dependencies": {
+    "recompose": "^0.22.0"
+  }
+}
