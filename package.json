@@ -1,35 +1,8 @@
 {
-  "name": "redux-elm",
-  "version": "4.0.0",
-  "description": "The Elm Architecture in Redux",
+  "private": true,
   "scripts": {
-    "docs:clean": "rimraf _book",
-    "docs:prepare": "gitbook install",
-    "docs:build": "npm run docs:prepare && gitbook build -g salsita/redux-elm",
-    "docs:watch": "npm run docs:prepare && gitbook serve",
-    "docs:publish": "npm run docs:clean && npm run docs:build && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:salsita/redux-elm gh-pages --force"
+    "postinstall": "lerna bootstrap"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/salsita/prism.git"
-  },
-  "keywords": [
-    "redux",
-    "elm",
-    "flux",
-    "react",
-    "fractal"
-  ],
-  "author": "Tomas Weiss <tomasw@salsitasoft.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/salsita/prism/issues"
-  },
-  "engines": {
-    "node": ">=7.0.0",
-    "npm": ">=3.0.0"
-  },
-  "homepage": "https://github.com/salsita/prism#readme",
   "devDependencies": {
     "lerna": "2.0.0-beta.36"
   }
