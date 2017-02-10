@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { buildReducer, buildMatcher } from 'prism';
+import { buildReducer, buildUnwrapper } from 'prism';
 
 import counterReducer, { CounterState, initialState as counterInitialState } from './counterReducer';
 
@@ -14,18 +14,18 @@ const initialState : CountersPairState = {
 };
 
 export default buildReducer<CountersPairState>({
-  matcher: buildMatcher('Top'),
+  unwrapper: buildUnwrapper('Top'),
   handler: (state, action) => ({
     ...state,
     top: counterReducer(state.top, action)
   })
 }, {
-  matcher: buildMatcher('Bottom'),
+  unwrapper: buildUnwrapper('Bottom'),
   handler: (state, action) => ({
     ...state,
     bottom: counterReducer(state.bottom, action)
   })
 }, {
-  matcher: buildMatcher('ResetCounters'),
+  unwrapper: buildUnwrapper('ResetCounters'),
   handler: (state, action) => initialState
 })(initialState);

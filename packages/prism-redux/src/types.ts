@@ -2,7 +2,7 @@ export interface Action {
   type : string
 };
 
-export interface Matcher {
+export interface Unwrapper {
   (action : Action) : Action | null
 };
 

@@ -1,5 +1,5 @@
-import { Action } from './types';
-import escapeRegexp from './escapeRegexp';
+import { Action } from '../types';
+import escapeRegexp from '../escapeRegexp';
 
 export default (pattern : string) => {
   const regexp = new RegExp(`^${escapeRegexp(pattern)}\\.(.+)`);

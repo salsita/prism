@@ -6,7 +6,8 @@ import { createStore } from 'redux';
 import countersPairReducer from './reducers/countersPairReducer';
 import CountersPair from './components/CountersPair';
 
-const store = createStore(countersPairReducer);
+const storeEnhancer = window['devToolsExtension'] ? window['devToolsExtension']() : value => value;
+const store = createStore(countersPairReducer, storeEnhancer);
 
 render((
   <Provider store={store}>
