@@ -1,11 +1,8 @@
-import { Action } from './buildReducer';
-
-const escape = /[|\\{}()[\]^$+*?.]/g;
-const escapeStringRegexp = (value : string) => value
-  .replace(escape, '\\$&');
+import { Action } from './types';
+import escapeRegexp from './escapeRegexp';
 
 export default (pattern : string) => {
-  const regexp = new RegExp(`^${escapeStringRegexp(pattern)}\\.(.+)`);
+  const regexp = new RegExp(`^${escapeRegexp(pattern)}\\.(.+)`);
 
   return (action : Action) : Action | null => {
     if (action.type === pattern) {
