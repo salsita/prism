@@ -1,4 +1,4 @@
-# [redux-elm](http://salsita.github.io/redux-elm)
+# [redux-elm](http://salsita.github.io/prism)
 
 [![NPM version][npm-image]][npm-url]
 [![Dependencies][dependencies]][npm-url]
@@ -19,9 +19,9 @@ Goal of this project is to solve hard problems **by defining patterns, not imple
 * Immutable application snapshots
 * Easy unit testing
 
-Because `redux-elm` is about Patterns, we have really [thorough documentation](http://salsita.github.io/redux-elm) which guides you to utilize all the ideas that `redux-elm` provides.
+Because `redux-elm` is about Patterns, we have really [thorough documentation](http://salsita.github.io/prism) which guides you to utilize all the ideas that `redux-elm` provides.
 
-See [why the Elm Architecture matters](http://salsita.github.io/redux-elm/).
+See [why the Elm Architecture matters](http://salsita.github.io/prism/).
 
 ## How does it look?
 
@@ -86,9 +86,9 @@ Are you looking for more feature complete boilerplate? There are two boilerplate
 
 Goal of documentation is explaining basic principle of `redux-elm` and this is Composition, it's divided into few chapters to gradually increase amount of complexity. 
 
-1. [Getting Started Tutorial](http://salsita.github.io/redux-elm/getting-started/)
-2. [GifViewer Tutorial](http://salsita.github.io/redux-elm/gif-viewer/)
-3. [Composition](http://salsita.github.io/redux-elm/composition/)
+1. [Getting Started Tutorial](http://salsita.github.io/prism/getting-started/)
+2. [GifViewer Tutorial](http://salsita.github.io/prism/gif-viewer/)
+3. [Composition](http://salsita.github.io/prism/composition/)
 
 First two chapters describes basic principles, while Composition part is the most important part explaining how `redux-elm` helps you building really scalable application. There's also Chapter which explains how to properly [Unit test](http://salsita.github.io/redux-elm/gif-viewer/unit-tests.html) your application.
 
@@ -113,7 +113,7 @@ Flow checks:
 * and many more...
 
 ## Discussion
-Join the [discussion on gitter](https://gitter.im/salsita/redux-elm)
+Join the [discussion on gitter](https://gitter.im/salsita/prism)
 
 [npm-image]: https://img.shields.io/npm/v/redux-elm.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/redux-elm
