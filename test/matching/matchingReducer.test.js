@@ -6,6 +6,7 @@ const Increment = 'Increment';
 const Decrement = 'Decrement';
 const INCREMENT_ACTION = { type: Increment };
 const DECREMENT_ACTION = { type: Decrement };
+const INCREMENT_ACTION_WITH_PARENT = { type: Increment, matching: { id: 'Parent', wrap: t => t } };
 
 const INITIAL_APP_STATE = 42;
 
@@ -49,5 +50,35 @@ describe('MatchingReducerFactory', () => {
     const referenceToMutatedState = counterReducer(state, { type: 'FooBar' });
 
     assert.equal(state, referenceToMutatedState);
+  });
+
+  it('should provide correct action matching id', () => {
+    let matchingResult;
+
+    const reducer = new MatchingReducerFactory(0)
+      .case(Increment, (appState, { matching }) => {
+        matchingResult = matching;
+        return appState + 1;
+      })
+      .toReducer();
+
+    reducer(undefined, INCREMENT_ACTION);
+
+    assert.equal(matchingResult.id, Increment);
+  });
+
+  it('should provide correct action matching id when action parent exists', () => {
+    let matchingResult;
+
+    const reducer = new MatchingReducerFactory(0)
+      .case(Increment, (appState, { matching }) => {
+        matchingResult = matching;
+        return appState + 1;
+      })
+      .toReducer();
+
+    reducer(undefined, INCREMENT_ACTION_WITH_PARENT);
+
+    assert.equal(matchingResult.id, `Parent.${Increment}`);
   });
 });

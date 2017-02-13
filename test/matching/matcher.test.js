@@ -7,6 +7,7 @@ describe('matcher', () => {
     const result = matcher('Foo')({ type: 'Foo.Bar' });
     assert.equal(result.wrap('Qux'), 'Foo.Qux');
     assert.equal(result.unwrappedType, 'Bar');
+    assert.equal(result.id, 'Foo');
   });
 
   it('should not match when action does not start with pattern', () => {
@@ -20,6 +21,7 @@ describe('matcher', () => {
 
     assert.equal(result.unwrappedType, 'Foo');
     assert.equal(result.wrap(pattern), pattern);
+    assert.equal(result.id, 'Foo');
   });
 
   it('should not match the action there\'s no exact match nor unwrapping', () => {
