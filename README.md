@@ -2,7 +2,9 @@
 
 > React / Redux action composition made simple
 
-Given function `f` and function `g` we can simply compose them: `f ∘ g = f(g())`. Function composition in JavaScript is just a matter of calling function and passing the result as input to other function. This thesis can be applied to React Components and Reducers as well, because functional stateless Component is nothing but function of its props (state of the application) and Reducer is just another plain JavaScript function. Can we compose actions?
+Given function `f` and function `g` we can simply compose them: `f ∘ g = f(g())`.
+
+Function composition in JavaScript is just a matter of calling function and passing the result as input to other function. This thesis can be applied to [React Components](https://facebook.github.io/react/docs/react-component.html) and [Redux Reducers](http://redux.js.org/docs/basics/Reducers.html) as well, because functional stateless Component is nothing but function of its props (state of the application) and Reducer is just another plain JavaScript function. Can we compose [actions](http://redux.js.org/docs/basics/Actions.html)?
 
 Yes we can! Let's just call it action wrapping. Because it's the same principle like you would be wrapping a box inside a box, the last box in the hierarchy contains some object and that's the Action. We can just wrap action type to keep things simple and because action type is just a string, it's as easy as function composition.
 
