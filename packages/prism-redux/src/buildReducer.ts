@@ -7,8 +7,13 @@ export interface UnwrapperHandlerPair<S> {
 
 export default <S>(...handlers : Array<UnwrapperHandlerPair<S>>) =>
   (initialState : S) =>
-  (state : S = initialState, action : Action) : S =>
+  (state = initialState, action : Action) : S =>
     handlers
     .map(({ unwrapper, handler }) => ({ unwrappedAction: unwrapper(action), handler }))
-    .filter(({ unwrappedAction }) => !!unwrappedAction)
-    .reduce((currentState, { unwrappedAction, handler }) => handler(currentState, unwrappedAction!), state);
+    .reduce((currentState, { unwrappedAction, handler }) => {
+      if (unwrappedAction) {
+        return handler(currentState, unwrappedAction);
+      } else {
+        return currentState;
+      }
+    }, state);

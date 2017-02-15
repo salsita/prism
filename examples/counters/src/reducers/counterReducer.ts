@@ -8,7 +8,7 @@ export const initialState : CounterState = {
   value: 0
 };
 
-export default (state : CounterState = initialState, { type } : Action) : CounterState => {
+export default (state = initialState, { type } : Action) : CounterState => {
   switch (type) {
     case 'Increment':
       return {
