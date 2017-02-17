@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { enhanceComponent } from 'prism';
 
 import { EventHandler } from '../commonTypes';
 import { CounterState } from '../reducers/counterReducer';
@@ -34,7 +33,7 @@ const mapDispatchToProps = (dispatch : Dispatch<CounterState>) : CounterPropsFro
   onDecrement: () => dispatch({ type: 'Decrement' })
 });
 
-export default enhanceComponent<CounterState>(connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Counter));
+)(Counter);

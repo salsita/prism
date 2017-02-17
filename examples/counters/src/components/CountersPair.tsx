@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import { enhanceComponent } from 'prism';
 
 import Counter from './Counter';
 import { EventHandler } from '../commonTypes';
@@ -17,15 +18,17 @@ interface CountersPairProps {
   onReset: EventHandler
 };
 
+const InstantiableCounter = enhanceComponent<CountersPairState, CounterState>(Counter);
+
 const CountersPair = ({ onReset } : CountersPairProps)  => (
   <div>
     <span>Top Counter</span>
-    <Counter
+    <InstantiableCounter
       selector={topCounterSelector}
       wrapper={topCounterWrapper}
     />
     <span>Bottom Counter</span>
-    <Counter
+    <InstantiableCounter
       selector={bottomCounterSelector}
       wrapper={bottomCounterWrapper}
     />
