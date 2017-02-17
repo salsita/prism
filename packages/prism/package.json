@@ -1,0 +1,23 @@
+{
+  "name": "prism",
+  "version": "0.1.0",
+  "description": "Prism",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "build:commonjs": "tsc -p ./ --module commonjs --outDir lib",
+    "build": "npm run build:commonjs"
+  },
+  "author": "Tomas Weiss <tomasw@salsitasoft.com>",
+  "bugs": {
+    "url": "https://github.com/salsita/prism/issues"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^2.1.5"
+  },
+  "dependencies": {
+    "prism-react": "^0.1.0",
+    "prism-redux": "^0.1.0"
+  }
+}
