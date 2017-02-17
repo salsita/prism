@@ -1,7 +1,7 @@
 {
   "name": "prism",
   "version": "0.1.0",
-  "description": "Prism",
+  "description": "React / Redux action composition made simple",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {

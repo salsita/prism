@@ -22,6 +22,10 @@ interface SuperModel {
   nested: NestedModel
 };
 
+interface NestTestingModel {
+  foo: SuperModel
+};
+
 interface Action {
   type: string
 };
@@ -29,13 +33,13 @@ interface Action {
 const HelloWorld = ({ name } : HelloWorldProps) => <div>Hello {name}!</div>;
 const FooBar = ({ onClick, name } : FooBarProps) => <button onClick={onClick}>{name}</button>;
 
-const EnhancedHelloWorld = enhanceComponent<NestedModel>(connect(
+const EnhancedHelloWorld = enhanceComponent<SuperModel, NestedModel>(connect(
   state => ({
     name: state.name
   })
 )(HelloWorld));
 
-const EnhancedFooBar = enhanceComponent(connect(
+const EnhancedFooBar = enhanceComponent<SuperModel, NestedModel>(connect(
   ({ name }) => ({ name }),
   {
     onClick: () => ({ type: 'Bar' })
@@ -72,18 +76,28 @@ describe('enhanceComponent', () => {
   });
 
   it('should allow wrapping all the outgoing actions in redux store context', () => {
-    const store = createStore((value : number = 0, { type } : Action) => {
+    const store = createStore((state : SuperModel = {
+      nested: {
+        name: ''
+      }
+    }, { type } : Action) => {
       if (type === 'Foo.Bar') {
-        return 42;
+        return {
+          ...state,
+          nested: {
+            ...state.nested,
+            name: '42'
+          }
+        };
       } else {
-        return value;
+        return state;
       }
     });
 
     const component = mount(
       <Provider store={store}>
         <EnhancedFooBar
-          selector={value => value}
+          selector={value => value.nested}
           wrapper={type => `Foo.${type}`}
         />
       </Provider>
@@ -91,11 +105,15 @@ describe('enhanceComponent', () => {
 
     component.find('button').simulate('click');
 
-    expect(store.getState()).toEqual(42);
+    expect(store.getState()).toEqual({
+      nested: {
+        name: '42'
+      }
+    });
   });
 
   it('should allow nested wrapping & selectors', () => {
-    const appState = {
+    const appState : NestTestingModel = {
       foo: {
         nested: {
           name: 'Tomas Weiss'
@@ -126,7 +144,7 @@ describe('enhanceComponent', () => {
       />
     );
 
-    const EnhancedRoot = enhanceComponent(connect(
+    const EnhancedRoot = enhanceComponent<NestTestingModel, SuperModel>(connect(
       state => state
     )(Root));
 

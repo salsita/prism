@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "description": "Prism bindings for Redux",
   "main": "lib/index.js",
-  "module": "es/index.js",
-  "jsnext:main": "es/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
     "build:commonjs": "tsc -p ./ --module commonjs --outDir lib",
