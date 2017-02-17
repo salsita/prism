@@ -2,7 +2,8 @@
   "compilerOptions": {
     "declaration": true,
     "strictNullChecks": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "jsx": "react"
   },
   "include": [
     "src/**/*"

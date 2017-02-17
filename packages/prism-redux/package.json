@@ -8,7 +8,9 @@
   "typings": "lib/index.d.ts",
   "scripts": {
     "build:commonjs": "tsc -p ./ --module commonjs --outDir lib",
-    "build": "npm run build:commonjs"
+    "build": "npm run build:commonjs",
+    "test": "jest",
+    "test:watch": "npm run test -- --watch"
   },
   "author": "Tomas Weiss <tomasw@salsitasoft.com>",
   "bugs": {
@@ -16,6 +18,19 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "jest": "^18.1.0",
+    "ts-jest": "^18.0.3",
     "typescript": "^2.1.5"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
   }
 }
