@@ -47,7 +47,7 @@ const RootComponent = () => (
 );
 ```
 
-But what if we want *two Counters*?
+But what if we want **two Counters**?
 
 ```js
 const RootComponent = () => (
