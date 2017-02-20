@@ -4,17 +4,26 @@ describe('buildParameterizedUnwrapper', () => {
   it('should provide unwrapped action and parameter', () => {
     const unwrapper = buildParameterizedUnwrapper('Foo');
 
-    const { type, args: { param }} = unwrapper({ type: 'Foo.Parameter.Bar' });
-    expect(type).toBe('Bar');
-    expect(param).toBe('Parameter');
+    const action = unwrapper({ type: 'Foo.Parameter.Bar' });
+
+    if (action) {
+      expect(action.type).toBe('Bar');
+      expect(action.args.param).toBe('Parameter');
+    } else {
+      throw new Error;
+    }
   });
 
   it('should allow unwrapped action nesting', () => {
     const unwrapper = buildParameterizedUnwrapper('Foo');
-    const  { type, args: { param }} = unwrapper({ type: 'Foo.Parameter.Bar.Baz' });
+    const action = unwrapper({ type: 'Foo.Parameter.Bar.Baz' });
 
-    expect(type).toBe('Bar.Baz');
-    expect(param).toBe('Parameter');
+    if (action) {
+      expect(action.type).toBe('Bar.Baz');
+      expect(action.args.param).toBe('Parameter');
+    } else {
+      throw new Error;
+    }
   });
 
   it('should not match when action does not start with pattern', () => {

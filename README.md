@@ -26,6 +26,8 @@ Imagine you've just implemented your awesome Calendar widget, but then comes a n
 
 `prism` ensures that these points are a breeze. Both of the points in particular are nothing but function composition.
 
+`prism` is useful when you need to instantiate or isolate a UI component, where the UI component is defined as pair of View (React component) and correpsonding State (Redux Reducer).
+
 ## Installation & Usage
 You can install `prism` via npm.
 
@@ -43,7 +45,7 @@ For now, there's just one example showing action composition in action:
 
 ## Inspiration
 
-This project was previously called `redux-elm` and you should still be able to see how those ideas evoled over time in git history. So significiant amount of inspiration was drawn from [The Elm Architecture](https://guide.elm-lang.org/architecture/)
+This project was previously called `redux-elm` and you should still be able to see how those ideas evoled over time in git history. So significiant amount of inspiration has been drawn from [The Elm Architecture](https://guide.elm-lang.org/architecture/)
 
 ## Discussion
 Join the [discussion on gitter](https://gitter.im/salsita/prism)

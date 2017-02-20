@@ -13,7 +13,7 @@ const initialState : CountersPairState = {
   bottom: counterInitialState
 };
 
-export default buildReducer<CountersPairState>({
+export default buildReducer([{
   unwrapper: buildUnwrapper('Top'),
   handler: (state, action) => ({
     ...state,
@@ -28,4 +28,4 @@ export default buildReducer<CountersPairState>({
 }, {
   unwrapper: buildUnwrapper('ResetCounters'),
   handler: (state, action) => initialState
-})(initialState);
+}], initialState);

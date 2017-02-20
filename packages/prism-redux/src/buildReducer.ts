@@ -5,8 +5,7 @@ export interface UnwrapperHandlerPair<S> {
   handler: Handler<S>
 };
 
-export default <S>(...handlers : Array<UnwrapperHandlerPair<S>>) =>
-  (initialState : S) =>
+export default <S>(handlers : Array<UnwrapperHandlerPair<S>>, initialState : S) =>
   (state = initialState, action : Action) : S =>
     handlers
     .map(({ unwrapper, handler }) => ({ unwrappedAction: unwrapper(action), handler }))

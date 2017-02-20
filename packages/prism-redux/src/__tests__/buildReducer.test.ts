@@ -1,4 +1,4 @@
-import { Action } from '../../lib/types';
+import { Action } from '../types';
 import buildReducer from '../buildReducer';
 
 const staticUnwrapper = (action : Action) => action;
@@ -7,10 +7,10 @@ describe('buildReducer', () => {
   it('should return an initial state when undefined state is provided', () => {
     const initialState = 42;
 
-    const reducer = buildReducer<number>({
+    const reducer = buildReducer([{
       unwrapper: staticUnwrapper,
       handler: state => state
-    })(initialState);
+    }], initialState);
 
     expect(reducer(undefined, { type: 'foobar' }))
       .toBe(initialState);
@@ -19,10 +19,10 @@ describe('buildReducer', () => {
   it('should provide unwrapped action as argument', () => {
     const actionType = 'UNWRAPPED';
 
-    const reducer = buildReducer<string>({
+    const reducer = buildReducer([{
       unwrapper: action => ({ type: actionType}),
       handler: ((state, { type }) => type)
-    })('');
+    }], '');
 
     expect(reducer(undefined, { type: 'bazbar' })).toBe(actionType);
   });
@@ -33,7 +33,7 @@ describe('buildReducer', () => {
 
     const initialState = 42;
 
-    const reducer = buildReducer<number>({
+    const reducer = buildReducer([{
       unwrapper: action => {
         if (action.type === matchingActionType) {
           return action;
@@ -42,7 +42,7 @@ describe('buildReducer', () => {
         }
       },
       handler: () => 43
-    })(initialState);
+    }], initialState);
 
     expect(reducer(undefined, { type: nonMatchingActionType })).toBe(initialState);
     expect(reducer(undefined, { type: matchingActionType })).toBe(43);
@@ -51,10 +51,10 @@ describe('buildReducer', () => {
   it('should return original reference to the state when no action is handled', () => {
     const state = {};
 
-    const reducer = buildReducer({
+    const reducer = buildReducer([{
       unwrapper: action => null,
       handler: state => ({ ...state })
-    })(state);
+    }], state);
 
     expect(reducer(undefined, { type: 'foo' })).toBe(state);
   })

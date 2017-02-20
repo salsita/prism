@@ -6,7 +6,7 @@
   "typings": "lib/index.d.ts",
   "scripts": {
     "build:commonjs": "tsc -p ./ --module commonjs --outDir lib",
-    "build": "npm run build:commonjs",
+    "build": "rm -rf lib && npm run build:commonjs",
     "test": "jest",
     "test:watch": "npm run test -- --watch"
   },
@@ -16,6 +16,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/jest": "^18.1.1",
     "jest": "^18.1.0",
     "ts-jest": "^18.0.3",
     "typescript": "^2.1.5"
@@ -24,7 +25,7 @@
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "testRegex": "(src/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
       "ts",
       "tsx",

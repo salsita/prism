@@ -1,3 +1,4 @@
+import { Action } from '../../types';
 import buildUnwrapper from '../buildUnwrapper';
 
 describe('buildUnwrapper', () => {
@@ -28,6 +29,6 @@ describe('buildUnwrapper', () => {
   it('should pass through the content of the action when matched', () => {
     const unwrap = buildUnwrapper('Foo');
 
-    expect(unwrap({ type: 'Foo.Bar', payload: 42 })).toEqual({ type: 'Bar', payload: 42 });
+    expect(unwrap(<Action>{ type: 'Foo.Bar' as string, payload: 42 })).toEqual({ type: 'Bar', payload: 42 });
   });
 });
