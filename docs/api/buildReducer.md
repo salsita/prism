@@ -6,7 +6,7 @@ Creates a Redux compatible [Reducer](http://redux.js.org/docs/basics/Reducers.ht
 
 1. `handlers` *(Array<UnwrapperHandlerPair>)*: An array of `UnwrapperHandlerPair` which is just an object consisting of two fields: `unwrapper` and `handler`
 
-2. [`initialState`] *(any)*: Initial state to be used as a default value for the reducer.
+2. `initialState` *(any)*: Initial state to be used as a default value for the reducer.
 
 #### Returns
 
