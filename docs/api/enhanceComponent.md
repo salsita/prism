@@ -1,6 +1,6 @@
 # `enhanceComponent(Component)`
 
-Enhances Component so that it's possible to automatically wrap all the dispatched actions inside the component and state is automatically selected so that `connected` state is locally scoped.
+Enhances Component so that it's possible to automatically wrap all the dispatched actions inside the component and state is automatically unwrapped so that `connected` app state is locally scoped.
 
 #### Arguments
 
@@ -57,5 +57,5 @@ const RootComponent = () => (
       wrapper={type => `Alice.${type}`}
     />
   </div>
-)
+);
 ```
