@@ -31,4 +31,9 @@ describe('buildUnwrapper', () => {
 
     expect(unwrap(<Action>{ type: 'Foo.Bar' as string, payload: 42 })).toEqual({ type: 'Bar', payload: 42 });
   });
+
+  it('should be able to use as parameterized unwrapper', () => {
+    const unwrap = buildUnwrapper('Foo');
+    expect(unwrap({ type: 'Foo.1.Bar' })).toEqual({ type: '1.Bar' });
+  })
 });
