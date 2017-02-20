@@ -17,6 +17,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/enzyme": "^2.7.4",
+    "@types/jest": "^18.1.1",
     "@types/react": "^15.0.7",
     "@types/react-redux": "^4.4.36",
     "@types/recompose": "^0.20.4",
@@ -41,7 +42,7 @@
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "testRegex": "(src/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
       "ts",
       "tsx",
