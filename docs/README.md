@@ -1,4 +1,4 @@
-# prism
+# prism fundamentals
 
 The main goal of this toolset is to easily allow user to isolate `react-redux` components. Imagine you have a counter with following `reducer` and React `Component`:
 
@@ -47,7 +47,7 @@ const RootComponent = () => (
 );
 ```
 
-But what if we want two Counters?
+But what if we want *two Counters*?
 
 ```js
 const RootComponent = () => (
