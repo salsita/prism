@@ -66,4 +66,15 @@ Ooops, this simply won't work. That's where `prism` comes to play for the rescue
 
 `prism` utilizes a concept called action wrapping in order to achieve isolation of components. So how does it work?
 
-Imagine action of type `Increment` if you want to constrain the action to particular Component instance you can simply "wrap" it with string identifying the instance, for example: `TopCounter.Increment`.
+Imagine action of type `Increment` if you want to constrain the action to particular Component instance you can simply "wrap" it with string identifying the instance, for example: `TopCounter.Increment`. This mechanism is called action wrapping, because you technically wrap action inside another. Which is pretty much the same like:
+
+```js
+{
+  type: 'TopCounter',
+  payload: {
+    type: 'Increment',
+  }
+}
+```
+
+The payload of action is another action.
