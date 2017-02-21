@@ -2,9 +2,16 @@
   "private": true,
   "scripts": {
     "postinstall": "lerna bootstrap",
-    "test": "cd packages/prism-react && npm run test && cd ../prism-redux && npm run test"
+    "test": "cd packages/prism-react && npm run test && cd ../prism-redux && npm run test",
+    "docs:clean": "rimraf _book",
+    "docs:prepare": "gitbook install",
+    "docs:build": "npm run docs:prepare && gitbook build -g salsita/prism",
+    "docs:watch": "npm run docs:prepare && gitbook serve",
+    "docs:publish": "npm run docs:clean && npm run docs:build && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:salsita/prism gh-pages --force"
   },
   "devDependencies": {
-    "lerna": "2.0.0-beta.36"
+    "gitbook-cli": "^2.3.0",
+    "lerna": "2.0.0-beta.36",
+    "rimraf": "^2.6.0"
   }
 }
