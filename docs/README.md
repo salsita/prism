@@ -79,3 +79,7 @@ Imagine action of type `Increment` if you want to constrain the action to partic
 
 Payload of action is another (nested) action.
 
+`Prism` provides a function called [`enhanceComponent`](./api/enhanceComponent.md) which can be used to wrap [Redux Container Component](http://redux.js.org/docs/basics/UsageWithReact.html#implementing-container-components). This Component will be enhanced so that two more possible props are mandatory for the Component.
+
+1. `selector` - a function which selects a part of application state
+2. `wrapper` - a function which defines how all the dispatched actions within the component should be wrapped
