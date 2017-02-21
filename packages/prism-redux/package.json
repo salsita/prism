@@ -8,7 +8,11 @@
     "build:commonjs": "tsc -p ./ --module commonjs --outDir lib",
     "build": "rm -rf lib && npm run build:commonjs",
     "test": "jest",
-    "test:watch": "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch",
+    "preversion": "npm test",
+    "version": "npm run build",
+    "postversion": "git push && git push --tags",
+    "prepublish": "npm run build"
   },
   "author": "Tomas Weiss <tomasw@salsitasoft.com>",
   "bugs": {
