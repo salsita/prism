@@ -130,18 +130,35 @@ OK, there is the other side of the coin which is called Action Unwrapping. All t
 
 `buildReducer` function accepts a list of `UnwrapperHandlerPair` the pair is actually an object containing two keys: `unwrapper` and `handler`.
 
-```js
-import { buildUnwrapper } from 'prism';
+`unwrapper` is just a function which takes an action as parameter and returns either unwrapped action or `null` when no action is matched.
 
-// UnwrapperHandlerPair is just a plain old JavaScript object
-// prism provides a helper function to build simple unwrapper
-const unwrapperHandlerPair = {
+```js
+import { buildReducer } from 'prism';
+
+// Obviously, this unwrapper is more of Matcher rather than
+// unwrapper because it does not unwrap the action
+// it only matches it
+const buildUnwrapper = type => action => {
+  if (action.type === type) {
+    return action;
+  } else {
+    return null;
+  }
+};
+
+const reducer = buildReducer([{
   unwrapper: buildUnwrapper('Increment'),
   handler: (state, action) => state + 1
-};
+}, {
+  unwrapper: buildUnwrapper('Decrement'),
+  handler: (state, action) => state - 1
+}], 0); // Second argument is initial state
 ```
 
-`Unwrapper` is responsible for matching the action and when the action is matched it can potentially unwrap it as well. For example `buildUnwrapper('Increment')` creates an unwrapper which matches either action starting with `Increment.` prefix and then it provides unwrapped action to `handler` function, or it matches action `Increment` directly therefore no action is unwrappped and original `Increment` action is passed to the handler.
+So far, our example was just showing how to match action, but what if we need to unwrap it as well? You can always write your own unwrapper (it's really easy!) or there's one especially useful built in unwrapper provided by `prism`. Usage is simple, just import a function called [`buildUnwrapper`](./api/buildUnwrapper.md).
 
+```js
+
+```
 
 
