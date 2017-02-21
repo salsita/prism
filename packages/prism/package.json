@@ -20,7 +20,11 @@
     "typescript": "^2.1.5"
   },
   "dependencies": {
-    "prism-react": "^1.0.0",
-    "prism-redux": "^1.0.0"
-  }
+    "prism-react": "^1.0.1",
+    "prism-redux": "^1.0.1"
+  },
+  "files": [
+    "lib",
+    "src"
+  ]
 }
