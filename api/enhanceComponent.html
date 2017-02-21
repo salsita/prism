@@ -1,0 +1,360 @@
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>enhanceComponent · Table of Contents</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Enhances Component so that it&#39;s possible to automatically wrap all the dispatched actions inside the component and state is automatically unwrapped so that">
+        <meta name="generator" content="GitBook 3.0.0-pre.5">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="buildReducer.html" />
+    
+    
+    <link rel="prev" href="./" />
+    
+
+    </head>
+    <body>
+        
+<div class="book"
+    data-level="2.1"
+    data-chapter-title="enhanceComponent"
+    data-filepath="api/enhanceComponent.md"
+    data-basepath=".."
+    data-revision="Tue Feb 21 2017 14:50:22 GMT+0100 (CET)"
+    data-innerlanguage="">
+    
+
+<div class="book-summary">
+    
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+
+            
+
+
+            
+            
+    
+        <li class="chapter " data-level="0" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="../fundamentals/">
+            
+                <a href="../fundamentals/">
+            
+                    
+                        <b>1.</b>
+                    
+                    Fundamentals
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1" data-path="../fundamentals/actionWrapping.html">
+            
+                <a href="../fundamentals/actionWrapping.html">
+            
+                    
+                        <b>1.1.</b>
+                    
+                    Action Wrapping
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../fundamentals/actionUnwrapping.html">
+            
+                <a href="../fundamentals/actionUnwrapping.html">
+            
+                    
+                        <b>1.2.</b>
+                    
+                    Action Unwrapping
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                        <b>2.</b>
+                    
+                    API Reference
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="2.1" data-path="enhanceComponent.html">
+            
+                <a href="enhanceComponent.html">
+            
+                    
+                        <b>2.1.</b>
+                    
+                    enhanceComponent
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="buildReducer.html">
+            
+                <a href="buildReducer.html">
+            
+                    
+                        <b>2.2.</b>
+                    
+                    buildReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="buildUnwrapper.html">
+            
+                <a href="buildUnwrapper.html">
+            
+                    
+                        <b>2.3.</b>
+                    
+                    buildUnwrapper
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            <li class="divider"></li>
+            
+
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+</div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >enhanceComponent</a>
+    </h1>
+</div>
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            <section class="normal markdown-section">
+                            
+                            <h1 id="enhancecomponentcomponent"><code>enhanceComponent(Component)</code></h1>
+<p>Enhances Component so that it&apos;s possible to automatically wrap all the dispatched actions inside the component and state is automatically unwrapped so that <code>connected</code> app state is locally scoped.</p>
+<h4 id="arguments">Arguments</h4>
+<ol>
+<li><code>React Component</code> <em>(ComponentClass)</em>: Connected React Component.</li>
+</ol>
+<h4 id="returns">Returns</h4>
+<p><code>ReactComponent</code> <em>(ComponentClass)</em>: Enhanced Component, which is capable of action wrapping &amp; state unwrapping using selector.</p>
+<h4 id="example">Example</h4>
+<pre><code class="lang-js"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>;
+<span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react-redux&apos;</span>;
+<span class="hljs-keyword">import</span> { enhanceComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prism&apos;</span>;
+
+<span class="hljs-comment">// First we create plain old React dumb component</span>
+<span class="hljs-keyword">const</span> HelloWorldComponent = ({ name }) =&gt; <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Hello {name}<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span></span>;
+
+<span class="hljs-comment">// Now let&apos;s make it smart by connecting it with the application state</span>
+<span class="hljs-keyword">const</span> ConnectedHelloWorldComponent = connect(
+  state =&gt; ({
+    name: state.bar.name
+  })
+)(HelloWorldComponent);
+
+<span class="hljs-comment">// Wrap it to Prism enhanced component so that we can instantiate the component by providing</span>
+<span class="hljs-comment">// selector and wrapper in props</span>
+<span class="hljs-keyword">const</span> PrismEnhancedConnectedHelloWorldComponent = enhanceComponent(ConnectedHelloWorldComponent);
+
+<span class="hljs-comment">// Usage:</span>
+<span class="hljs-comment">// Let&apos;s suppose the app state has following shape:</span>
+<span class="hljs-comment">// {</span>
+<span class="hljs-comment">//  john: {</span>
+<span class="hljs-comment">//    bar: {</span>
+<span class="hljs-comment">//      name: &apos;John Doe&apos;</span>
+<span class="hljs-comment">//    }</span>
+<span class="hljs-comment">//  },</span>
+<span class="hljs-comment">//  alice; {</span>
+<span class="hljs-comment">//    bar: {</span>
+<span class="hljs-comment">//      name: &apos;Alice Doe&apos;</span>
+<span class="hljs-comment">//    }</span>
+<span class="hljs-comment">//  }</span>
+<span class="hljs-comment">// }</span>
+
+<span class="hljs-keyword">const</span> RootComponent = () =&gt; (
+  &lt;div&gt;
+    &lt;PrismEnhancedConnectedHelloWorldComponent
+      selector={state =&gt; state.john}
+      wrapper={type =&gt; `John.${type}`}
+    /&gt;
+    &lt;PrismEnhancedConnectedHelloWorldComponent
+      selector={state =&gt; state.alice}
+      wrapper={type =&gt; `Alice.${type}`}
+    /&gt;
+  &lt;/div&gt;
+);
+</code></pre>
+
+                            
+                            </section>
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="./" class="navigation navigation-prev " aria-label="Previous page: API Reference">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="buildReducer.html" class="navigation navigation-next " aria-label="Next page: buildReducer">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+</div>
+
+        
+    <script src="../gitbook/app.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/buttons.js"></script>
+        
+    
+    <script>
+    require(["gitbook"], function(gitbook) {
+        gitbook.start({"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}}});
+    });
+    </script>
+
+    </body>
+</html>

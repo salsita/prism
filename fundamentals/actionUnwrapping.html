@@ -1,0 +1,378 @@
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>Action Unwrapping · Table of Contents</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="OK, there is the other side of the coin which is called Action Unwrapping. All the actions are already wrapped and using selectors we assume that our state">
+        <meta name="generator" content="GitBook 3.0.0-pre.5">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../api/" />
+    
+    
+    <link rel="prev" href="actionWrapping.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book"
+    data-level="1.2"
+    data-chapter-title="Action Unwrapping"
+    data-filepath="fundamentals/actionUnwrapping.md"
+    data-basepath=".."
+    data-revision="Tue Feb 21 2017 14:50:22 GMT+0100 (CET)"
+    data-innerlanguage="">
+    
+
+<div class="book-summary">
+    
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+
+            
+
+
+            
+            
+    
+        <li class="chapter " data-level="0" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                        <b>1.</b>
+                    
+                    Fundamentals
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1" data-path="actionWrapping.html">
+            
+                <a href="actionWrapping.html">
+            
+                    
+                        <b>1.1.</b>
+                    
+                    Action Wrapping
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2" data-path="actionUnwrapping.html">
+            
+                <a href="actionUnwrapping.html">
+            
+                    
+                        <b>1.2.</b>
+                    
+                    Action Unwrapping
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="../api/">
+            
+                <a href="../api/">
+            
+                    
+                        <b>2.</b>
+                    
+                    API Reference
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1" data-path="../api/enhanceComponent.html">
+            
+                <a href="../api/enhanceComponent.html">
+            
+                    
+                        <b>2.1.</b>
+                    
+                    enhanceComponent
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="../api/buildReducer.html">
+            
+                <a href="../api/buildReducer.html">
+            
+                    
+                        <b>2.2.</b>
+                    
+                    buildReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="../api/buildUnwrapper.html">
+            
+                <a href="../api/buildUnwrapper.html">
+            
+                    
+                        <b>2.3.</b>
+                    
+                    buildUnwrapper
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            <li class="divider"></li>
+            
+
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+</div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Action Unwrapping</a>
+    </h1>
+</div>
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            <section class="normal markdown-section">
+                            
+                            <h2 id="action-unwrapping">Action Unwrapping</h2>
+<p>OK, there is the other side of the coin which is called Action Unwrapping. All the actions are already wrapped and using selectors we assume that our state is isolated, but now we need to be able to unwrap the action in reducer and mutate corresponding state slice. There&apos;s another helper function called <a href="./api/buildReducer.md"><code>buildReducer</code></a> for building a reducer which can handle wrapped actions.</p>
+<p><code>buildReducer</code> function accepts a list of <code>UnwrapperHandlerPair</code> the pair is actually an object containing two keys: <code>unwrapper</code> and <code>handler</code>.</p>
+<p><code>unwrapper</code> is just a function which takes an action as parameter and returns either unwrapped action or <code>null</code> when no action is matched. <code>handler</code> is quite self-explanatory.</p>
+<pre><code class="lang-js"><span class="hljs-keyword">import</span> { buildReducer } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prism&apos;</span>;
+
+<span class="hljs-comment">// Obviously, this unwrapper is more of Matcher rather than</span>
+<span class="hljs-comment">// unwrapper because it does not unwrap the action</span>
+<span class="hljs-comment">// it only matches it</span>
+<span class="hljs-keyword">const</span> buildMatchingUnwrapper = type =&gt; action =&gt; {
+  <span class="hljs-keyword">if</span> (action.type === type) {
+    <span class="hljs-keyword">return</span> action;
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+  }
+};
+
+<span class="hljs-keyword">const</span> reducer = buildReducer([{
+  unwrapper: buildMatchingUnwrapper(<span class="hljs-string">&apos;Increment&apos;</span>),
+  handler: (state, action) =&gt; state + <span class="hljs-number">1</span>
+}, {
+  unwrapper: buildMatchingUnwrapper(<span class="hljs-string">&apos;Decrement&apos;</span>),
+  handler: (state, action) =&gt; state - <span class="hljs-number">1</span>
+}], <span class="hljs-number">0</span>); <span class="hljs-comment">// Second argument is initial state</span>
+</code></pre>
+<p>So far, our example was just showing how to match action, but what if we need to unwrap it as well? Well it&apos;s just a matter of returning modified unwrapped action:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">import</span> { buildReducer } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prism&apos;</span>;
+
+<span class="hljs-keyword">const</span> buildStartsWithUnwrapper = prefix =&gt; action =&gt; {
+  <span class="hljs-keyword">if</span> (action.type.startsWith(prefix)) {
+    <span class="hljs-keyword">return</span> {
+      ...action,
+      type: action.type.replace(<span class="hljs-string">`<span class="hljs-subst">${prefix}</span>.`</span>, <span class="hljs-string">&apos;&apos;</span>)
+    };
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+  }
+};
+
+<span class="hljs-keyword">const</span> reducer = buildReducer([{
+  unwrapper: buildStartsWithUnwrapper(<span class="hljs-string">&apos;TopCounter&apos;</span>),
+  handler: (state, action) =&gt; ({
+    ...state,
+    topCounter: counterReducer(state.topCounter, action) <span class="hljs-comment">// Action here is already unwrapped, due to unwrapper</span>
+  })
+}, {
+  unwrapper: buildStartsWithUnwrapper(<span class="hljs-string">&apos;BottomCounter&apos;</span>),
+  handler: (state, action) =&gt; ({
+    ...state,
+    bottomCounter: counterReducer(state.bottomCounter, action) <span class="hljs-comment">// Spot the difference in provided state slice</span>
+  })
+}], {topCoutner: <span class="hljs-number">0</span>, bottomCounter: <span class="hljs-number">0</span>});
+</code></pre>
+<p>In most cases you need a combination of <code>startsWithUnwrapper</code> and <code>matchingUnwrapper</code>, the unwrapper either directly matches the action or just simply unwraps. <code>Prism</code> ships with built in <code>unwrapper</code> which is doing exactly that. Usage is trivial, just import <a href="./api/buildUpdater.md"><code>buildUpdater</code></a>:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">import</span> { buildUnwrapper, buildReducer } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prism&apos;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> buildReducer([{
+  unwrapper: buildUnwrapper(<span class="hljs-string">&apos;Top&apos;</span>), <span class="hljs-comment">// Unwraps Top prefixed actions</span>
+  handler: (state, action) =&gt; ({
+    ...state,
+    top: counterReducer(state.top, action)
+  })
+}, {
+  unwrapper: buildUnwrapper(<span class="hljs-string">&apos;Bottom&apos;</span>), <span class="hljs-comment">// Unwraps Bottom prefixed actions</span>
+  handler: (state, action) =&gt; ({
+    ...state,
+    bottom: counterReducer(state.bottom, action)
+  })
+}, {
+  unwrapper: buildUnwrapper(<span class="hljs-string">&apos;ResetCounters&apos;</span>), <span class="hljs-comment">// Direct match for ResetCounters action</span>
+  handler: (state, action) =&gt; initialState
+}], initialState);
+</code></pre>
+
+                            
+                            </section>
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="actionWrapping.html" class="navigation navigation-prev " aria-label="Previous page: Action Wrapping">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../api/" class="navigation navigation-next " aria-label="Next page: API Reference">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+</div>
+
+        
+    <script src="../gitbook/app.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/buttons.js"></script>
+        
+    
+    <script>
+    require(["gitbook"], function(gitbook) {
+        gitbook.start({"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}}});
+    });
+    </script>
+
+    </body>
+</html>

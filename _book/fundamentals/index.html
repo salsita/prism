@@ -1,0 +1,365 @@
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>Fundamentals · Table of Contents</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="The main goal of this toolset is to easily allow user to isolate react-redux components. Imagine you have a Counter with following reducer and React Compon">
+        <meta name="generator" content="GitBook 3.0.0-pre.5">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="actionWrapping.html" />
+    
+    
+    <link rel="prev" href="../" />
+    
+
+    </head>
+    <body>
+        
+<div class="book"
+    data-level="1"
+    data-chapter-title="Fundamentals"
+    data-filepath="fundamentals/README.md"
+    data-basepath=".."
+    data-revision="Tue Feb 21 2017 13:52:25 GMT+0100 (CET)"
+    data-innerlanguage="">
+    
+
+<div class="book-summary">
+    
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+
+            
+
+
+            
+            
+    
+        <li class="chapter " data-level="0" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                        <b>1.</b>
+                    
+                    Fundamentals
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1" data-path="actionWrapping.html">
+            
+                <a href="actionWrapping.html">
+            
+                    
+                        <b>1.1.</b>
+                    
+                    Action Wrapping
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="actionUnwrapping.html">
+            
+                <a href="actionUnwrapping.html">
+            
+                    
+                        <b>1.2.</b>
+                    
+                    Action Unwrapping
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="../api/">
+            
+                <a href="../api/">
+            
+                    
+                        <b>2.</b>
+                    
+                    API Reference
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1" data-path="../api/enhanceComponent.html">
+            
+                <a href="../api/enhanceComponent.html">
+            
+                    
+                        <b>2.1.</b>
+                    
+                    enhanceComponent
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="../api/buildReducer.html">
+            
+                <a href="../api/buildReducer.html">
+            
+                    
+                        <b>2.2.</b>
+                    
+                    buildReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="../api/buildUnwrapper.html">
+            
+                <a href="../api/buildUnwrapper.html">
+            
+                    
+                        <b>2.3.</b>
+                    
+                    buildUnwrapper
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            <li class="divider"></li>
+            
+
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+</div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Fundamentals</a>
+    </h1>
+</div>
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            <section class="normal markdown-section">
+                            
+                            <h1 id="prism-fundamentals">prism fundamentals</h1>
+<p>The main goal of this toolset is to easily allow user to isolate <a href="https://github.com/reactjs/react-redux" target="_blank"><code>react-redux</code></a> components. Imagine you have a Counter with following <a href="https://github.com/reactjs/redux/blob/master/docs/basics/Reducers.md" target="_blank"><code>reducer</code></a> and <a href="https://facebook.github.io/react/docs/react-component.html" target="_blank">React <code>Component</code></a>:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>;
+<span class="hljs-keyword">import</span> { connect, Provider } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react-redux&apos;</span>;
+<span class="hljs-keyword">import</span> { createStore } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;redux&apos;</span>;
+
+<span class="hljs-keyword">const</span> Counter = ({ value, onIncrement, onDecrement }) =&gt; (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{onDecrement}</span>&gt;</span>-<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{value}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{onIncrement}</span>&gt;</span>+<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+);
+
+<span class="hljs-keyword">const</span> counterReducer = (state = <span class="hljs-number">0</span>, { type }) =&gt; {
+  <span class="hljs-keyword">switch</span> (type) {
+    <span class="hljs-keyword">case</span> <span class="hljs-string">&apos;Increment&apos;</span>:
+      <span class="hljs-keyword">return</span> state + <span class="hljs-number">1</span>;
+
+    <span class="hljs-keyword">case</span> <span class="hljs-string">&apos;Decrement&apos;</span>:
+      <span class="hljs-keyword">return</span> state - <span class="hljs-number">1</span>;
+
+    <span class="hljs-keyword">default</span>:
+      <span class="hljs-keyword">return</span> state;
+  }
+};
+
+<span class="hljs-keyword">const</span> rootReducer = combineReducers({
+  counter: counterReducer
+});
+
+<span class="hljs-keyword">const</span> ConnectedCounter = connect(
+  state =&gt; ({
+    value: state.counter
+  })
+)(Counter);
+
+<span class="hljs-keyword">const</span> store = createStore(rootReducer);
+
+<span class="hljs-keyword">const</span> RootComponent = () =&gt; (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Provider</span> <span class="hljs-attr">store</span>=<span class="hljs-string">{store}</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ConnectedCounter</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">Provider</span>&gt;</span>
+);
+</span></code></pre>
+<p>But what if we want <strong>two Counters</strong>?</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> RootComponent = () =&gt; (
+  &lt;Provider store={store}&gt;
+    &lt;div&gt;
+      &lt;ConnectedCounter /&gt;
+      &lt;ConnectedCounter /&gt;
+    &lt;/div&gt;
+  &lt;/Provider&gt;
+);
+</code></pre>
+<p>Ooops, this simply won&apos;t work. That&apos;s where <code>prism</code> comes to play for the rescue.</p>
+
+                            
+                            </section>
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../" class="navigation navigation-prev " aria-label="Previous page: Introduction">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="actionWrapping.html" class="navigation navigation-next " aria-label="Next page: Action Wrapping">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+</div>
+
+        
+    <script src="../gitbook/app.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+    <script>
+    require(["gitbook"], function(gitbook) {
+        gitbook.start({"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"livereload":{}});
+    });
+    </script>
+
+    </body>
+</html>

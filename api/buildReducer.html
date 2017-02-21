@@ -1,0 +1,335 @@
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>buildReducer · Table of Contents</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Creates a Redux compatible Reducer.">
+        <meta name="generator" content="GitBook 3.0.0-pre.5">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="buildUnwrapper.html" />
+    
+    
+    <link rel="prev" href="enhanceComponent.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book"
+    data-level="2.2"
+    data-chapter-title="buildReducer"
+    data-filepath="api/buildReducer.md"
+    data-basepath=".."
+    data-revision="Tue Feb 21 2017 14:50:22 GMT+0100 (CET)"
+    data-innerlanguage="">
+    
+
+<div class="book-summary">
+    
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+
+            
+
+
+            
+            
+    
+        <li class="chapter " data-level="0" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="../fundamentals/">
+            
+                <a href="../fundamentals/">
+            
+                    
+                        <b>1.</b>
+                    
+                    Fundamentals
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1" data-path="../fundamentals/actionWrapping.html">
+            
+                <a href="../fundamentals/actionWrapping.html">
+            
+                    
+                        <b>1.1.</b>
+                    
+                    Action Wrapping
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../fundamentals/actionUnwrapping.html">
+            
+                <a href="../fundamentals/actionUnwrapping.html">
+            
+                    
+                        <b>1.2.</b>
+                    
+                    Action Unwrapping
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                        <b>2.</b>
+                    
+                    API Reference
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1" data-path="enhanceComponent.html">
+            
+                <a href="enhanceComponent.html">
+            
+                    
+                        <b>2.1.</b>
+                    
+                    enhanceComponent
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="2.2" data-path="buildReducer.html">
+            
+                <a href="buildReducer.html">
+            
+                    
+                        <b>2.2.</b>
+                    
+                    buildReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="buildUnwrapper.html">
+            
+                <a href="buildUnwrapper.html">
+            
+                    
+                        <b>2.3.</b>
+                    
+                    buildUnwrapper
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            <li class="divider"></li>
+            
+
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+</div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >buildReducer</a>
+    </h1>
+</div>
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            <section class="normal markdown-section">
+                            
+                            <h1 id="buildreducerhandlers-initialstate"><code>buildReducer(handlers, initialState)</code></h1>
+<p>Creates a Redux compatible <a href="http://redux.js.org/docs/basics/Reducers.html" target="_blank">Reducer</a>. </p>
+<h4 id="arguments">Arguments</h4>
+<ol>
+<li><p><code>handlers</code> <em>(Array<UnwrapperHandlerPair>)</UnwrapperHandlerPair></em>: An array of <code>UnwrapperHandlerPair</code> which is just an object consisting of two fields: <code>unwrapper</code> and <code>handler</code></p>
+</li>
+<li><p><code>initialState</code> <em>(any)</em>: Initial state to be used as a default value for the reducer.</p>
+</li>
+</ol>
+<h4 id="returns">Returns</h4>
+<p><code>reducer</code> <em>(Function)</em>: Plain old JavaScript function which can be used as Redux reducer.</p>
+<h4 id="example">Example</h4>
+<pre><code class="lang-js"><span class="hljs-keyword">import</span> { buildReducer, buildUnwrapper } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;prism&apos;</span>;
+
+<span class="hljs-keyword">const</span> reducer = buildReducer([{
+  unwrapper: buildUnwrapper(<span class="hljs-string">&apos;Increment&apos;</span>),
+  handler: state =&gt; state + <span class="hljs-number">1</span>
+}, {
+  unwrapper: buildUnwrapper(<span class="hljs-string">&apos;Decrement&apos;</span>),
+  handler: state =&gt; state - <span class="hljs-number">1</span>
+}], <span class="hljs-number">0</span>);
+
+<span class="hljs-keyword">let</span> state = <span class="hljs-literal">undefined</span>;
+state = reducer(state, { type: <span class="hljs-string">&apos;Increment&apos;</span> });
+state = reducer(state, { type: <span class="hljs-string">&apos;Increment&apos;</span> });
+state = reducer(state, { type: <span class="hljs-string">&apos;Increment&apos;</span> });
+state = reducer(state, { type: <span class="hljs-string">&apos;Decrement&apos;</span> });
+
+<span class="hljs-built_in">console</span>.log(state); <span class="hljs-comment">// 2</span>
+</code></pre>
+
+                            
+                            </section>
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="enhanceComponent.html" class="navigation navigation-prev " aria-label="Previous page: enhanceComponent">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="buildUnwrapper.html" class="navigation navigation-next " aria-label="Next page: buildUnwrapper">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+</div>
+
+        
+    <script src="../gitbook/app.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/buttons.js"></script>
+        
+    
+    <script>
+    require(["gitbook"], function(gitbook) {
+        gitbook.start({"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}}});
+    });
+    </script>
+
+    </body>
+</html>
