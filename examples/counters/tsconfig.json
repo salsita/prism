@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "target": "es5",
+    "strictNullChecks": true
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

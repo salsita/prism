@@ -1,5 +1,5 @@
 node_modules
-lib
 npm-debug.log
 coverage
 _book
+.DS_Store

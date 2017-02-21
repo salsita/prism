@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "types": [
+      "jest"
+    ]
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "jsx": "react",
+    "types": [
+      "jest"
+    ]
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

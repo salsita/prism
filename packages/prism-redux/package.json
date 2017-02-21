@@ -1,0 +1,39 @@
+{
+  "name": "prism-redux",
+  "version": "0.1.0",
+  "description": "Prism bindings for Redux",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "build:commonjs": "tsc -p ./ --module commonjs --outDir lib",
+    "build": "rm -rf lib && npm run build:commonjs",
+    "test": "jest",
+    "test:watch": "npm run test -- --watch",
+    "preversion": "npm test",
+    "version": "npm run build",
+    "postversion": "git push && git push --tags",
+    "prepublish": "npm run build"
+  },
+  "author": "Tomas Weiss <tomasw@salsitasoft.com>",
+  "bugs": {
+    "url": "https://github.com/salsita/prism/issues"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^18.1.1",
+    "jest": "^18.1.0",
+    "ts-jest": "^18.0.3",
+    "typescript": "^2.1.5"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(src/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
+  }
+}
