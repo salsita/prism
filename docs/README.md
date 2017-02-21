@@ -62,7 +62,7 @@ const RootComponent = () => (
 
 Ooops, this simply won't work. That's where `prism` comes to play for the rescue.
 
-## Action Wrapping / Unwrapping
+## Action Wrapping
 
 `Prism` utilizes a concept called action wrapping in order to achieve isolation of components. So how does it work?
 
@@ -84,7 +84,7 @@ Payload of action is another (nested) action.
 1. `selector` - a function which selects a part of application state
 2. `wrapper` - a function which defines how all the dispatched actions within the component should be wrapped
 
-For isolated Components action wrapping would not be enough, we also need isolated application state slice and therefore the second required prop which is `selector`.
+For isolated Components action wrapping would not be enough, we also need isolated application state slice and that's the reason for the second required prop which is `selector`.
 
 ```js
 // Let's just define isolated Counter Presentional Component
@@ -107,7 +107,7 @@ const ConnectedCounter = connect(
 // Wrapping the Component allow user to isolate it easily
 const InstantiableConnectedCounter = enhanceComponent(ConnectedCounter);
 
-// Now let's just compose it
+// Now let's just instantiate two Counters
 const RootComponent = () => (
   <div>
     <InstantiableConnectedCounter
@@ -123,3 +123,5 @@ const RootComponent = () => (
 ```
 
 Obviously the code snippet above is responsible for rendering two independent instances of `Counter`, utilizng Action wrapping and selectors.
+
+## Action Unwrapping
