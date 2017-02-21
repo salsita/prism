@@ -138,7 +138,7 @@ import { buildReducer } from 'prism';
 // Obviously, this unwrapper is more of Matcher rather than
 // unwrapper because it does not unwrap the action
 // it only matches it
-const buildUnwrapper = type => action => {
+const buildMatchingUnwrapper = type => action => {
   if (action.type === type) {
     return action;
   } else {
@@ -147,18 +147,65 @@ const buildUnwrapper = type => action => {
 };
 
 const reducer = buildReducer([{
-  unwrapper: buildUnwrapper('Increment'),
+  unwrapper: buildMatchingUnwrapper('Increment'),
   handler: (state, action) => state + 1
 }, {
-  unwrapper: buildUnwrapper('Decrement'),
+  unwrapper: buildMatchingUnwrapper('Decrement'),
   handler: (state, action) => state - 1
 }], 0); // Second argument is initial state
 ```
 
-So far, our example was just showing how to match action, but what if we need to unwrap it as well? You can always write your own unwrapper (it's really easy!) or there's one especially useful built in unwrapper provided by `prism`. Usage is simple, just import a function called [`buildUnwrapper`](./api/buildUnwrapper.md).
+So far, our example was just showing how to match action, but what if we need to unwrap it as well? Well it's just a matter of returning modified unwrapped action:
 
 ```js
+import { buildReducer } from 'prism';
 
+const buildStartsWithUnwrapper = prefix => action => {
+  if (action.type.startsWith(prefix)) {
+    return {
+      ...action,
+      type: action.type.replace(`${prefix}.`, '')
+    };
+  } else {
+    return null;
+  }
+};
+
+const reducer = buildReducer([{
+  unwrapper: buildStartsWithUnwrapper('TopCounter'),
+  handler: (state, action) => ({
+    ...state,
+    topCounter: counterReducer(state.topCounter, action) // Action here is already unwrapped, due to unwrapper
+  })
+}, {
+  unwrapper: buildStartsWithUnwrapper('BottomCounter'),
+  handler: (state, action) => ({
+    ...state,
+    bottomCounter: counterReducer(state.bottomCounter, action) // Spot the difference in provided state slice
+  })
+}], {topCoutner: 0, bottomCounter: 0});
 ```
 
+In most cases you need a combination of `startsWithUnwrapper` and `matchingUnwrapper`, the unwrapper either directly matches the action or just simply unwraps. `Prism` ships with built in `unwrapper` which is doing exactly that. Usage is trivial, just import [`buildUpdater`](./api/buildUpdater.md):
 
+```js
+import { buildUnwrapper, buildReducer } from 'prism';
+
+export default buildReducer([{
+  unwrapper: buildUnwrapper('Top'), // Unwraps Top prefixed actions
+  handler: (state, action) => ({
+    ...state,
+    top: counterReducer(state.top, action)
+  })
+}, {
+  unwrapper: buildUnwrapper('Bottom'), // Unwraps Bottom prefixed actions
+  handler: (state, action) => ({
+    ...state,
+    bottom: counterReducer(state.bottom, action)
+  })
+}, {
+  unwrapper: buildUnwrapper('ResetCounters'), // Direct match for ResetCounters action
+  handler: (state, action) => initialState
+}], initialState);
+
+```
