@@ -125,3 +125,23 @@ const RootComponent = () => (
 Obviously the code snippet above is responsible for rendering two independent instances of `Counter`, utilizng Action wrapping and selectors.
 
 ## Action Unwrapping
+
+OK, there is the other side of the coin which is called Action Unwrapping. All the actions are already wrapped and using selectors we assume that our state is isolated, but now we need to be able to unwrap the action in reducer and mutate corresponding state slice. There's another helper function called [`buildReducer`](./api/buildReducer.md) for building a reducer which can handle wrapped actions.
+
+`buildReducer` function accepts a list of `UnwrapperHandlerPair` the pair is actually an object containing two keys: `unwrapper` and `handler`.
+
+```js
+import { buildUnwrapper } from 'prism';
+
+// UnwrapperHandlerPair is just a plain old JavaScript object
+// prism provides a helper function to build simple unwrapper
+const unwrapperHandlerPair = {
+  unwrapper: buildUnwrapper('Increment'),
+  handler: (state, action) => state + 1
+};
+```
+
+`Unwrapper` is responsible for matching the action and when the action is matched it can potentially unwrap it as well. For example `buildUnwrapper('Increment')` creates an unwrapper which matches either action starting with `Increment.` prefix and then it provides unwrapped action to `handler` function, or it matches action `Increment` directly therefore no action is unwrappped and original `Increment` action is passed to the handler.
+
+
+
