@@ -47,5 +47,3 @@ For now, there's just one example showing action composition in action:
 
 This project was previously called `redux-elm` and you should still be able to see how those ideas evoled over time in git history. So significiant amount of inspiration has been drawn from [The Elm Architecture](https://guide.elm-lang.org/architecture/)
 
-## Discussion
-Join the [discussion on gitter](https://gitter.im/salsita/prism)
