@@ -64,9 +64,11 @@ export default <P, S> (
     }
 
     render() {
+      const { selector, wrapper, ...rest } = this.props;
+
       return createEagerElement(
         EnhanceableComponent,
-        this.props
+        rest
       );
     }
   }

@@ -163,4 +163,33 @@ describe('enhanceComponent', () => {
     button.simulate('click');
     expect(button.text()).toEqual('John Doe');
   });
+
+  it('should not pass down selector and wrapper to enhanced Component', (done) => {
+    const identityReducer = (value : number = 42) => value;
+    const store = createStore(identityReducer);
+
+    interface SelectorWrapper {
+      selector: any,
+      wrapper: any
+    };
+
+    const EnhancedHelloWorld = enhanceComponent<void, void>(connect(
+      state => ({})
+    )((props : SelectorWrapper) => {
+      expect(props.selector).toBeUndefined();
+      expect(props.wrapper).toBeUndefined();
+
+      done();
+      return <div />;
+    }));
+
+    const component = mount(
+      <Provider store={store}>
+        <EnhancedHelloWorld
+          wrapper={type => type}
+          selector={state => state}
+        />
+      </Provider>
+    )
+  });
 });
