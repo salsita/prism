@@ -1,6 +1,6 @@
 {
   "name": "prism",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "React / Redux action composition made simple",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -20,8 +20,8 @@
     "typescript": "^2.1.5"
   },
   "dependencies": {
-    "prism-react": "^1.0.1",
-    "prism-redux": "^1.0.1"
+    "prism-react": "^1.0.2",
+    "prism-redux": "^1.0.2"
   },
   "files": [
     "lib",
